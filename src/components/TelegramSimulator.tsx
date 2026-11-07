@@ -1,39 +1,32 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { DEMO_FLOWS, BOT_CATALOG, SITE_CONFIG } from '../config/showroom';
-import { BotSimulatorStep, BotItem } from '../types/showroom';
-import { Send, RotateCcw, Sparkles, CheckCheck, Bot, ExternalLink, ShieldCheck } from 'lucide-react';
+import { DEMO_FLOWS } from '../config/showroom';
+import { BotSimulatorStep } from '../types/showroom';
+import { RotateCcw, CheckCheck, ExternalLink, Send, ArrowRight } from 'lucide-react';
 
 interface TelegramSimulatorProps {
-  initialFlowId?: string;
-  onOrderBotById: (botId: string) => void;
+  activeDemoFlowId: string;
+  onSelectFlow: (flowId: string) => void;
+  onOrderPackage: (packageId: string) => void;
 }
 
 export const TelegramSimulator: React.FC<TelegramSimulatorProps> = ({
-  initialFlowId = 'shop-bot-flow',
-  onOrderBotById,
+  activeDemoFlowId,
+  onSelectFlow,
+  onOrderPackage,
 }) => {
-  const [currentFlowId, setCurrentFlowId] = useState<string>(initialFlowId);
   const [messages, setMessages] = useState<BotSimulatorStep[]>([]);
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [customInput, setCustomInput] = useState<string>('');
   const chatBottomRef = useRef<HTMLDivElement>(null);
 
-  const activeFlow = DEMO_FLOWS[currentFlowId] || DEMO_FLOWS['shop-bot-flow'];
-  const activeBot = BOT_CATALOG.find((b) => b.id === activeFlow.botId) || BOT_CATALOG[0];
+  const activeFlow = DEMO_FLOWS[activeDemoFlowId] || DEMO_FLOWS['standard-flow'];
 
   useEffect(() => {
-    if (initialFlowId && DEMO_FLOWS[initialFlowId]) {
-      setCurrentFlowId(initialFlowId);
-    }
-  }, [initialFlowId]);
-
-  useEffect(() => {
-    // Reset conversation whenever active flow changes
+    // Reset conversation when active flow changes
     setMessages(activeFlow.initialMessages);
-  }, [currentFlowId]);
+  }, [activeDemoFlowId]);
 
   useEffect(() => {
-    // Auto-scroll to bottom of chat
     chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
 
@@ -48,9 +41,9 @@ export const TelegramSimulator: React.FC<TelegramSimulatorProps> = ({
       return;
     }
 
-    // Append user message
+    // Append user tap message
     const userMsg: BotSimulatorStep = {
-      id: `user-${Date.now()}`,
+      id: `usr-${Date.now()}`,
       sender: 'user',
       text: label,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -61,40 +54,38 @@ export const TelegramSimulator: React.FC<TelegramSimulatorProps> = ({
 
     setTimeout(() => {
       setIsTyping(false);
-      const botResponse = activeFlow.responses[action];
-      if (botResponse && botResponse.length > 0) {
-        // filter out any user step from predefined responses
-        const botOnlySteps = botResponse.filter((s) => s.sender === 'bot');
-        if (botOnlySteps.length > 0) {
-          setMessages((prev) => [...prev, ...botOnlySteps]);
+      const flowResponse = activeFlow.responses[action];
+      if (flowResponse && flowResponse.length > 0) {
+        const botOnly = flowResponse.filter((s) => s.sender === 'bot');
+        if (botOnly.length > 0) {
+          setMessages((prev) => [...prev, ...botOnly]);
         }
       } else {
-        // Fallback default response
         setMessages((prev) => [
           ...prev,
           {
-            id: `fallback-${Date.now()}`,
+            id: `bot-${Date.now()}`,
             sender: 'bot',
-            text: `🤖 Simulated response for action: **${label}**.\n\nIn the real production bot, this triggers an asynchronous webhook handling business logic, payment verifications, and database updates.`,
-            buttons: [{ label: '🔄 Reset Chat', action: 'reset' }],
+            text: `Action "${label}" processed. This updates the business order status and alerts the owner.`,
+            buttons: [{ label: 'Back to Start', action: 'reset' }],
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           },
         ]);
       }
-    }, 600);
+    }, 450);
   };
 
   const handleCustomSend = (e: React.FormEvent) => {
     e.preventDefault();
     if (!customInput.trim()) return;
 
-    const userText = customInput.trim();
+    const text = customInput.trim();
     setCustomInput('');
 
     const userMsg: BotSimulatorStep = {
-      id: `user-${Date.now()}`,
+      id: `usr-${Date.now()}`,
       sender: 'user',
-      text: userText,
+      text,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
 
@@ -106,75 +97,75 @@ export const TelegramSimulator: React.FC<TelegramSimulatorProps> = ({
       setMessages((prev) => [
         ...prev,
         {
-          id: `bot-echo-${Date.now()}`,
+          id: `echo-${Date.now()}`,
           sender: 'bot',
-          text: `🤖 Received: "${userText}".\n\nOur bots are programmed with conversational state machines (aiogram 3.x) & RAG LLM integration to interpret natural language effortlessly.\n\nReady to test or purchase?`,
-          buttons: [
-            { label: '🛒 Browse Catalog', action: 'browse_catalog' },
-            { label: '💬 Talk to Developer', action: 'handover' },
-            { label: '🔄 Reset', action: 'reset' },
-          ],
+          text: `Command "${text}" received. The bot processes inquiries and notifies the owner directly.`,
+          buttons: [{ label: 'Restart Flow', action: 'reset' }],
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
       ]);
-    }, 700);
+    }, 500);
   };
 
+  const flowTabs = [
+    { id: 'starter-flow', label: 'Starter: Menu & Location', packageId: 'starter' },
+    { id: 'standard-flow', label: 'Standard: Order Dispatch', packageId: 'standard' },
+    { id: 'full-flow', label: 'Full: Bookings & Reports', packageId: 'full' },
+  ];
+
   return (
-    <section id="simulator" className="py-24 bg-[#08090d] border-t border-white/5 relative">
+    <section id="simulator" className="py-20 sm:py-28 bg-[#0b0d13] border-t border-white/5 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-spotify-green/10 text-spotify-green text-xs font-bold uppercase tracking-wider mb-3 border border-spotify-green/20">
-            <Sparkles className="w-3.5 h-3.5" />
-            Interactive In-Browser Telegram Sandbox
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <div className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-2">
+            Live Sandbox
           </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-            Test Real Bot Workflows Live
+          <h2 className="text-2xl sm:text-4xl font-bold text-white tracking-tight">
+            Test Real Bot Workflows
           </h2>
-          <p className="mt-4 text-slate-300 text-sm sm:text-base">
-            Click through inline buttons, checkouts, and AI responses. Experience the exact user experience your customers will get inside Telegram.
+          <p className="mt-3 text-sm sm:text-base text-slate-300">
+            Click through menu options, simulated cart orders, and booking confirmations to test the exact customer experience.
           </p>
 
-          {/* Bot Selector Pills */}
+          {/* Flow Selector Pills */}
           <div className="mt-8 flex items-center justify-center gap-2 flex-wrap">
-            {Object.entries(DEMO_FLOWS).map(([key, flow]) => {
-              const isSelected = key === currentFlowId;
+            {flowTabs.map((tab) => {
+              const isSelected = tab.id === activeDemoFlowId;
               return (
                 <button
-                  key={key}
-                  onClick={() => setCurrentFlowId(key)}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold transition-all flex items-center gap-2 ${
+                  key={tab.id}
+                  type="button"
+                  onClick={() => onSelectFlow(tab.id)}
+                  className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
                     isSelected
-                      ? 'bg-spotify-green text-black font-bold shadow-glow-green/30 scale-105'
-                      : 'bg-[#151722] text-slate-400 hover:text-white border border-white/5'
+                      ? 'bg-emerald-400 text-black font-bold shadow-sm'
+                      : 'bg-[#151722] text-slate-400 hover:text-white border border-white/10'
                   }`}
                 >
-                  <span>{flow.avatarText}</span>
-                  <span>{flow.botName.replace(' Demo', '')}</span>
+                  {tab.label}
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Simulator Device Frame */}
-        <div className="max-w-2xl mx-auto rounded-3xl bg-[#0f1118] border-2 border-slate-700/60 shadow-2xl overflow-hidden relative">
-          {/* Telegram Header */}
-          <div className="bg-[#181b26] px-5 py-3.5 border-b border-white/10 flex items-center justify-between">
+        {/* Telegram Device Window */}
+        <div className="max-w-xl mx-auto rounded-2xl bg-[#0f1118] border border-white/15 shadow-2xl overflow-hidden">
+          {/* Header */}
+          <div className="bg-[#161a25] px-4 py-3 border-b border-white/10 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-spotify-green to-cyan-500 flex items-center justify-center text-lg font-bold text-black shadow-md">
-                {activeFlow.avatarText}
+              <div className="w-9 h-9 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-xs font-bold">
+                YS
               </div>
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-sm text-white">{activeFlow.botName}</span>
-                  <span className="text-[10px] uppercase font-bold px-1.5 py-0.2 rounded bg-spotify-green/20 text-spotify-green">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-bold text-xs sm:text-sm text-white">{activeFlow.tierName}</span>
+                  <span className="text-[9px] uppercase font-bold px-1.5 py-0.2 rounded bg-white/10 text-slate-300">
                     BOT
                   </span>
                 </div>
-                <div className="text-xs text-spotify-green flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-spotify-green inline-block animate-pulse"></span>
+                <div className="text-[11px] text-emerald-400">
                   {activeFlow.botUsername} • online
                 </div>
               </div>
@@ -182,23 +173,26 @@ export const TelegramSimulator: React.FC<TelegramSimulatorProps> = ({
 
             <div className="flex items-center gap-2">
               <button
+                type="button"
                 onClick={() => setMessages(activeFlow.initialMessages)}
                 title="Restart Conversation"
-                className="p-2 rounded-lg bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                className="p-1.5 rounded-lg bg-white/5 text-slate-400 hover:text-white transition-colors"
+                aria-label="Restart conversation"
               >
                 <RotateCcw className="w-4 h-4" />
               </button>
               <button
-                onClick={() => onOrderBotById(activeFlow.botId)}
-                className="text-xs font-bold px-3 py-1.5 rounded-full bg-spotify-green text-black hover:bg-spotify-green-light transition-all shadow-glow-green/30"
+                type="button"
+                onClick={() => onOrderPackage(activeFlow.tierId)}
+                className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-400 text-black hover:bg-emerald-300 transition-colors"
               >
-                Deploy Bot
+                Order Tier
               </button>
             </div>
           </div>
 
-          {/* Chat Messages Area */}
-          <div className="p-4 sm:p-6 space-y-4 min-h-[380px] max-h-[480px] overflow-y-auto bg-[#0a0c13]/95 bg-[radial-gradient(#181d2c_1px,transparent_1px)] [background-size:16px_16px]">
+          {/* Messages Area */}
+          <div className="p-4 sm:p-5 space-y-3.5 min-h-[340px] max-h-[440px] overflow-y-auto bg-[#090b10]">
             {messages.map((msg) => {
               const isUser = msg.sender === 'user';
               return (
@@ -207,37 +201,38 @@ export const TelegramSimulator: React.FC<TelegramSimulatorProps> = ({
                   className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}
                 >
                   <div
-                    className={`max-w-[85%] rounded-2xl px-4 py-3 text-xs sm:text-sm leading-relaxed shadow-md ${
+                    className={`max-w-[88%] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm leading-relaxed ${
                       isUser
-                        ? 'bg-gradient-to-r from-spotify-green to-emerald-500 text-black font-medium rounded-br-none'
-                        : 'bg-[#1b1f2d] text-slate-100 rounded-bl-none border border-white/5'
+                        ? 'bg-emerald-500 text-black font-medium rounded-br-none'
+                        : 'bg-[#181d29] text-slate-100 rounded-bl-none border border-white/5'
                     }`}
                   >
                     <div className="whitespace-pre-line">
                       {msg.text.split('\n').map((line, lIdx) => (
-                        <p key={lIdx} className={lIdx > 0 ? 'mt-1.5' : ''}>
+                        <p key={lIdx} className={lIdx > 0 ? 'mt-1' : ''}>
                           {line}
                         </p>
                       ))}
                     </div>
                     <div
-                      className={`text-[10px] mt-1.5 flex items-center justify-end gap-1 ${
-                        isUser ? 'text-black/60' : 'text-slate-400'
+                      className={`text-[10px] mt-1 flex items-center justify-end gap-1 ${
+                        isUser ? 'text-black/60' : 'text-slate-500'
                       }`}
                     >
                       <span>{msg.time || '12:00'}</span>
-                      {isUser && <CheckCheck className="w-3.5 h-3.5 text-black" />}
+                      {isUser && <CheckCheck className="w-3 h-3 text-black" />}
                     </div>
                   </div>
 
-                  {/* Inline Telegram Keyboard Buttons */}
+                  {/* Inline Buttons */}
                   {msg.buttons && msg.buttons.length > 0 && (
-                    <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-[85%]">
+                    <div className="mt-1.5 grid grid-cols-1 sm:grid-cols-2 gap-1.5 w-full max-w-[88%]">
                       {msg.buttons.map((btn, bIdx) => (
                         <button
                           key={bIdx}
+                          type="button"
                           onClick={() => handleButtonClick(btn.action, btn.label, btn.url)}
-                          className="px-3 py-2 rounded-xl bg-[#23283a] hover:bg-[#2d344b] text-slate-200 text-xs font-semibold transition-all border border-white/10 hover:border-spotify-green/50 text-center flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
+                          className="px-3 py-2 rounded-lg bg-[#202636] hover:bg-[#283044] text-slate-200 text-xs font-medium transition-colors border border-white/10 text-center flex items-center justify-center gap-1 min-h-[38px] active:scale-98"
                         >
                           <span>{btn.label}</span>
                           {btn.url && <ExternalLink className="w-3 h-3 text-slate-400" />}
@@ -249,48 +244,39 @@ export const TelegramSimulator: React.FC<TelegramSimulatorProps> = ({
               );
             })}
 
-            {/* Typing Indicator */}
             {isTyping && (
-              <div className="flex items-center gap-2 text-xs text-slate-400 py-1">
-                <div className="flex items-center gap-1 px-3 py-2 rounded-2xl bg-[#1b1f2d] border border-white/5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-spotify-green animate-bounce" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-spotify-green animate-bounce [animation-delay:0.2s]" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-spotify-green animate-bounce [animation-delay:0.4s]" />
+              <div className="flex items-center gap-2 text-xs text-slate-400">
+                <div className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#181d29] border border-white/5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce [animation-delay:0.2s]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce [animation-delay:0.4s]" />
                 </div>
-                <span className="text-[11px] font-mono text-spotify-green">{activeFlow.botUsername} is typing...</span>
+                <span className="text-[11px] text-slate-400">typing...</span>
               </div>
             )}
             <div ref={chatBottomRef} />
           </div>
 
-          {/* Interactive Chat Input Bar */}
+          {/* Input Bar */}
           <form
             onSubmit={handleCustomSend}
-            className="p-3 bg-[#131622] border-t border-white/10 flex items-center gap-2"
+            className="p-2.5 bg-[#12151e] border-t border-white/10 flex items-center gap-2"
           >
             <input
               type="text"
               value={customInput}
               onChange={(e) => setCustomInput(e.target.value)}
-              placeholder="Type a simulated message or command..."
-              className="flex-1 px-4 py-2 text-xs bg-[#0b0d14] rounded-full border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-spotify-green"
+              placeholder="Type a test message or command..."
+              className="flex-1 px-3.5 py-2 text-xs bg-[#090b10] rounded-lg border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400"
             />
             <button
               type="submit"
-              className="p-2 rounded-full bg-spotify-green text-black hover:bg-spotify-green-light transition-all shrink-0"
-              title="Send Message"
+              className="p-2 rounded-lg bg-emerald-400 text-black hover:bg-emerald-300 transition-colors shrink-0"
+              aria-label="Send test message"
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-3.5 h-3.5" />
             </button>
           </form>
-
-          {/* Footer inside device */}
-          <div className="bg-[#0b0d14] px-4 py-2 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400">
-            <span>Showing: {activeBot.name}</span>
-            <span className="text-spotify-green font-medium">
-              One-Time: ${activeBot.oneTimePrice} | Monthly: ${activeBot.monthlyPrice}/mo
-            </span>
-          </div>
         </div>
       </div>
     </section>

@@ -1,50 +1,75 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { ValueProps } from './components/ValueProps';
-import { Showroom } from './components/Showroom';
-import { TelegramSimulator } from './components/TelegramSimulator';
 import { DealsPricing } from './components/DealsPricing';
+import { TelegramSimulator } from './components/TelegramSimulator';
 import { ComparisonMatrix } from './components/ComparisonMatrix';
-import { CustomQuoteCalculator } from './components/CustomQuoteCalculator';
 import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
 import { CheckoutModal } from './components/CheckoutModal';
-import { BotItem, PricingModel } from './types/showroom';
-import { BOT_CATALOG } from './config/showroom';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { CurrencyCode, PackageTier } from './types/showroom';
+import { PACKAGES, SITE_CONFIG } from './config/showroom';
+import { Send } from 'lucide-react';
 
 export function App() {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalTitle, setModalTitle] = useState('Pro Operator Bundle');
-  const [modalModel, setModalModel] = useState<PricingModel>('one-time');
-  const [modalPrice, setModalPrice] = useState<number>(299);
-  const [activeDemoFlowId, setActiveDemoFlowId] = useState<string>('shop-bot-flow');
+  // Read initial query params from URL
+  const getInitialParam = (key: string, fallback: string) => {
+    if (typeof window === 'undefined') return fallback;
+    const params = new URLSearchParams(window.location.search);
+    return params.get(key) || fallback;
+  };
 
-  const handleOpenOrderModal = (
-    title = 'Pro Operator Bundle',
-    model: PricingModel = 'one-time',
-    price = 299
-  ) => {
-    setModalTitle(title);
-    setModalModel(model);
-    setModalPrice(price);
+  const [currency, setCurrency] = useState<CurrencyCode>(() => {
+    const p = getInitialParam('currency', 'ETB');
+    return p === 'USD' ? 'USD' : 'ETB';
+  });
+
+  const [selectedPackageId, setSelectedPackageId] = useState<string>(() => {
+    return getInitialParam('plan', 'standard');
+  });
+
+  const [activeDemoFlowId, setActiveDemoFlowId] = useState<string>(() => {
+    return getInitialParam('demo', 'standard-flow');
+  });
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalPackageId, setModalPackageId] = useState<string>('standard');
+
+  // Sync state changes to URL search params for shareability and persistence
+  const syncUrlParams = useCallback(
+    (cur: CurrencyCode, plan: string, demo: string) => {
+      if (typeof window === 'undefined') return;
+      const url = new URL(window.location.href);
+      url.searchParams.set('currency', cur);
+      url.searchParams.set('plan', plan);
+      url.searchParams.set('demo', demo);
+      window.history.replaceState({}, '', url.toString());
+    },
+    []
+  );
+
+  useEffect(() => {
+    syncUrlParams(currency, selectedPackageId, activeDemoFlowId);
+  }, [currency, selectedPackageId, activeDemoFlowId, syncUrlParams]);
+
+  const handleToggleCurrency = (newCurrency: CurrencyCode) => {
+    setCurrency(newCurrency);
+  };
+
+  const handleSelectPackage = (pkg: PackageTier) => {
+    setSelectedPackageId(pkg.id);
+    setModalPackageId(pkg.id);
     setModalOpen(true);
   };
 
-  const handleSelectDeal = (
-    dealName: string,
-    model: PricingModel,
-    price: number
-  ) => {
-    handleOpenOrderModal(dealName, model, price);
+  const handleSelectPackageFromComparison = (packageId: 'starter' | 'standard' | 'full') => {
+    setSelectedPackageId(packageId);
+    setModalPackageId(packageId);
+    setModalOpen(true);
   };
 
-  const handleOrderBot = (bot: BotItem, model: PricingModel) => {
-    const price = model === 'one-time' ? bot.oneTimePrice : bot.monthlyPrice;
-    handleOpenOrderModal(`${bot.name} (${bot.categoryLabel})`, model, price);
-  };
-
-  const handleOpenDemo = (demoFlowId: string) => {
+  const handleLaunchDemo = (demoFlowId: string) => {
     setActiveDemoFlowId(demoFlowId);
     const element = document.getElementById('simulator');
     if (element) {
@@ -52,83 +77,97 @@ export function App() {
     }
   };
 
-  const handleOrderBotById = (botId: string) => {
-    const bot = BOT_CATALOG.find((b) => b.id === botId);
-    if (bot) {
-      handleOrderBot(bot, 'one-time');
+  const handleOpenOrderModal = (packageId?: string) => {
+    if (packageId) {
+      setModalPackageId(packageId);
     } else {
-      handleOpenOrderModal('Telegram Bot Order', 'one-time', 149);
+      setModalPackageId(selectedPackageId);
     }
+    setModalOpen(true);
   };
 
-  const handleExploreCatalog = () => {
-    const element = document.getElementById('showroom');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleOpenSimulator = () => {
-    const element = document.getElementById('simulator');
+  const handleExplorePackages = () => {
+    const element = document.getElementById('packages');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   return (
-    <div className="min-h-screen bg-obsidian text-slate-100 flex flex-col font-sans selection:bg-spotify-green selection:text-black">
-      {/* Top Navigation */}
-      <Navbar onOpenOrderModal={() => handleOpenOrderModal('Direct Telegram Order')} />
-
-      {/* Main Content Sections */}
-      <main className="flex-1">
-        {/* 1. Hero Section (Spotify-Inspired) */}
-        <Hero
-          onOpenOrderModal={() => handleOpenOrderModal('Bespoke Telegram Bot')}
-          onExploreCatalog={handleExploreCatalog}
-          onOpenSimulator={handleOpenSimulator}
+    <ErrorBoundary>
+      <div className="min-h-screen bg-[#090a0f] text-slate-100 flex flex-col font-sans selection:bg-emerald-400 selection:text-black">
+        {/* Navigation Bar */}
+        <Navbar
+          currency={currency}
+          onToggleCurrency={handleToggleCurrency}
+          onOpenOrderModal={() => handleOpenOrderModal(selectedPackageId)}
         />
 
-        {/* 2. Core Value Grid (Code Ownership vs Managed Cloud Servicing) */}
-        <ValueProps />
+        {/* Main Content */}
+        <main className="flex-1 pb-16 sm:pb-0">
+          {/* 1. Hero */}
+          <Hero
+            currency={currency}
+            onExplorePackages={handleExplorePackages}
+            onOpenDemo={handleLaunchDemo}
+            onOpenOrderModal={() => handleOpenOrderModal(selectedPackageId)}
+          />
 
-        {/* 3. The Interactive Bot Showroom (Categorized Catalog) */}
-        <Showroom
-          onOpenDemo={handleOpenDemo}
-          onOrderBot={handleOrderBot}
+          {/* 2. Packages & Pricing (Starter 3,000, Standard 4,000, Full 7,000) */}
+          <DealsPricing
+            currency={currency}
+            selectedPackageId={selectedPackageId}
+            onSelectPackage={handleSelectPackage}
+            onLaunchDemo={handleLaunchDemo}
+          />
+
+          {/* 3. Interactive Telegram Simulator */}
+          <TelegramSimulator
+            activeDemoFlowId={activeDemoFlowId}
+            onSelectFlow={(flowId) => setActiveDemoFlowId(flowId)}
+            onOrderPackage={(pkgId) => handleOpenOrderModal(pkgId)}
+          />
+
+          {/* 4. Feature Comparison Matrix */}
+          <ComparisonMatrix
+            currency={currency}
+            onSelectPackage={handleSelectPackageFromComparison}
+          />
+
+          {/* 5. FAQ */}
+          <FAQ />
+        </main>
+
+        {/* Footer */}
+        <Footer />
+
+        {/* Mobile Sticky Quick Order Action Bar */}
+        <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0c0e14]/95 backdrop-blur-md border-t border-white/10 px-4 py-2.5 flex items-center justify-between gap-3">
+          <div className="text-xs">
+            <span className="text-slate-400">Packages from </span>
+            <span className="font-bold text-emerald-400">
+              {currency === 'ETB' ? '3,000 ETB' : '$25'}
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => handleOpenOrderModal(selectedPackageId)}
+            className="px-4 py-2 text-xs font-bold text-black bg-emerald-400 hover:bg-emerald-300 rounded-lg flex items-center gap-1.5 shadow-sm"
+          >
+            <Send className="w-3.5 h-3.5" />
+            <span>Order Bot</span>
+          </button>
+        </div>
+
+        {/* Checkout Modal */}
+        <CheckoutModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          initialPackageId={modalPackageId}
+          currency={currency}
         />
-
-        {/* 4. Live Interactive Telegram Sandbox Simulator */}
-        <TelegramSimulator
-          initialFlowId={activeDemoFlowId}
-          onOrderBotById={handleOrderBotById}
-        />
-
-        {/* 5. Spotify Deals & Pricing Matrix */}
-        <DealsPricing onSelectDeal={handleSelectDeal} />
-
-        {/* 6. Feature Delivery Comparison Matrix */}
-        <ComparisonMatrix />
-
-        {/* 7. Interactive Custom Quote Estimator */}
-        <CustomQuoteCalculator />
-
-        {/* 8. Frequently Asked Questions */}
-        <FAQ />
-      </main>
-
-      {/* Footer */}
-      <Footer />
-
-      {/* Checkout & Inquiry Modal */}
-      <CheckoutModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        initialItemTitle={modalTitle}
-        initialModel={modalModel}
-        initialPrice={modalPrice}
-      />
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 }
 

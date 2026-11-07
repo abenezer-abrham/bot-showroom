@@ -1,85 +1,129 @@
 import React from 'react';
-import { COMPARISON_FEATURES } from '../config/showroom';
-import { Check, Sparkles, HelpCircle } from 'lucide-react';
+import { COMPARISON_ROWS } from '../config/showroom';
+import { Check, X } from 'lucide-react';
+import { CurrencyCode } from '../types/showroom';
 
-export const ComparisonMatrix: React.FC = () => {
+interface ComparisonMatrixProps {
+  currency: CurrencyCode;
+  onSelectPackage: (packageId: 'starter' | 'standard' | 'full') => void;
+}
+
+export const ComparisonMatrix: React.FC<ComparisonMatrixProps> = ({
+  currency,
+  onSelectPackage,
+}) => {
+  const starterPrice = currency === 'ETB' ? '3,000 ETB' : '$25';
+  const standardPrice = currency === 'ETB' ? '4,000 ETB' : '$35';
+  const fullPrice = currency === 'ETB' ? '7,000 ETB' : '$60';
+
   return (
-    <section id="compare" className="py-24 bg-[#0d0f16] border-t border-white/5 relative">
+    <section id="comparison" className="py-20 sm:py-28 border-t border-white/5 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-spotify-green/10 text-spotify-green text-xs font-bold uppercase tracking-wider mb-3 border border-spotify-green/20">
-            <Sparkles className="w-3.5 h-3.5" />
-            Clear Transparency
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <div className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-2">
+            Detailed Comparison
           </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-            Compare The Delivery Models
+          <h2 className="text-2xl sm:text-4xl font-bold text-white tracking-tight">
+            Compare What You Get
           </h2>
-          <p className="mt-4 text-slate-300 text-sm sm:text-base">
-            Whether you want total independence with full source code or zero server headache with 24/7 managed hosting, see exactly what each option provides.
+          <p className="mt-3 text-sm sm:text-base text-slate-300">
+            A line-by-line feature breakdown for Starter, Standard, and Full Suite packages.
           </p>
         </div>
 
-        {/* Comparison Table */}
-        <div className="overflow-x-auto rounded-3xl border border-white/10 bg-[#12151f]/80 backdrop-blur-md shadow-2xl">
-          <table className="w-full text-left border-collapse">
+        {/* Responsive Table Container */}
+        <div className="overflow-x-auto rounded-2xl border border-white/10 bg-[#0e1119] shadow-xl">
+          <table className="w-full text-left border-collapse min-w-[620px]">
             <thead>
-              <tr className="border-b border-white/10 bg-[#161a26]">
-                <th className="py-6 px-6 text-sm font-bold text-slate-300 min-w-[240px]">
-                  Feature / Capability
+              <tr className="border-b border-white/10 bg-[#141724]">
+                <th className="py-4 px-5 text-xs font-bold text-slate-300 w-2/5">
+                  Package Capability
                 </th>
-                <th className="py-6 px-6 text-sm font-bold text-white min-w-[200px]">
-                  <div className="flex items-center gap-2">
-                    <span>One-Time Buyout</span>
-                    <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-spotify-green/20 text-spotify-green">
-                      Code
-                    </span>
-                  </div>
-                  <div className="text-xs text-slate-400 font-normal mt-1">Full source code ownership</div>
+                <th className="py-4 px-4 text-xs font-bold text-white text-center w-1/5">
+                  <div>Starter</div>
+                  <div className="text-emerald-400 text-[11px] font-normal">{starterPrice}</div>
                 </th>
-                <th className="py-6 px-6 text-sm font-bold text-white min-w-[200px] bg-spotify-green/5 border-x border-spotify-green/20">
-                  <div className="flex items-center gap-2">
-                    <span className="text-spotify-green">Monthly Managed</span>
-                    <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-spotify-green text-black">
-                      Popular
-                    </span>
-                  </div>
-                  <div className="text-xs text-slate-400 font-normal mt-1">Zero server maintenance</div>
+                <th className="py-4 px-4 text-xs font-bold text-white text-center w-1/5 bg-emerald-500/5 border-x border-emerald-500/20">
+                  <div className="text-emerald-400">Standard</div>
+                  <div className="text-white text-[11px] font-normal">{standardPrice}</div>
                 </th>
-                <th className="py-6 px-6 text-sm font-bold text-white min-w-[200px]">
-                  <div className="flex items-center gap-2">
-                    <span>Custom Bespoke</span>
-                    <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-400">
-                      Bespoke
-                    </span>
-                  </div>
-                  <div className="text-xs text-slate-400 font-normal mt-1">Engineered to spec</div>
+                <th className="py-4 px-4 text-xs font-bold text-white text-center w-1/5">
+                  <div>Full Suite</div>
+                  <div className="text-emerald-400 text-[11px] font-normal">{fullPrice}</div>
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 text-sm text-slate-300">
-              {COMPARISON_FEATURES.map((item, idx) => (
-                <tr
-                  key={idx}
-                  className="hover:bg-white/[0.02] transition-colors"
-                >
-                  <td className="py-4 px-6 font-medium text-white flex items-center gap-2">
-                    <span>{item.feature}</span>
+            <tbody className="divide-y divide-white/5 text-xs text-slate-300">
+              {COMPARISON_ROWS.map((row, idx) => (
+                <tr key={idx} className="hover:bg-white/[0.02] transition-colors">
+                  <td className="py-3.5 px-5">
+                    <div className="font-medium text-white">{row.feature}</div>
+                    <div className="text-[11px] text-slate-400 mt-0.5">{row.detail}</div>
                   </td>
-                  <td className="py-4 px-6">
-                    <span className="font-semibold text-slate-200">{item.oneTime}</span>
+
+                  {/* Starter */}
+                  <td className="py-3.5 px-4 text-center">
+                    {row.starter ? (
+                      <Check className="w-4 h-4 text-emerald-400 mx-auto" />
+                    ) : (
+                      <X className="w-4 h-4 text-slate-600 mx-auto" />
+                    )}
                   </td>
-                  <td className="py-4 px-6 bg-spotify-green/5 border-x border-spotify-green/20">
-                    <span className="font-semibold text-spotify-green flex items-center gap-1.5">
-                      <Check className="w-4 h-4 shrink-0" />
-                      {item.monthly}
-                    </span>
+
+                  {/* Standard */}
+                  <td className="py-3.5 px-4 text-center bg-emerald-500/5 border-x border-emerald-500/20">
+                    {row.standard ? (
+                      <Check className="w-4 h-4 text-emerald-400 mx-auto" />
+                    ) : (
+                      <X className="w-4 h-4 text-slate-600 mx-auto" />
+                    )}
                   </td>
-                  <td className="py-4 px-6">
-                    <span className="font-semibold text-slate-200">{item.custom}</span>
+
+                  {/* Full */}
+                  <td className="py-3.5 px-4 text-center">
+                    {row.full ? (
+                      <Check className="w-4 h-4 text-emerald-400 mx-auto" />
+                    ) : (
+                      <X className="w-4 h-4 text-slate-600 mx-auto" />
+                    )}
                   </td>
                 </tr>
               ))}
             </tbody>
+            <tfoot>
+              <tr className="border-t border-white/10 bg-[#121520]">
+                <td className="py-4 px-5 text-xs text-slate-400 font-medium">
+                  Instant order via Telegram
+                </td>
+                <td className="py-4 px-4 text-center">
+                  <button
+                    type="button"
+                    onClick={() => onSelectPackage('starter')}
+                    className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-colors"
+                  >
+                    Select Starter
+                  </button>
+                </td>
+                <td className="py-4 px-4 text-center bg-emerald-500/5 border-x border-emerald-500/20">
+                  <button
+                    type="button"
+                    onClick={() => onSelectPackage('standard')}
+                    className="px-3 py-1.5 rounded-lg bg-emerald-400 hover:bg-emerald-300 text-black font-semibold text-xs transition-colors"
+                  >
+                    Select Standard
+                  </button>
+                </td>
+                <td className="py-4 px-4 text-center">
+                  <button
+                    type="button"
+                    onClick={() => onSelectPackage('full')}
+                    className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-colors"
+                  >
+                    Select Full
+                  </button>
+                </td>
+              </tr>
+            </tfoot>
           </table>
         </div>
       </div>

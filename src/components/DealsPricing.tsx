@@ -1,129 +1,100 @@
-import React, { useState } from 'react';
-import { Check, Zap, Sparkles, Shield, ArrowRight } from 'lucide-react';
-import { DEAL_PACKAGES } from '../config/showroom';
-import { PricingModel } from '../types/showroom';
+import React from 'react';
+import { Check, ArrowRight, Smartphone, ShieldCheck } from 'lucide-react';
+import { PACKAGES } from '../config/showroom';
+import { CurrencyCode, PackageTier } from '../types/showroom';
 
 interface DealsPricingProps {
-  onSelectDeal: (dealName: string, model: PricingModel, price: number) => void;
+  currency: CurrencyCode;
+  selectedPackageId: string;
+  onSelectPackage: (pkg: PackageTier) => void;
+  onLaunchDemo: (demoFlowId: string) => void;
 }
 
-export const DealsPricing: React.FC<DealsPricingProps> = ({ onSelectDeal }) => {
-  const [pricingModel, setPricingModel] = useState<PricingModel>('one-time');
-
+export const DealsPricing: React.FC<DealsPricingProps> = ({
+  currency,
+  selectedPackageId,
+  onSelectPackage,
+  onLaunchDemo,
+}) => {
   return (
-    <section id="deals" className="py-24 relative overflow-hidden">
-      {/* Background radial accent */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-spotify-green/10 blur-[130px] rounded-full pointer-events-none -z-10" />
-
+    <section id="packages" className="py-20 sm:py-28 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-spotify-green/10 text-spotify-green text-xs font-semibold uppercase tracking-wider mb-3 border border-spotify-green/20">
-            <Sparkles className="w-3.5 h-3.5" />
-            Spotify-Style Transparent Deals
+        {/* Section Header */}
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <div className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-2">
+            Transparent Pricing
           </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-            Choose Your Ownership Model
+          <h2 className="text-2xl sm:text-4xl font-bold text-white tracking-tight">
+            Choose Your Telegram Bot Package
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-slate-300">
-            Pick between one-time full source code buyout or zero-maintenance monthly managed cloud hosting. Switch or cancel anytime.
+          <p className="mt-3 text-sm sm:text-base text-slate-300">
+            One-time setup with 24/7 cloud availability. Select the package matching your business needs.
           </p>
-
-          {/* Pricing Model Switcher Toggle (Spotify-style) */}
-          <div className="mt-8 inline-flex items-center p-1.5 rounded-full bg-[#161922] border border-white/10 shadow-inner">
-            <button
-              onClick={() => setPricingModel('one-time')}
-              className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
-                pricingModel === 'one-time'
-                  ? 'bg-spotify-green text-black shadow-glow-green'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              <span>💎 One-Time Buyout</span>
-              <span className="text-[11px] font-bold px-1.5 py-0.5 rounded bg-black/20 text-black">
-                Own Forever
-              </span>
-            </button>
-            <button
-              onClick={() => setPricingModel('monthly')}
-              className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
-                pricingModel === 'monthly'
-                  ? 'bg-spotify-green text-black shadow-glow-green'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              <span>☁️ Monthly Servicing</span>
-              <span className="text-[11px] font-bold px-1.5 py-0.5 rounded bg-black/20 text-black">
-                Managed 24/7
-              </span>
-            </button>
-          </div>
         </div>
 
-        {/* Pricing Cards Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto">
-          {DEAL_PACKAGES.map((deal) => {
-            const isPopular = deal.popular;
-            const currentPrice = pricingModel === 'one-time' ? deal.oneTimePrice : deal.monthlyPrice;
-            const billingLabel = pricingModel === 'one-time' ? 'one-time payment' : '/ month billed monthly';
+        {/* Pricing Cards Grid - Mobile Friendly Single Col, Desktop 3 Col */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch max-w-6xl mx-auto">
+          {PACKAGES.map((pkg) => {
+            const isPopular = pkg.popular;
+            const isSelected = selectedPackageId === pkg.id;
+            const price = currency === 'ETB' ? `${pkg.priceETB.toLocaleString()} ETB` : `$${pkg.priceUSD}`;
 
             return (
               <div
-                key={deal.id}
-                className={`relative rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 ${
+                key={pkg.id}
+                className={`rounded-2xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-200 relative ${
                   isPopular
-                    ? 'bg-gradient-to-b from-[#18231d] to-[#11161d] border-2 border-spotify-green shadow-glow-green/40 lg:-translate-y-2'
-                    : 'glass-card border border-white/10 hover:border-white/20'
-                }`}
+                    ? 'bg-[#10151c] border-2 border-emerald-500/50 shadow-lg lg:-translate-y-1'
+                    : 'bg-[#10131b] border border-white/10 hover:border-white/20'
+                } ${isSelected ? 'ring-2 ring-emerald-400' : ''}`}
               >
-                {/* Floating Top Badge */}
-                {deal.badge && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold tracking-wide uppercase shadow-md bg-spotify-green text-black border border-spotify-green-light">
-                    {deal.badge}
+                {/* Popular Pill Badge */}
+                {pkg.badge && (
+                  <div
+                    className={`absolute -top-3 left-6 px-3 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase shadow-sm ${
+                      isPopular
+                        ? 'bg-emerald-400 text-black'
+                        : 'bg-[#1a1f2b] text-slate-300 border border-white/10'
+                    }`}
+                  >
+                    {pkg.badge}
                   </div>
                 )}
 
                 <div>
                   {/* Title & Subtitle */}
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-2xl font-black text-white">{deal.name}</h3>
-                    {deal.savingsBadge && (
-                      <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                        {deal.savingsBadge}
-                      </span>
-                    )}
+                  <div className="mb-2">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white">{pkg.name}</h3>
                   </div>
-                  <p className="text-sm text-slate-400 mb-6 min-h-[40px] leading-relaxed">
-                    {deal.subtitle}
+                  <p className="text-xs sm:text-sm text-slate-400 mb-6 min-h-[36px] leading-relaxed">
+                    {pkg.subtitle}
                   </p>
 
-                  {/* Price Block */}
-                  <div className="mb-6 p-4 rounded-2xl bg-black/40 border border-white/5">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-4xl sm:text-5xl font-black text-white tracking-tight">
-                        ${currentPrice}
+                  {/* Price Banner */}
+                  <div className="mb-6 p-4 rounded-xl bg-black/40 border border-white/5">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                        {price}
                       </span>
-                      <span className="text-xs text-slate-400 font-medium">
-                        {billingLabel}
+                      <span className="text-xs text-slate-400 font-normal">
+                        one-time setup
                       </span>
                     </div>
-                    <div className="text-xs text-spotify-green mt-1 font-medium">
-                      {pricingModel === 'one-time'
-                        ? '✓ 100% Full Source Code & Lifetime License'
-                        : '✓ 24/7 Cloud Hosting & Zero Server Setup'}
+                    {/* Exact user requirement callout */}
+                    <div className="mt-2.5 pt-2.5 border-t border-white/5 text-xs text-emerald-400 font-medium leading-relaxed">
+                      Core: {pkg.coreFeature}
                     </div>
                   </div>
 
                   {/* Feature Checklist */}
-                  <div className="space-y-3 mb-8">
-                    <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                      What is included:
+                  <div className="space-y-2.5 mb-8">
+                    <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                      Included Capabilities:
                     </div>
-                    {deal.highlights.map((feature, i) => (
-                      <div key={i} className="flex items-start gap-3">
-                        <div className="p-0.5 rounded-full bg-spotify-green/20 text-spotify-green mt-0.5 shrink-0">
-                          <Check className="w-4 h-4 stroke-[2.5]" />
-                        </div>
-                        <span className="text-sm text-slate-300 leading-snug">
+                    {pkg.features.map((feature, i) => (
+                      <div key={i} className="flex items-start gap-2.5">
+                        <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                        <span className="text-xs sm:text-sm text-slate-300 leading-snug">
                           {feature}
                         </span>
                       </div>
@@ -131,41 +102,53 @@ export const DealsPricing: React.FC<DealsPricingProps> = ({ onSelectDeal }) => {
                   </div>
                 </div>
 
-                {/* Card CTA Button */}
-                <button
-                  onClick={() => onSelectDeal(deal.name, pricingModel, currentPrice)}
-                  className={`w-full py-4 rounded-full font-bold text-sm tracking-wide transition-all duration-300 flex items-center justify-center gap-2 ${
-                    isPopular
-                      ? 'bg-spotify-green text-black hover:bg-spotify-green-light shadow-glow-green hover:scale-[1.02] active:scale-[0.98]'
-                      : 'bg-white/10 text-white hover:bg-white/20 border border-white/10 hover:border-spotify-green/40 hover:scale-[1.02]'
-                  }`}
-                >
-                  <span>{deal.ctaText}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+                {/* Bottom Actions */}
+                <div className="space-y-2.5 pt-4 border-t border-white/5">
+                  <button
+                    type="button"
+                    onClick={() => onSelectPackage(pkg)}
+                    className={`w-full py-3 px-4 rounded-xl font-semibold text-xs sm:text-sm transition-colors flex items-center justify-center gap-2 ${
+                      isPopular
+                        ? 'bg-emerald-400 text-black hover:bg-emerald-300'
+                        : 'bg-white/10 text-white hover:bg-white/15 border border-white/10'
+                    }`}
+                  >
+                    <span>{pkg.ctaText}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => onLaunchDemo(pkg.demoFlowId)}
+                    className="w-full py-2.5 px-4 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-colors flex items-center justify-center gap-1.5"
+                  >
+                    <Smartphone className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Test {pkg.name} Demo</span>
+                  </button>
+                </div>
               </div>
             );
           })}
         </div>
 
-        {/* Guarantee Banner below pricing */}
-        <div className="mt-12 max-w-3xl mx-auto p-4 rounded-2xl bg-[#11141c] border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+        {/* Guarantee Banner */}
+        <div className="mt-12 max-w-3xl mx-auto p-4 rounded-xl bg-[#11141c] border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left text-xs">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">
-              <Shield className="w-5 h-5" />
+            <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 shrink-0">
+              <ShieldCheck className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-sm font-bold text-white">60-Day Bug-Free Warranty &amp; Upgrade Credit</div>
-              <div className="text-xs text-slate-400">
-                Switch from monthly to one-time buyout anytime with 20% of prior monthly fees credited.
+              <div className="font-semibold text-white">Full Onboarding &amp; Setup Included</div>
+              <div className="text-slate-400">
+                Menu upload, store details, and testing completed before final delivery.
               </div>
             </div>
           </div>
           <a
-            href="#compare"
-            className="text-xs font-semibold text-spotify-green hover:underline whitespace-nowrap"
+            href="#comparison"
+            className="text-emerald-400 hover:underline font-medium whitespace-nowrap"
           >
-            See Full Comparison Matrix &rarr;
+            Compare All Features &rarr;
           </a>
         </div>
       </div>

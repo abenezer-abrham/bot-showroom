@@ -1,4 +1,4 @@
-import { BotItem, DealPackage, BotDemoFlow } from '../types/showroom';
+import { PackageTier, BotDemoFlow } from '../types/showroom';
 
 export const SITE_CONFIG = {
   name: 'Yene.suk',
@@ -8,728 +8,361 @@ export const SITE_CONFIG = {
   telegramUrl: 'https://t.me/abenezer_abrham',
   githubUrl: 'https://github.com/abenezer-abrham',
   email: 'abenezerabrham61@gmail.com',
-  tagline: 'High-Converting Telegram Bots & Managed Cloud Servicing',
-  heroHeadline: 'Turnkey Telegram Bots That Automate Revenue 24/7',
-  heroSubheadline: 'Buy full source code once for lifetime ownership, or subscribe to fully managed cloud servicing with 99.9% uptime SLA. Zero maintenance friction.',
+  tagline: 'Custom Telegram Business Bots for Local & Global Enterprises',
+  heroHeadline: 'Turnkey Telegram Bots That Handle Customers 24/7',
+  heroSubheadline: 'Empower your restaurant, boutique, salon, or service business with automated menus, order dispatching, and booking directly inside Telegram.',
 };
 
-export const BOT_CATALOG: BotItem[] = [
+export const PACKAGES: PackageTier[] = [
   {
-    id: 'shop-bot',
-    name: 'TeleShop Pro',
-    tagline: 'Automated E-Commerce & Instant Digital Goods Delivery',
-    description: 'A complete retail storefront inside Telegram. Features product catalogs, category browsing, interactive shopping carts, inventory sync, and multi-gateway checkout via Telegram Stars, Stripe, and Crypto.',
-    category: 'ecommerce',
-    categoryLabel: 'E-Commerce',
-    badge: '🔥 Top Seller',
-    badgeColor: 'green',
+    id: 'starter',
+    name: 'Starter',
+    subtitle: 'Essential digital storefront for cafes, shops, and service professionals.',
+    priceETB: 3000,
+    priceUSD: 25,
+    badge: 'Fast Launch',
+    coreFeature: 'Menu, prices, hours, location, “contact owner” button',
+    features: [
+      'Interactive digital menu & item catalog',
+      'Live pricing with instant updates',
+      'Operating hours & open/closed status',
+      'Google Maps & physical location pin',
+      'One-tap "Contact Owner" direct button',
+      'Zero server maintenance required'
+    ],
+    deliverables: [
+      'Complete Telegram Bot deployment',
+      'Menu data configuration & image uploads',
+      'Admin guide for updating items',
+      'Standard 30-day technical support'
+    ],
+    demoFlowId: 'starter-flow',
+    ctaText: 'Choose Starter'
+  },
+  {
+    id: 'standard',
+    name: 'Standard',
+    subtitle: 'Full order-taking automation with instant dispatch directly to the owner.',
+    priceETB: 4000,
+    priceUSD: 35,
+    badge: 'Most Popular',
     popular: true,
-    oneTimePrice: 149,
-    monthlyPrice: 29,
+    coreFeature: 'Starter + takes orders, sends them to owner’s phone',
     features: [
-      'Interactive inline catalog & search',
-      'Telegram Stars & Crypto (USDT/TON) payments',
-      'Instant digital file / license key delivery',
-      'Order management & webhook alerts',
-      'Admin broadcast & customer CRM',
-      'Automated invoice generation'
+      'Everything included in Starter',
+      'Interactive order cart & quantity selector',
+      'Customer delivery address & phone capture',
+      'Instant order dispatch to owner’s Telegram & phone',
+      'Order confirmation receipt for customers',
+      'Custom delivery notes & instructions'
     ],
-    techStack: ['Python 3.12', 'aiogram 3.x', 'SQLite/PostgreSQL', 'Docker', 'Stripe API'],
     deliverables: [
-      'Full Python source code (clean PEP 8)',
-      '1-Click Docker Compose deployment script',
-      'Admin dashboard commands',
-      'Setup guide & 60 days bug-fix warranty'
+      'Full ordering pipeline configured',
+      'Owner phone/Telegram notification webhook',
+      'Cart management logic & state engine',
+      'Priority 45-day technical support'
     ],
-    demoFlowId: 'shop-bot-flow',
-    stats: [
-      { label: 'Avg Checkout Time', value: '< 25s' },
-      { label: 'Payment Gateways', value: '3+' },
-      { label: 'Setup Time', value: '15 mins' }
-    ]
+    demoFlowId: 'standard-flow',
+    ctaText: 'Choose Standard'
   },
   {
-    id: 'vip-gate-bot',
-    name: 'SubGate VIP',
-    tagline: 'Automated Paid Channel Memberships & Crypto Gating',
-    description: 'Monetize exclusive Telegram channels and groups. Generates unique single-use join links upon payment, verifies recurring subscriptions, and automatically removes expired members.',
-    category: 'subscription',
-    categoryLabel: 'VIP Subscriptions',
-    badge: '⚡ High ROI',
-    badgeColor: 'cyan',
-    oneTimePrice: 179,
-    monthlyPrice: 35,
+    id: 'full',
+    name: 'Full Suite',
+    subtitle: 'Advanced appointment bookings, automated reminders, and revenue reporting.',
+    priceETB: 7000,
+    priceUSD: 60,
+    badge: 'Complete Enterprise',
+    coreFeature: 'Standard + appointment booking, reminders, monthly sales report',
     features: [
-      'Auto-generating single-use invite links',
-      'Recurring monthly/annual payment verification',
-      'Automated expiry reminders & graceful kick',
-      'Crypto (USDT TRC20, TON, BTC) & Stripe support',
-      'Affiliate referral commission system',
-      'Detailed revenue analytics & member churn stats'
+      'Everything included in Standard',
+      'Self-service appointment & reservation booking',
+      'Calendar availability & slot management',
+      'Automated customer appointment reminders',
+      'Monthly sales, orders & customer analytics report',
+      'Exportable CSV order & booking history'
     ],
-    techStack: ['Python 3.12', 'aiogram 3.x', 'Redis Queue', 'PostgreSQL', 'Telegram Bot API'],
     deliverables: [
-      'Full source code with lifetime license',
-      'Self-host on any $4/mo VPS or cloud',
-      'Custom webhook notification engine',
-      'Dedicated migration guide'
+      'Automated booking engine with slot locks',
+      'Scheduled background reminder dispatchers',
+      'Monthly reporting aggregator script',
+      'Dedicated 90-day maintenance & SLA'
     ],
-    demoFlowId: 'vip-gate-flow',
-    stats: [
-      { label: 'Churn Reduction', value: '40%' },
-      { label: 'Supported Currencies', value: '10+' },
-      { label: 'Automation Level', value: '100%' }
-    ]
-  },
-  {
-    id: 'ai-assistant-bot',
-    name: 'OmniAI Support',
-    tagline: 'Intelligent Knowledge Base & 24/7 Customer Care',
-    description: 'Empower your community with an AI bot trained on your custom docs, PDFs, and website data. Answers queries in 30+ languages and seamlessly hands off complex tickets to human staff.',
-    category: 'ai',
-    categoryLabel: 'AI & LLMs',
-    badge: '🤖 Gemini / GPT-4o Ready',
-    badgeColor: 'purple',
-    popular: true,
-    oneTimePrice: 199,
-    monthlyPrice: 45,
-    features: [
-      'RAG pipeline for custom PDF/doc ingestion',
-      'Multi-model engine (Gemini 1.5, GPT-4o, Claude 3.5)',
-      'Human support agent handover with ticket thread',
-      'Context-aware conversational memory',
-      'Multi-language auto-detection (30+ tongues)',
-      'Rate-limiting & anti-abuse moderation'
-    ],
-    techStack: ['Python 3.12', 'LangChain / LlamaIndex', 'ChromaDB / Qdrant', 'FastAPI', 'aiogram 3'],
-    deliverables: [
-      'Clean modular AI agent codebase',
-      'Vector database configuration template',
-      'Knowledge ingestion scripts',
-      'Free model API integration assistance'
-    ],
-    demoFlowId: 'ai-assistant-flow',
-    stats: [
-      { label: 'Ticket Deflection', value: '78%' },
-      { label: 'Response Latency', value: '< 1.2s' },
-      { label: 'Knowledge Base', value: 'Unlimited' }
-    ]
-  },
-  {
-    id: 'crypto-sniper-bot',
-    name: 'AlphaPulse Signals',
-    tagline: 'Multi-Chain Whale & DEX Token Alert Engine',
-    description: 'High-speed algorithmic broadcast bot that tracks large wallet transactions, liquidity additions, token deployments, and sends formatted rich alerts directly to private channels.',
-    category: 'crypto',
-    categoryLabel: 'Crypto & Alerts',
-    badge: '💎 High Speed',
-    badgeColor: 'amber',
-    oneTimePrice: 249,
-    monthlyPrice: 59,
-    features: [
-      'Low-latency RPC websocket monitoring',
-      'Formatted signal cards with DexScreener & chart links',
-      'Whale wallet tracking & liquidity locks alerts',
-      'Custom alert thresholds & subscriber filters',
-      'Multi-channel simultaneous broadcasting',
-      'Built-in security audits & honeypot warnings'
-    ],
-    techStack: ['Python 3.12', 'Web3.py', 'Asyncio WebSockets', 'Redis Streams', 'Docker'],
-    deliverables: [
-      'Complete high-frequency scanner codebase',
-      'Custom RPC connection guide',
-      'Broadcast dispatcher system',
-      'Docker containerized deployment'
-    ],
-    demoFlowId: 'crypto-sniper-flow',
-    stats: [
-      { label: 'Signal Latency', value: '< 200ms' },
-      { label: 'Supported Chains', value: 'EVM & TON' },
-      { label: 'Active Alerts', value: 'Real-time' }
-    ]
-  },
-  {
-    id: 'lead-form-bot',
-    name: 'LeadFlow Booker',
-    tagline: 'Conversational Lead Intake & Instant CRM Sync',
-    description: 'Convert cold channel visitors into qualified booked calls. Guides prospects through dynamic step-by-step questions, validates emails/phones, and pushes leads instantly to Google Sheets or your CRM.',
-    category: 'automation',
-    categoryLabel: 'Automation',
-    badge: '📈 Conversion Booster',
-    badgeColor: 'green',
-    oneTimePrice: 129,
-    monthlyPrice: 25,
-    features: [
-      'Branching conversational questionnaire',
-      'Instant Google Sheets & Notion synchronization',
-      'Phone number & email auto-verification',
-      'Cal.com / Calendly booking integration',
-      'Instant Telegram notification to sales reps',
-      'Custom file/resume upload support'
-    ],
-    techStack: ['Python 3.12', 'aiogram 3.x', 'Google Sheets API', 'Webhooks', 'SQLite'],
-    deliverables: [
-      'Customizable survey flow config',
-      'Google Sheets integration script',
-      'Source code with full commercial usage rights',
-      'Detailed video walkthrough'
-    ],
-    demoFlowId: 'lead-form-flow',
-    stats: [
-      { label: 'Completion Rate', value: '84%' },
-      { label: 'CRM Sync', value: 'Instant' },
-      { label: 'Lead Capture', value: '3x higher' }
-    ]
-  },
-  {
-    id: 'moderator-bot',
-    name: 'ShieldGuard Moderator',
-    tagline: 'Advanced Anti-Spam, Captcha & Channel Defense',
-    description: 'Protect large Telegram groups from userbot spam, scam links, raid attacks, and flooding. Features interactive button captchas, blacklist filters, and automated mute/ban rules.',
-    category: 'automation',
-    categoryLabel: 'Moderation',
-    badge: '🛡️ 100% Protection',
-    badgeColor: 'cyan',
-    oneTimePrice: 119,
-    monthlyPrice: 24,
-    features: [
-      'Interactive click-to-verify math & emoji captcha',
-      'Instant scam link & phishing domain auto-deletion',
-      'Raid protection & mass join throttler',
-      'Keyword blacklisting & regex filters',
-      'Admin audit log channel',
-      'Custom welcome greeting with media support'
-    ],
-    techStack: ['Python 3.12', 'aiogram 3.x', 'Redis Cache', 'Docker'],
-    deliverables: [
-      'Modular defense bot source code',
-      'Pre-configured threat blacklist',
-      'Docker deploy guide',
-      'Unlimited group usage'
-    ],
-    demoFlowId: 'moderator-flow',
-    stats: [
-      { label: 'Spam Block Rate', value: '99.8%' },
-      { label: 'Captcha Verification', value: '30s timer' },
-      { label: 'Admin Time Saved', value: '15+ hrs/wk' }
-    ]
+    demoFlowId: 'full-flow',
+    ctaText: 'Choose Full Suite'
   }
 ];
 
 export const DEMO_FLOWS: Record<string, BotDemoFlow> = {
-  'shop-bot-flow': {
-    botId: 'shop-bot',
-    botName: 'TeleShop Pro Demo',
-    botUsername: '@teleshop_pro_bot',
-    avatarText: '🛍️',
+  'starter-flow': {
+    tierId: 'starter',
+    tierName: 'Starter Tier Demo',
+    badge: '3,000 ETB',
+    botUsername: '@yenesuk_starter_bot',
     initialMessages: [
       {
-        id: 'msg-1',
+        id: 'st-1',
         sender: 'bot',
-        text: '👋 Welcome to **TeleShop Pro Demo Store**!\n\nBrowse our premium digital software, bot templates, and licenses with instant delivery upon checkout.\n\nSelect an option below to begin:',
+        text: 'Welcome to **Yene.suk Restaurant & Cafe**.\n\nPlease select an option below to view our menu, operating hours, and location:',
         buttons: [
-          { label: '📦 Browse Products', action: 'browse_catalog' },
-          { label: '🛒 View Cart (0)', action: 'view_cart' },
-          { label: '⚡ Test Instant Order', action: 'test_order' },
-          { label: '❓ Help & FAQ', action: 'help' }
+          { label: 'View Menu & Prices', action: 'show_menu' },
+          { label: 'Hours & Location', action: 'show_hours' },
+          { label: 'Contact Owner', action: 'contact_owner' }
         ],
         time: '12:00'
       }
     ],
     responses: {
-      'browse_catalog': [
-        {
-          id: 'b-1',
-          sender: 'user',
-          text: '📦 Browse Products',
-          time: '12:01'
-        },
-        {
-          id: 'b-2',
-          sender: 'bot',
-          text: '📂 **Featured Products**:\n\n1. **Python AI Bot Template** - $49\n2. **Telegram Mini-App Kit** - $89\n3. **Channel Automation Suite** - $59\n\nChoose an item to preview details:',
-          buttons: [
-            { label: '➕ Add Python AI Bot ($49)', action: 'add_ai_item' },
-            { label: '➕ Add Mini-App Kit ($89)', action: 'add_miniapp' },
-            { label: '⬅️ Back to Menu', action: 'reset' }
-          ],
-          time: '12:01'
-        }
-      ],
-      'add_ai_item': [
-        {
-          id: 'a-1',
-          sender: 'user',
-          text: '➕ Add Python AI Bot ($49)',
-          time: '12:02'
-        },
-        {
-          id: 'a-2',
-          sender: 'bot',
-          text: '✅ **Added to Cart!**\n\n• Item: Python AI Bot Template ($49.00)\n• Quantity: 1\n• Subtotal: **$49.00**\n\nReady to checkout with Telegram Stars or USDT?',
-          buttons: [
-            { label: '💳 Checkout Now', action: 'checkout' },
-            { label: '📦 Keep Shopping', action: 'browse_catalog' },
-            { label: '🗑️ Clear Cart', action: 'reset' }
-          ],
-          time: '12:02'
-        }
-      ],
-      'checkout': [
-        {
-          id: 'c-1',
-          sender: 'user',
-          text: '💳 Checkout Now',
-          time: '12:02'
-        },
-        {
-          id: 'c-2',
-          sender: 'bot',
-          text: '🧾 **Order Invoice #TS-8842**\n\nTotal: **$49.00**\n\nSelect your preferred instant payment method:',
-          buttons: [
-            { label: '⭐ Pay with Telegram Stars (2,450 Stars)', action: 'paid_demo' },
-            { label: '💎 Pay with Crypto (USDT / TON)', action: 'paid_demo' },
-            { label: '💳 Credit Card / Stripe', action: 'paid_demo' }
-          ],
-          time: '12:02'
-        }
-      ],
-      'paid_demo': [
-        {
-          id: 'p-1',
-          sender: 'user',
-          text: 'Payment Completed',
-          time: '12:03'
-        },
-        {
-          id: 'p-2',
-          sender: 'bot',
-          text: '🎉 **Payment Verified!**\n\nYour order has been fulfilled instantly.\n\n📥 **Download Link**: `https://github.com/client/repo-access`\n🔑 **License Key**: `TS-PRO-9842-LIVE-KEY`\n\nThank you for shopping with TeleShop Pro!',
-          buttons: [
-            { label: '🔄 Restart Demo', action: 'reset' }
-          ],
-          time: '12:03'
-        }
-      ],
-      'view_cart': [
-        {
-          id: 'vc-1',
-          sender: 'user',
-          text: '🛒 View Cart',
-          time: '12:01'
-        },
-        {
-          id: 'vc-2',
-          sender: 'bot',
-          text: '🛒 Your cart currently has **1 demo item** ($49.00).\n\nTap Checkout to test the payment flow!',
-          buttons: [
-            { label: '💳 Proceed to Checkout', action: 'checkout' },
-            { label: '⬅️ Back to Menu', action: 'reset' }
-          ],
-          time: '12:01'
-        }
-      ],
-      'test_order': [
-        {
-          id: 'to-1',
-          sender: 'user',
-          text: '⚡ Test Instant Order',
-          time: '12:01'
-        },
-        {
-          id: 'to-2',
-          sender: 'bot',
-          text: '🚀 Generating simulated payment invoice for 1x TeleShop Starter Package ($149)...',
-          buttons: [
-            { label: '⭐ Confirm Demo Invoice', action: 'paid_demo' },
-            { label: '⬅️ Cancel', action: 'reset' }
-          ],
-          time: '12:01'
-        }
-      ],
-      'help': [
-        {
-          id: 'h-1',
-          sender: 'user',
-          text: '❓ Help & FAQ',
-          time: '12:01'
-        },
-        {
-          id: 'h-2',
-          sender: 'bot',
-          text: '💡 **TeleShop Pro Capabilities**:\n• Supports 10,000+ simultaneous checkouts\n• Zero transaction fee on crypto\n• Docker ready for self-hosting or managed hosting by Abenezer.',
-          buttons: [
-            { label: '⬅️ Main Menu', action: 'reset' }
-          ],
-          time: '12:01'
-        }
-      ]
-    }
-  },
-  'vip-gate-flow': {
-    botId: 'vip-gate-bot',
-    botName: 'SubGate VIP Bot',
-    botUsername: '@subgate_vip_bot',
-    avatarText: '👑',
-    initialMessages: [
-      {
-        id: 'vg-1',
-        sender: 'bot',
-        text: '👑 Welcome to **Alpha Traders VIP Community**!\n\nAccess our private trading channel with daily high-conviction calls & market breakdown.\n\nChoose a pass to join:',
-        buttons: [
-          { label: '🌟 Monthly VIP Pass ($49/mo)', action: 'select_monthly' },
-          { label: '💎 Lifetime VIP Pass ($299)', action: 'select_lifetime' },
-          { label: '🎟️ Redeem Invite Code', action: 'redeem' }
-        ],
-        time: '12:00'
-      }
-    ],
-    responses: {
-      'select_monthly': [
+      'show_menu': [
         {
           id: 'sm-1',
           sender: 'user',
-          text: '🌟 Monthly VIP Pass ($49/mo)',
+          text: 'View Menu & Prices',
           time: '12:01'
         },
         {
           id: 'sm-2',
           sender: 'bot',
-          text: '🔒 **Step 1/2**: Select your billing method for automatic monthly access.\n\nCancel anytime with 1 tap.',
+          text: 'Current Menu & Prices:\n\n1. Special Roast Coffee - 90 ETB\n2. Fresh Avocado Salad - 180 ETB\n3. Gourmet Burger with Fries - 350 ETB\n4. Sparkling Lemonade - 80 ETB\n\nAll items are prepared fresh to order.',
           buttons: [
-            { label: '💎 Pay with Crypto (USDT-TRC20)', action: 'vip_crypto' },
-            { label: '💳 Pay with Stripe / Card', action: 'vip_crypto' },
-            { label: '⬅️ Back', action: 'reset' }
+            { label: 'Hours & Location', action: 'show_hours' },
+            { label: 'Contact Owner', action: 'contact_owner' },
+            { label: 'Reset Demo', action: 'reset' }
           ],
           time: '12:01'
         }
       ],
-      'vip_crypto': [
+      'show_hours': [
         {
-          id: 'vc-1',
+          id: 'sh-1',
           sender: 'user',
-          text: '💎 Pay with Crypto',
+          text: 'Hours & Location',
+          time: '12:01'
+        },
+        {
+          id: 'sh-2',
+          sender: 'bot',
+          text: 'Business Information:\n\n• Hours: Monday - Sunday, 8:00 AM - 10:00 PM\n• Location: Bole Road, Next to Edna Mall, Addis Ababa\n• Map Coordinates: 9.0123° N, 38.7845° E',
+          buttons: [
+            { label: 'Contact Owner', action: 'contact_owner' },
+            { label: 'Back to Menu', action: 'show_menu' }
+          ],
+          time: '12:01'
+        }
+      ],
+      'contact_owner': [
+        {
+          id: 'co-1',
+          sender: 'user',
+          text: 'Contact Owner',
           time: '12:02'
         },
         {
-          id: 'vc-2',
+          id: 'co-2',
           sender: 'bot',
-          text: '🎉 **Access Approved!**\n\nHere is your private single-use invite link (valid for 1 join):\n🔗 `https://t.me/+AlphaVIP_Private_Token98`\n\n⏳ Next renewal date: 30 days from now.',
+          text: 'Direct Owner Contact:\n\n• Phone: +251 91 123 4567\n• Telegram: @abenezer_abrham\n\nYou can call directly or send a direct message for inquiries.',
           buttons: [
-            { label: '🚀 Join Alpha Traders VIP', action: 'reset' }
-          ],
-          time: '12:02'
-        }
-      ],
-      'select_lifetime': [
-        {
-          id: 'sl-1',
-          sender: 'user',
-          text: '💎 Lifetime VIP Pass ($299)',
-          time: '12:01'
-        },
-        {
-          id: 'sl-2',
-          sender: 'bot',
-          text: '💎 **Lifetime Pass Selected** - Never pay monthly fees.\n\nReady to activate your permanent membership?',
-          buttons: [
-            { label: '⚡ Instant Activation', action: 'vip_crypto' },
-            { label: '⬅️ Back', action: 'reset' }
-          ],
-          time: '12:01'
-        }
-      ],
-      'redeem': [
-        {
-          id: 'rd-1',
-          sender: 'user',
-          text: '🎟️ Redeem Code',
-          time: '12:01'
-        },
-        {
-          id: 'rd-2',
-          sender: 'bot',
-          text: '⌨️ Enter your 8-digit promotional code to unlock VIP access.',
-          buttons: [
-            { label: '⬅️ Back to Menu', action: 'reset' }
-          ],
-          time: '12:01'
-        }
-      ]
-    }
-  },
-  'ai-assistant-flow': {
-    botId: 'ai-assistant-bot',
-    botName: 'OmniAI Knowledge Bot',
-    botUsername: '@omniai_support_bot',
-    avatarText: '🤖',
-    initialMessages: [
-      {
-        id: 'ai-1',
-        sender: 'bot',
-        text: '🤖 Hello! I am the **OmniAI Customer Intelligence Bot**.\n\nI have ingested the full company docs and API documentation. Ask me anything or select a topic below:',
-        buttons: [
-          { label: '⚡ How does source code delivery work?', action: 'ask_code' },
-          { label: '🛠️ What is included in monthly servicing?', action: 'ask_servicing' },
-          { label: '🧑‍💻 Connect to Human Engineer', action: 'handover' }
-        ],
-        time: '12:00'
-      }
-    ],
-    responses: {
-      'ask_code': [
-        {
-          id: 'ac-1',
-          sender: 'user',
-          text: 'How does source code delivery work?',
-          time: '12:01'
-        },
-        {
-          id: 'ac-2',
-          sender: 'bot',
-          text: '💡 **Direct Source Code Buyout**:\n\nWhen you purchase a bot one-time, you receive:\n1. Private GitHub repository access or ZIP archive.\n2. Complete Python 3.12 codebase (aiogram 3).\n3. Docker Compose configuration file.\n4. Step-by-step VPS deployment guide.\n5. 60 days of bug-fix warranty & support.\n\nYou own the code 100% with no recurring licensing fees.',
-          buttons: [
-            { label: '🛠️ What about monthly servicing?', action: 'ask_servicing' },
-            { label: '🔄 Reset Chat', action: 'reset' }
-          ],
-          time: '12:01'
-        }
-      ],
-      'ask_servicing': [
-        {
-          id: 'as-1',
-          sender: 'user',
-          text: 'What is included in monthly servicing?',
-          time: '12:01'
-        },
-        {
-          id: 'as-2',
-          sender: 'bot',
-          text: '🚀 **Monthly Managed Servicing (Bot-as-a-Service)**:\n\nIf you prefer zero technical hassle:\n• We host your bot 24/7 on high-speed cloud infrastructure.\n• 99.9% uptime SLA monitoring with instant failover.\n• Database backups & security patch updates.\n• Monthly feature adjustments & Telegram Bot API compatibility.\n• Cancel or switch to code buyout anytime!',
-          buttons: [
-            { label: '🧑‍💻 Speak to Abenezer', action: 'handover' },
-            { label: '🔄 Reset Chat', action: 'reset' }
-          ],
-          time: '12:01'
-        }
-      ],
-      'handover': [
-        {
-          id: 'ho-1',
-          sender: 'user',
-          text: 'Connect to Human Engineer',
-          time: '12:02'
-        },
-        {
-          id: 'ho-2',
-          sender: 'bot',
-          text: '🔔 Pinging Abenezer Abrham on Telegram...\n\nDirect contact link: [@abenezer_abrham](https://t.me/abenezer_abrham)\n\nTicket created: #TK-912. Average response time: < 15 minutes.',
-          buttons: [
-            { label: '💬 Open Telegram Chat', url: 'https://t.me/abenezer_abrham', action: 'open_tg' },
-            { label: '🔄 Start Over', action: 'reset' }
+            { label: 'Chat on Telegram', url: 'https://t.me/abenezer_abrham', action: 'tg' },
+            { label: 'Reset Demo', action: 'reset' }
           ],
           time: '12:02'
         }
       ]
     }
   },
-  'crypto-sniper-flow': {
-    botId: 'crypto-sniper-bot',
-    botName: 'AlphaPulse DEX Signals',
-    botUsername: '@alphapulse_bot',
-    avatarText: '📈',
+  'standard-flow': {
+    tierId: 'standard',
+    tierName: 'Standard Tier Demo',
+    badge: '4,000 ETB',
+    botUsername: '@yenesuk_standard_bot',
     initialMessages: [
       {
-        id: 'cs-1',
+        id: 'std-1',
         sender: 'bot',
-        text: '🚨 **WHALE DETECTED | TON / USDT**\n\n💰 Size: **$124,500 USDT**\n🪙 Pair: $TON / $NOT\n📊 Price Impact: +4.82%\n🔒 Liquidity: 100% Locked (UNCX)\n\n⚡ Alert Latency: 142ms\n\nWhat would you like to filter?',
+        text: 'Welcome to **Yene.suk Orders**.\n\nBrowse products, add to your cart, and place your order. Orders are dispatched instantly to the owner\'s phone.',
         buttons: [
-          { label: '🎯 Set Min Alert Size ($50K+)', action: 'filter_size' },
-          { label: '📡 View Channel Broadcasts', action: 'view_channels' }
+          { label: 'Browse Products', action: 'browse_cart' },
+          { label: 'Track Recent Order', action: 'track_order' },
+          { label: 'Store Info & Location', action: 'std_info' }
         ],
         time: '12:00'
       }
     ],
     responses: {
-      'filter_size': [
-        {
-          id: 'fs-1',
-          sender: 'user',
-          text: 'Set Min Alert Size to $50K+',
-          time: '12:01'
-        },
-        {
-          id: 'fs-2',
-          sender: 'bot',
-          text: '✅ Filter updated! Only transactions above $50,000 will be relayed to your private VIP channel.',
-          buttons: [
-            { label: '🔄 Reset Demo', action: 'reset' }
-          ],
-          time: '12:01'
-        }
-      ]
-    }
-  },
-  'lead-form-flow': {
-    botId: 'lead-form-bot',
-    botName: 'LeadFlow Booker',
-    botUsername: '@leadflow_booker_bot',
-    avatarText: '📋',
-    initialMessages: [
-      {
-        id: 'lf-1',
-        sender: 'bot',
-        text: '👋 Hi there! Looking for custom software or bot development?\n\nAnswer 3 quick questions so we can generate an accurate proposal for your project.',
-        buttons: [
-          { label: '🚀 Start Project Questionnaire', action: 'start_quiz' },
-          { label: '📅 Book a Free Discovery Call', action: 'book_call' }
-        ],
-        time: '12:00'
-      }
-    ],
-    responses: {
-      'start_quiz': [
-        {
-          id: 'sq-1',
-          sender: 'user',
-          text: '🚀 Start Project Questionnaire',
-          time: '12:01'
-        },
-        {
-          id: 'sq-2',
-          sender: 'bot',
-          text: '📋 **Question 1 of 3**:\n\nWhat type of bot do you need built?',
-          buttons: [
-            { label: '🛒 E-Commerce & Payments', action: 'q2' },
-            { label: '🤖 AI Support Assistant', action: 'q2' },
-            { label: '📈 Crypto / Trading Alerts', action: 'q2' },
-            { label: '⚡ Custom Workflow', action: 'q2' }
-          ],
-          time: '12:01'
-        }
-      ],
-      'q2': [
-        {
-          id: 'q2-1',
-          sender: 'user',
-          text: 'E-Commerce & Payments',
-          time: '12:01'
-        },
-        {
-          id: 'q2-2',
-          sender: 'bot',
-          text: '📋 **Question 2 of 3**:\n\nHow do you prefer to run it?',
-          buttons: [
-            { label: '💎 Buy Source Code (One-Time)', action: 'q3' },
-            { label: '☁️ Managed Servicing (Monthly)', action: 'q3' }
-          ],
-          time: '12:01'
-        }
-      ],
-      'q3': [
-        {
-          id: 'q3-1',
-          sender: 'user',
-          text: 'Managed Servicing (Monthly)',
-          time: '12:02'
-        },
-        {
-          id: 'q3-2',
-          sender: 'bot',
-          text: '🎉 **Lead Recorded & Synced to CRM!**\n\nAbenezer has received your project parameters and will reach out on Telegram within 30 minutes.\n\nReady to get started now?',
-          buttons: [
-            { label: '💬 Chat Directly on Telegram', url: 'https://t.me/abenezer_abrham', action: 'open_tg' },
-            { label: '🔄 Restart', action: 'reset' }
-          ],
-          time: '12:02'
-        }
-      ],
-      'book_call': [
+      'browse_cart': [
         {
           id: 'bc-1',
           sender: 'user',
-          text: '📅 Book a Free Discovery Call',
+          text: 'Browse Products',
           time: '12:01'
         },
         {
           id: 'bc-2',
           sender: 'bot',
-          text: '🗓️ Select an available 20-minute slot on our calendar or message directly on [@abenezer_abrham](https://t.me/abenezer_abrham).',
+          text: 'Available for Immediate Delivery:\n\n• Handcrafted Leather Bag (2,200 ETB)\n• Premium Canvas Sneakers (1,800 ETB)\n• Minimalist Wristwatch (1,400 ETB)',
           buttons: [
-            { label: '⬅️ Back', action: 'reset' }
+            { label: 'Add Leather Bag (2,200 ETB)', action: 'order_item' },
+            { label: 'Back to Main Menu', action: 'reset' }
+          ],
+          time: '12:01'
+        }
+      ],
+      'order_item': [
+        {
+          id: 'oi-1',
+          sender: 'user',
+          text: 'Add Leather Bag (2,200 ETB)',
+          time: '12:01'
+        },
+        {
+          id: 'oi-2',
+          sender: 'bot',
+          text: 'Cart Summary (1 item):\n\n• 1x Handcrafted Leather Bag\n• Total: 2,200 ETB\n\nConfirm delivery details to send order to owner\'s phone:',
+          buttons: [
+            { label: 'Confirm & Dispatch Order', action: 'dispatch_order' },
+            { label: 'Cancel', action: 'reset' }
+          ],
+          time: '12:01'
+        }
+      ],
+      'dispatch_order': [
+        {
+          id: 'do-1',
+          sender: 'user',
+          text: 'Confirm & Dispatch Order',
+          time: '12:02'
+        },
+        {
+          id: 'do-2',
+          sender: 'bot',
+          text: 'Order #ORD-4029 Dispatched!\n\nA structured alert has been sent directly to the business owner\'s phone with item details, total (2,200 ETB), and customer contact.\n\nThe store owner will confirm shortly.',
+          buttons: [
+            { label: 'Reset Demo', action: 'reset' }
+          ],
+          time: '12:02'
+        }
+      ],
+      'track_order': [
+        {
+          id: 'to-1',
+          sender: 'user',
+          text: 'Track Recent Order',
+          time: '12:01'
+        },
+        {
+          id: 'to-2',
+          sender: 'bot',
+          text: 'Order #ORD-4029: In Preparation.\nEstimated delivery time: 35 minutes.',
+          buttons: [
+            { label: 'Back to Menu', action: 'reset' }
+          ],
+          time: '12:01'
+        }
+      ],
+      'std_info': [
+        {
+          id: 'si-1',
+          sender: 'user',
+          text: 'Store Info & Location',
+          time: '12:01'
+        },
+        {
+          id: 'si-2',
+          sender: 'bot',
+          text: 'Standard Tier includes full Starter details: Menu, prices, open hours (9:00 AM - 8:00 PM), and physical shop coordinates.',
+          buttons: [
+            { label: 'Browse Products', action: 'browse_cart' }
           ],
           time: '12:01'
         }
       ]
     }
   },
-  'moderator-flow': {
-    botId: 'moderator-bot',
-    botName: 'ShieldGuard Group Defense',
-    botUsername: '@shieldguard_bot',
-    avatarText: '🛡️',
+  'full-flow': {
+    tierId: 'full',
+    tierName: 'Full Suite Demo',
+    badge: '7,000 ETB',
+    botUsername: '@yenesuk_full_bot',
     initialMessages: [
       {
-        id: 'mg-1',
+        id: 'fl-1',
         sender: 'bot',
-        text: '🛡️ **ShieldGuard Defense Active**\n\n• Protected Members: 42,800\n• Spam Raids Deflected: 1,489\n• Uptime: 99.98%\n\nTest human verification simulation:',
+        text: 'Welcome to **Yene.suk Executive Suite**.\n\nAll Standard order features plus interactive appointment booking, reminder scheduling, and automated monthly analytics reports.',
         buttons: [
-          { label: '🧪 Trigger Captcha Simulation', action: 'trigger_captcha' },
-          { label: '⚙️ View Moderation Rules', action: 'view_rules' }
+          { label: 'Book Appointment', action: 'book_slot' },
+          { label: 'View Monthly Sales Report', action: 'sales_report' },
+          { label: 'Order Items (Standard)', action: 'std_order' }
         ],
         time: '12:00'
       }
     ],
     responses: {
-      'trigger_captcha': [
+      'book_slot': [
         {
-          id: 'tc-1',
+          id: 'bs-1',
           sender: 'user',
-          text: '🧪 Trigger Captcha Simulation',
+          text: 'Book Appointment',
           time: '12:01'
         },
         {
-          id: 'tc-2',
+          id: 'bs-2',
           sender: 'bot',
-          text: '⚠️ **HUMAN VERIFICATION REQUIRED**\n\nWelcome @NewMember! To speak in this group, please solve within 60 seconds:\n\n👉 **What is 5 + 3 ?**',
+          text: 'Select an available date & time slot:\n\n• Today: 3:00 PM (Available)\n• Tomorrow: 10:30 AM (Available)\n• Tomorrow: 4:00 PM (Available)',
           buttons: [
-            { label: '7', action: 'wrong_ans' },
-            { label: '8 (Correct)', action: 'right_ans' },
-            { label: '9', action: 'wrong_ans' }
+            { label: 'Tomorrow: 10:30 AM', action: 'confirm_slot' },
+            { label: 'Back to Main Menu', action: 'reset' }
           ],
           time: '12:01'
         }
       ],
-      'right_ans': [
+      'confirm_slot': [
         {
-          id: 'ra-1',
+          id: 'cs-1',
           sender: 'user',
-          text: '8 (Correct)',
+          text: 'Tomorrow: 10:30 AM',
+          time: '12:02'
+        },
+        {
+          id: 'cs-2',
+          sender: 'bot',
+          text: 'Appointment Confirmed for Tomorrow at 10:30 AM.\n\nAutomated Reminders Enabled:\n1. 24 hours prior SMS/Telegram notification\n2. 1 hour prior arrival alert\n\nNotification sent to business calendar.',
+          buttons: [
+            { label: 'View Monthly Sales Report', action: 'sales_report' },
+            { label: 'Reset Demo', action: 'reset' }
+          ],
+          time: '12:02'
+        }
+      ],
+      'sales_report': [
+        {
+          id: 'sr-1',
+          sender: 'user',
+          text: 'View Monthly Sales Report',
           time: '12:01'
         },
         {
-          id: 'ra-2',
+          id: 'sr-2',
           sender: 'bot',
-          text: '✅ **Verification Passed!**\n\nYou have been granted full chat permissions. Welcome aboard!',
+          text: 'Monthly Executive Summary (Generated for Owner):\n\n• Total Orders Processed: 384\n• Gross Revenue: 184,200 ETB\n• Appointments Completed: 96\n• No-Show Rate: 2.1% (reduced by automated reminders)\n• Top Requested Item: Special Roast (41% volume)\n\nReport auto-generated on the 1st of every month.',
           buttons: [
-            { label: '🔄 Reset', action: 'reset' }
+            { label: 'Book Appointment', action: 'book_slot' },
+            { label: 'Reset Demo', action: 'reset' }
           ],
           time: '12:01'
         }
       ],
-      'wrong_ans': [
+      'std_order': [
         {
-          id: 'wa-1',
+          id: 'so-1',
           sender: 'user',
-          text: 'Wrong Answer',
+          text: 'Order Items (Standard)',
           time: '12:01'
         },
         {
-          id: 'wa-2',
+          id: 'so-2',
           sender: 'bot',
-          text: '❌ Incorrect answer. User has been temporarily muted for 5 minutes.',
+          text: 'Full Suite includes all Standard ordering features. Seamless order placement with instant phone notification to staff.',
           buttons: [
-            { label: '🔄 Try Again', action: 'trigger_captcha' }
+            { label: 'Reset Demo', action: 'reset' }
           ],
           time: '12:01'
         }
@@ -738,142 +371,91 @@ export const DEMO_FLOWS: Record<string, BotDemoFlow> = {
   }
 };
 
-export const DEAL_PACKAGES: DealPackage[] = [
+export const COMPARISON_ROWS = [
   {
-    id: 'deal-starter',
-    name: 'Starter Turnkey',
-    subtitle: 'Best for launching your first automated Telegram channel or shop.',
-    badge: '⚡ Instant Setup',
-    monthlyPrice: 29,
-    oneTimePrice: 149,
-    billingTerm: 'per month',
-    description: 'Get any 1 ready-to-run bot template with complete configuration, database, and documentation.',
-    savingsBadge: 'Save 20% on Annual',
-    highlights: [
-      'Choice of any 1 Bot from Showroom',
-      'Full Python 3.12 source code OR cloud hosting',
-      '1 Telegram Bot Token configuration',
-      'Database setup (SQLite / PostgreSQL)',
-      'Detailed deployment guide & video walkthrough',
-      '30 days standard bug warranty'
-    ],
-    ctaText: 'Get Starter Deal',
-    popular: false
+    feature: 'Digital Menu & Product Catalog',
+    starter: true,
+    standard: true,
+    full: true,
+    detail: 'Display items, descriptions, and active pricing.'
   },
   {
-    id: 'deal-operator',
-    name: 'Pro Operator Bundle',
-    subtitle: 'The Spotify-style all-inclusive package with zero technical overhead.',
-    badge: '🔥 Most Popular',
-    monthlyPrice: 59,
-    oneTimePrice: 299,
-    billingTerm: 'per month',
-    description: 'Choice of any 2 Bots + 3 Months Managed Cloud Hosting + Custom Branding + Priority Support.',
-    savingsBadge: 'BEST VALUE • SAVE $150',
-    highlights: [
-      'Any 2 Bots from the Showroom catalog',
-      'Includes 3 Months Managed 24/7 Cloud Hosting',
-      'Custom branding (Your logo, name & bot bio)',
-      'Payment Gateway Integration (Stars / USDT / Stripe)',
-      '99.9% Uptime Guarantee & health monitoring',
-      'Direct Telegram Priority Support SLA (< 1 hr)',
-      'Full source code transfer whenever requested'
-    ],
-    ctaText: 'Claim Pro Bundle',
-    popular: true
+    feature: 'Business Hours & Physical Location Pin',
+    starter: true,
+    standard: true,
+    full: true,
+    detail: 'Show operating status and Google Maps pin.'
   },
   {
-    id: 'deal-studio',
-    name: 'Full Studio & Agency',
-    subtitle: 'For agencies, entrepreneurs, and high-volume digital communities.',
-    badge: '💎 Lifetime Resale Rights',
-    monthlyPrice: 129,
-    oneTimePrice: 599,
-    billingTerm: 'per month',
-    description: 'All 6 Bots source code, white-label commercial rights, and direct engineering architecture support.',
-    savingsBadge: 'SAVE OVER $600',
-    highlights: [
-      'ALL 6 Bot Templates in the Catalog',
-      'Full Unrestricted Source Code & Commercial License',
-      'White-label rights (Rebrand and resell to your clients)',
-      'Docker Compose orchestration & deployment scripts',
-      'Priority 1-on-1 Telegram architecture consultation',
-      'Lifetime updates to bot base templates',
-      'Custom webhook & API integration support'
-    ],
-    ctaText: 'Get Full Studio Rights',
-    popular: false
-  }
-];
-
-export const COMPARISON_FEATURES = [
-  {
-    feature: 'Full Python Source Code Ownership',
-    oneTime: 'Included (100% Lifetime)',
-    monthly: 'Available upon request',
-    custom: 'Included (Full IP Transfer)'
+    feature: 'Direct "Contact Owner" Button',
+    starter: true,
+    standard: true,
+    full: true,
+    detail: 'Direct 1-tap call or Telegram chat.'
   },
   {
-    feature: 'Cloud Hosting & Server Infrastructure',
-    oneTime: 'Self-hosted (We provide 1-click Docker)',
-    monthly: 'Included (Fully Managed 24/7)',
-    custom: 'Configured on your cloud or managed'
+    feature: 'Order Taking & Shopping Cart',
+    starter: false,
+    standard: true,
+    full: true,
+    detail: 'Customers select items and enter delivery details.'
   },
   {
-    feature: '99.9% Uptime Monitoring & Backups',
-    oneTime: 'Manual / Self-managed',
-    monthly: 'Automated 24/7 with alerts',
-    custom: 'Enterprise Grade SLA'
+    feature: 'Instant Order Dispatch to Owner\'s Phone',
+    starter: false,
+    standard: true,
+    full: true,
+    detail: 'Immediate notification with items and total.'
   },
   {
-    feature: 'Telegram Bot API Updates & Maintenance',
-    oneTime: '60 Days bug fixes included',
-    monthly: 'Continuous automated updates',
-    custom: 'Dedicated continuous support'
+    feature: 'Customer Order Confirmation Receipts',
+    starter: false,
+    standard: true,
+    full: true,
+    detail: 'Automated receipt number and status tracking.'
   },
   {
-    feature: 'Payment Gateways Setup (Stars/USDT/Stripe)',
-    oneTime: 'Config template provided',
-    monthly: 'Fully connected for you',
-    custom: 'Bespoke multi-currency pipeline'
+    feature: 'Self-Service Appointment & Table Booking',
+    starter: false,
+    standard: false,
+    full: true,
+    detail: 'Interactive calendar time slot reservation.'
   },
   {
-    feature: 'Custom Feature Add-ons & Tweaks',
-    oneTime: 'Hourly rate or DIY',
-    monthly: '2 minor revisions per month included',
-    custom: 'Built to exact specifications'
+    feature: 'Automated Reminder Alerts for Bookings',
+    starter: false,
+    standard: false,
+    full: true,
+    detail: 'Reduces customer no-shows with timed notifications.'
   },
   {
-    feature: 'Direct Telegram Support Channel',
-    oneTime: 'Standard Support (24h)',
-    monthly: 'Priority Direct Support (< 2h)',
-    custom: 'VIP Dedicated Slack/Telegram (< 30m)'
+    feature: 'Monthly Sales & Analytics Summary Report',
+    starter: false,
+    standard: false,
+    full: true,
+    detail: 'Automated revenue, volume, and customer data report.'
   }
 ];
 
 export const FAQ_ITEMS = [
   {
-    q: 'What is the difference between One-Time Buyout and Monthly Servicing?',
-    a: 'With a One-Time Buyout, you purchase the complete Python source code and lifetime commercial license. You can host it on your own VPS (e.g. Hetzner, DigitalOcean, AWS) using our 1-click Docker Compose script with zero recurring fees. With Monthly Servicing, we handle 100% of the infrastructure, server hosting, 24/7 monitoring, security patches, database backups, and Telegram API updates so you never have to touch a server.'
+    q: 'How does the bot send orders to the owner\'s phone?',
+    a: 'In the Standard and Full packages, when a customer completes their order inside Telegram, the bot formats the entire order (items, quantities, delivery address, contact number, and total) and transmits it immediately to the owner\'s private Telegram or linked phone number.'
   },
   {
-    q: 'Can I start with Monthly Servicing and later switch to One-Time Buyout?',
-    a: 'Yes! If you start on a Monthly Servicing plan, you can buy out the complete source code and your database snapshot at any time with a 20% credit of all monthly fees already paid applied toward the buyout.'
+    q: 'What is required from me to get started?',
+    a: 'You simply provide your menu or product list, pricing, operating hours, and location. We configure and deploy the entire bot, link it to your Telegram, and hand over full operational control.'
   },
   {
-    q: 'What payment methods do you accept?',
-    a: 'We accept Crypto (USDT, TON, BTC, ETH), Telegram Stars directly inside Telegram, Credit/Debit cards via Stripe, and PayPal. Invoices are generated automatically.'
+    q: 'Can I start with Starter and upgrade later?',
+    a: 'Yes. You can start with the Starter package (3,000 ETB) and upgrade to Standard (order taking) or Full (bookings & reports) at any time. Your existing menu and settings are preserved.'
   },
   {
-    q: 'How fast do I get access after ordering?',
-    a: 'For pre-built templates, source code access or cloud deployment provisioning begins within 15–30 minutes of order confirmation. For custom modifications, delivery typically takes 24–72 hours.'
+    q: 'Are there monthly hosting fees?',
+    a: 'All 3 packages include setup, full deployment, and cloud operational hosting so your bot remains active 24/7 with zero server management needed on your end.'
   },
   {
-    q: 'Can you customize the bot to fit my exact workflow?',
-    a: 'Absolutely! All bots are built modularly in clean Python (aiogram 3.x). We can integrate custom APIs, proprietary databases, custom mini-apps, or tailored payment flows. Contact [@abenezer_abrham](https://t.me/abenezer_abrham) for a tailored quote.'
-  },
-  {
-    q: 'Do you offer a warranty or refund guarantee?',
-    a: 'Yes. All one-time code purchases include a 60-day bug-free warranty where we fix any unexpected runtime issues immediately. For monthly plans, you can cancel at any time with zero lock-in or cancellation penalties.'
+    q: 'How do appointment reminders work in the Full package?',
+    a: 'When a customer reserves a time slot, the system schedules automated reminders sent 24 hours and 1 hour before the appointment, significantly reducing no-shows for clinics, salons, and consultancies.'
   }
 ];

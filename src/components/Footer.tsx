@@ -1,122 +1,107 @@
 import React from 'react';
-import { Send, Heart, Shield, Code2 } from 'lucide-react';
+import { Send, ArrowUpRight } from 'lucide-react';
 import { SITE_CONFIG } from '../config/showroom';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-[#07080b] border-t border-white/10 pt-16 pb-12 text-slate-400 text-sm">
+    <footer className="bg-[#07080c] border-t border-white/10 pt-12 pb-10 text-slate-400 text-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
-          {/* Brand Col */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+          {/* Brand */}
           <div className="md:col-span-2">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-spotify-green to-cyan-400 p-[1.5px]">
-                <div className="w-full h-full bg-[#0a0b0e] rounded-full flex items-center justify-center">
-                  <svg
-                    className="w-4 h-4 text-spotify-green"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.4"
-                    strokeLinecap="round"
-                  >
-                    <circle cx="12" cy="12" r="9.5" strokeWidth="1.5" stroke="currentColor" opacity="0.8" />
-                    <line x1="12" y1="5.5" x2="12" y2="18.5" />
-                    <line x1="6.37" y1="8.75" x2="17.63" y2="15.25" />
-                    <line x1="6.37" y1="15.25" x2="17.63" y2="8.75" />
-                    <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-                  </svg>
-                </div>
+            <div className="flex items-center gap-2.5 mb-3">
+              <div className="w-8 h-8 rounded-full bg-[#161a24] border border-white/15 flex items-center justify-center">
+                <svg
+                  className="w-3.5 h-3.5 text-emerald-400"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                >
+                  <circle cx="12" cy="12" r="9" strokeWidth="1.6" opacity="0.8" />
+                  <line x1="12" y1="5.5" x2="12" y2="18.5" />
+                  <line x1="6.37" y1="8.75" x2="17.63" y2="15.25" />
+                  <line x1="6.37" y1="15.25" x2="17.63" y2="8.75" />
+                  <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+                </svg>
               </div>
-              <span className="text-xl font-black text-white">
-                Yene<span className="text-spotify-green">.</span>suk
+              <span className="text-base font-bold text-white">
+                Yene<span className="text-emerald-400">.</span>suk
               </span>
             </div>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-sm leading-relaxed mb-4">
-              Premium showroom of tested Python Telegram bots. Choose between lifetime source code buyout or 24/7 managed cloud servicing.
+            <p className="text-slate-400 max-w-sm leading-relaxed mb-3">
+              Professional Telegram business bots: Menus, order taking with direct phone dispatch, and appointment scheduling.
             </p>
-            <div className="text-xs text-slate-400 flex items-center gap-1.5">
-              <span>Engineered by</span>
-              <strong className="text-white">{SITE_CONFIG.developerName}</strong>
+            <div className="text-slate-400">
+              Developed by <strong className="text-white">{SITE_CONFIG.developerName}</strong>
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Packages */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-4">
-              Navigation
+            <h4 className="font-semibold text-white uppercase tracking-wider mb-3">
+              Packages
             </h4>
-            <ul className="space-y-2 text-xs">
+            <ul className="space-y-2">
               <li>
-                <a href="#showroom" className="hover:text-spotify-green transition-colors">
-                  Bot Catalog
+                <a href="#packages" className="hover:text-white transition-colors">
+                  Starter (3,000 ETB)
                 </a>
               </li>
               <li>
-                <a href="#simulator" className="hover:text-spotify-green transition-colors">
-                  Live Telegram Sandbox
+                <a href="#packages" className="hover:text-white transition-colors">
+                  Standard (4,000 ETB)
                 </a>
               </li>
               <li>
-                <a href="#deals" className="hover:text-spotify-green transition-colors">
-                  Spotify-Style Deals
+                <a href="#packages" className="hover:text-white transition-colors">
+                  Full Suite (7,000 ETB)
                 </a>
               </li>
               <li>
-                <a href="#compare" className="hover:text-spotify-green transition-colors">
-                  Delivery Comparison
-                </a>
-              </li>
-              <li>
-                <a href="#calculator" className="hover:text-spotify-green transition-colors">
-                  Custom Quote Builder
-                </a>
-              </li>
-              <li>
-                <a href="#faq" className="hover:text-spotify-green transition-colors">
-                  FAQ
+                <a href="#comparison" className="hover:text-white transition-colors">
+                  Full Feature Matrix
                 </a>
               </li>
             </ul>
           </div>
 
-          {/* Connect */}
+          {/* Links */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-4">
-              Connect Directly
+            <h4 className="font-semibold text-white uppercase tracking-wider mb-3">
+              Direct Contact
             </h4>
-            <div className="space-y-3">
+            <div className="space-y-2">
               <a
                 href={SITE_CONFIG.telegramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/5 text-xs text-slate-300 hover:text-white hover:border-spotify-green/40 transition-all"
+                className="flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors"
               >
-                <Send className="w-4 h-4 text-spotify-green" />
                 <span>Telegram: @{SITE_CONFIG.telegramUsername}</span>
+                <ArrowUpRight className="w-3 h-3 text-slate-500" />
               </a>
 
               <a
                 href={SITE_CONFIG.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/5 text-xs text-slate-300 hover:text-white hover:border-spotify-green/40 transition-all"
+                className="flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors"
               >
-                <svg className="w-4 h-4 fill-current text-slate-300" viewBox="0 0 24 24">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-                </svg>
                 <span>GitHub: @abenezer-abrham</span>
+                <ArrowUpRight className="w-3 h-3 text-slate-500" />
               </a>
             </div>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        <div className="pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-400">
           <div>
             &copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.
           </div>
-          <div className="flex items-center gap-6">
-            <span>Python 3.12 • aiogram 3.x • Docker • Telegram Bot API</span>
+          <div>
+            Telegram Bot API • Fast Webhook Delivery • 24/7 Hosting
           </div>
         </div>
       </div>
