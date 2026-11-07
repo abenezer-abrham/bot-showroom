@@ -30,18 +30,32 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenOrderModal }) => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <a href="#" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-spotify-green to-cyan-400 p-[1.5px] transition-transform duration-300 group-hover:scale-105 shadow-glow-green/30">
-              <div className="w-full h-full bg-[#0e1017] rounded-[10px] flex items-center justify-center">
-                <Send className="w-5 h-5 text-spotify-green transform -rotate-12 group-hover:rotate-0 transition-transform duration-300" />
+            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-spotify-green to-cyan-400 p-[1.5px] transition-transform duration-300 group-hover:scale-105 shadow-glow-green/30">
+              <div className="w-full h-full bg-[#0a0b0e] rounded-full flex items-center justify-center">
+                {/* Hand-drawn styled star in circle emblem matching the sketch */}
+                <svg
+                  className="w-5 h-5 text-spotify-green transition-transform duration-500 group-hover:rotate-45"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                >
+                  <circle cx="12" cy="12" r="9.5" strokeWidth="1.5" stroke="currentColor" opacity="0.8" />
+                  <line x1="12" y1="5.5" x2="12" y2="18.5" />
+                  <line x1="6.37" y1="8.75" x2="17.63" y2="15.25" />
+                  <line x1="6.37" y1="15.25" x2="17.63" y2="8.75" />
+                  <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+                </svg>
               </div>
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xl font-bold tracking-tight text-white group-hover:text-spotify-green transition-colors">
-                  {SITE_CONFIG.name}
+                <span className="text-2xl font-black tracking-tight text-white group-hover:text-spotify-green transition-colors font-sans">
+                  Yene<span className="text-spotify-green">.</span>suk
                 </span>
-                <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-spotify-green/10 text-spotify-green border border-spotify-green/20">
-                  PRO
+                <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-spotify-green/10 text-spotify-green border border-spotify-green/20">
+                  SHOWROOM
                 </span>
               </div>
               <span className="text-xs text-slate-400 font-medium">by {SITE_CONFIG.developerName}</span>

@@ -1,7 +1,8 @@
 import { BotItem, DealPackage, BotDemoFlow } from '../types/showroom';
 
 export const SITE_CONFIG = {
-  name: 'BotMatrix',
+  name: 'Yene.suk',
+  displayName: 'Yene.suk',
   developerName: 'Abenezer Abrham',
   telegramUsername: 'abenezer_abrham',
   telegramUrl: 'https://t.me/abenezer_abrham',

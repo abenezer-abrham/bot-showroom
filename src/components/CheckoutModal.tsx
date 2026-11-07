@@ -28,7 +28,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const currentPrice = initialPrice || (model === 'one-time' ? 299 : 59);
 
   const orderSummaryText =
-    `Hello @abenezer_abrham, I would like to order from BotMatrix:\n\n` +
+    `Hello @abenezer_abrham, I would like to order from Yene.suk:\n\n` +
     `• Item: ${initialItemTitle}\n` +
     `• Model: ${model === 'one-time' ? 'One-Time Source Code Buyout ($' + currentPrice + ')' : 'Monthly Managed Servicing ($' + currentPrice + '/mo)'}\n` +
     `• My Telegram Handle: ${telegramHandle ? (telegramHandle.startsWith('@') ? telegramHandle : '@' + telegramHandle) : 'Not specified'}\n` +

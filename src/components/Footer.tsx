@@ -10,12 +10,27 @@ export const Footer: React.FC = () => {
           {/* Brand Col */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-spotify-green to-cyan-400 p-[1.5px]">
-                <div className="w-full h-full bg-[#0e1017] rounded-[10px] flex items-center justify-center">
-                  <Send className="w-4 h-4 text-spotify-green" />
+              <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-spotify-green to-cyan-400 p-[1.5px]">
+                <div className="w-full h-full bg-[#0a0b0e] rounded-full flex items-center justify-center">
+                  <svg
+                    className="w-4 h-4 text-spotify-green"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                  >
+                    <circle cx="12" cy="12" r="9.5" strokeWidth="1.5" stroke="currentColor" opacity="0.8" />
+                    <line x1="12" y1="5.5" x2="12" y2="18.5" />
+                    <line x1="6.37" y1="8.75" x2="17.63" y2="15.25" />
+                    <line x1="6.37" y1="15.25" x2="17.63" y2="8.75" />
+                    <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+                  </svg>
                 </div>
               </div>
-              <span className="text-xl font-black text-white">{SITE_CONFIG.name}</span>
+              <span className="text-xl font-black text-white">
+                Yene<span className="text-spotify-green">.</span>suk
+              </span>
             </div>
             <p className="text-xs sm:text-sm text-slate-400 max-w-sm leading-relaxed mb-4">
               Premium showroom of tested Python Telegram bots. Choose between lifetime source code buyout or 24/7 managed cloud servicing.

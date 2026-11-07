@@ -34,7 +34,7 @@ export const ValueProps: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-xs uppercase tracking-widest text-spotify-green font-bold mb-3">
-            Why BotMatrix
+            Why Yene.suk
           </h2>
           <p className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             Designed for Creators, Community Owners &amp; Tech Agencies

@@ -77,7 +77,7 @@ export const CustomQuoteCalculator: React.FC = () => {
       .join(', ');
 
     const text = encodeURIComponent(
-      `Hello @abenezer_abrham, I configured a custom bot quote on BotMatrix:\n\n` +
+      `Hello @abenezer_abrham, I configured a custom bot quote on Yene.suk:\n\n` +
       `• Model: ${model === 'one-time' ? 'One-Time Source Code Buyout' : 'Monthly Managed Cloud Servicing'}\n` +
       `• Base Tier: $${baseTier}\n` +
       `• Addons: ${selectedAddonNames || 'None'}\n` +

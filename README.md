@@ -1,6 +1,6 @@
-# 🤖 BotMatrix — Premium Telegram Bots Showroom & Managed Servicing
+# ⍟ Yene.suk — Premium Telegram Bots Showroom & Managed Servicing
 
-A high-converting, Spotify-inspired web showroom for showcasing and selling production-ready Telegram bots under two flexible ownership models: **One-Time Buyout (Lifetime Source Code Ownership)** and **Monthly Managed Cloud Servicing (99.9% Uptime SLA)**.
+A high-converting, Spotify-inspired web showroom built for showcasing and selling production-ready Telegram bots under two flexible ownership models: **One-Time Buyout (Lifetime Source Code Ownership)** and **Monthly Managed Cloud Servicing (99.9% Uptime SLA)**.
 
 Developed by **Abenezer Abrham** ([@abenezer_abrham](https://t.me/abenezer_abrham)).
 
