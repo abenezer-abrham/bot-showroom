@@ -17,7 +17,7 @@ export const TelegramSimulator: React.FC<TelegramSimulatorProps> = ({
   const [messages, setMessages] = useState<BotSimulatorStep[]>([]);
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [customInput, setCustomInput] = useState<string>('');
-  const chatBottomRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const activeFlow = DEMO_FLOWS[activeDemoFlowId] || DEMO_FLOWS['standard-flow'];
 
@@ -27,7 +27,13 @@ export const TelegramSimulator: React.FC<TelegramSimulatorProps> = ({
   }, [activeDemoFlowId]);
 
   useEffect(() => {
-    chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Scroll strictly inside the chat container so the main webpage window never jumps
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
   }, [messages, isTyping]);
 
   const handleButtonClick = (action: string, label: string, url?: string) => {
@@ -192,7 +198,10 @@ export const TelegramSimulator: React.FC<TelegramSimulatorProps> = ({
           </div>
 
           {/* Messages Area */}
-          <div className="p-4 sm:p-5 space-y-3.5 min-h-[340px] max-h-[440px] overflow-y-auto bg-[#090b10]">
+          <div
+            ref={chatContainerRef}
+            className="p-4 sm:p-5 space-y-3.5 min-h-[340px] max-h-[440px] overflow-y-auto bg-[#090b10]"
+          >
             {messages.map((msg) => {
               const isUser = msg.sender === 'user';
               return (
@@ -254,7 +263,6 @@ export const TelegramSimulator: React.FC<TelegramSimulatorProps> = ({
                 <span className="text-[11px] text-slate-400">typing...</span>
               </div>
             )}
-            <div ref={chatBottomRef} />
           </div>
 
           {/* Input Bar */}
