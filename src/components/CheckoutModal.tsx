@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Send, Copy, CheckCheck, ShieldCheck } from 'lucide-react';
+import { X, Send, Copy, CheckCheck, ShieldCheck, Phone } from 'lucide-react';
 import { SITE_CONFIG, PACKAGES } from '../config/showroom';
 import { CurrencyCode, PackageTier } from '../types/showroom';
 
@@ -37,7 +37,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const cleanHandle = telegramHandle.replace(/[<>]/g, '').trim();
 
   const orderSummaryText =
-    `Hello @abenezer_abrham, I would like to order a Telegram Bot on Yene.suk:\n\n` +
+    `Hello @${SITE_CONFIG.telegramUsername}, I would like to order a Telegram Bot on Yene.suk:\n\n` +
     `• Package: ${currentPkg.name} (${priceFormatted})\n` +
     `• What it includes: ${currentPkg.coreFeature}\n` +
     (cleanBusinessName ? `• Business Name: ${cleanBusinessName}\n` : '') +
@@ -186,7 +186,52 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
           </button>
         </div>
 
-        <div className="mt-3.5 text-center text-[11px] text-slate-500 flex items-center justify-center gap-1">
+        {/* Telebirr Payment Box */}
+        <div className="mt-3.5 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
+          <div>
+            <span className="font-bold text-white flex items-center gap-1.5">
+              <span className="px-1.5 py-0.5 rounded bg-emerald-500 text-black text-[10px] font-black">Telebirr</span>
+              <span>{SITE_CONFIG.telebirrPhone}</span>
+            </span>
+            <span className="text-[11px] text-emerald-300 block sm:inline sm:ml-2">
+              Account Name: <strong className="text-white">{SITE_CONFIG.telebirrName}</strong>
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              navigator.clipboard.writeText(SITE_CONFIG.telebirrPhone);
+              setCopied(true);
+              setTimeout(() => setCopied(false), 2000);
+            }}
+            className="text-[11px] text-emerald-400 hover:text-white underline font-semibold self-end sm:self-auto"
+          >
+            Copy Number
+          </button>
+        </div>
+
+        {/* Call options */}
+        <div className="mt-3 pt-3 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+          <span className="text-slate-400">Direct phone call:</span>
+          <div className="flex items-center gap-2 flex-wrap">
+            <a
+              href={`tel:${SITE_CONFIG.primaryPhone.replace(/\s+/g, '')}`}
+              className="px-2.5 py-1 rounded-md bg-white/5 hover:bg-white/10 text-emerald-400 font-medium transition-colors flex items-center gap-1"
+            >
+              <Phone className="w-3 h-3" />
+              <span>{SITE_CONFIG.primaryPhone}</span>
+            </a>
+            <a
+              href={`tel:${SITE_CONFIG.alternatePhone.replace(/\s+/g, '')}`}
+              className="px-2.5 py-1 rounded-md bg-white/5 hover:bg-white/10 text-slate-300 font-medium transition-colors flex items-center gap-1"
+              title="Alternate calling number"
+            >
+              <span>Alt: {SITE_CONFIG.alternatePhone}</span>
+            </a>
+          </div>
+        </div>
+
+        <div className="mt-3 text-center text-[11px] text-slate-500 flex items-center justify-center gap-1">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
           <span>Direct deal with developer Abenezer Abrham. 100% money-back guarantee.</span>
         </div>

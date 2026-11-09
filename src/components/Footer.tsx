@@ -1,5 +1,5 @@
 import React from 'react';
-import { Send, ArrowUpRight } from 'lucide-react';
+import { Send, ArrowUpRight, Phone } from 'lucide-react';
 import { SITE_CONFIG } from '../config/showroom';
 
 export const Footer: React.FC = () => {
@@ -70,7 +70,7 @@ export const Footer: React.FC = () => {
           {/* Links */}
           <div>
             <h4 className="font-semibold text-white uppercase tracking-wider mb-3">
-              Direct Contact
+              Direct Contact &amp; Payment
             </h4>
             <div className="space-y-2">
               <a
@@ -84,14 +84,24 @@ export const Footer: React.FC = () => {
               </a>
 
               <a
-                href={SITE_CONFIG.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={`tel:${SITE_CONFIG.primaryPhone.replace(/\s+/g, '')}`}
                 className="flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors"
               >
-                <span>GitHub: @abenezer-abrham</span>
-                <ArrowUpRight className="w-3 h-3 text-slate-500" />
+                <Phone className="w-3 h-3 text-emerald-400" />
+                <span>Call: {SITE_CONFIG.primaryPhone}</span>
               </a>
+
+              <a
+                href={`tel:${SITE_CONFIG.alternatePhone.replace(/\s+/g, '')}`}
+                className="flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors"
+              >
+                <Phone className="w-3 h-3 text-slate-400" />
+                <span>Alt: {SITE_CONFIG.alternatePhone}</span>
+              </a>
+
+              <div className="pt-1 text-[11px] text-slate-400">
+                <span className="text-emerald-400 font-semibold">Telebirr:</span> {SITE_CONFIG.telebirrPhone} ({SITE_CONFIG.telebirrName})
+              </div>
             </div>
           </div>
         </div>

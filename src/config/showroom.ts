@@ -4,8 +4,12 @@ export const SITE_CONFIG = {
   name: 'Yene.suk',
   displayName: 'Yene.suk',
   developerName: 'Abenezer Abrham',
-  telegramUsername: 'abenezer_abrham',
-  telegramUrl: 'https://t.me/abenezer_abrham',
+  telegramUsername: 'mesafintkumlachew',
+  telegramUrl: 'https://t.me/mesafintkumlachew',
+  primaryPhone: '+251 90 421 6852',
+  alternatePhone: '+251 96 366 1680',
+  telebirrPhone: '+251 96 366 1680',
+  telebirrName: 'ADDIS',
   githubUrl: 'https://github.com/abenezer-abrham',
   email: 'abenezerabrham61@gmail.com',
   tagline: 'Custom Telegram Business Bots for Local & Global Enterprises',
@@ -159,9 +163,9 @@ export const DEMO_FLOWS: Record<string, BotDemoFlow> = {
         {
           id: 'co-2',
           sender: 'bot',
-          text: 'Direct Owner Contact:\n\n• Phone: +251 91 123 4567\n• Telegram: @abenezer_abrham\n\nYou can call directly or send a direct message for inquiries.',
+          text: 'Direct Owner Contact:\n\n• Primary: +251 90 421 6852\n• Alternate (Call): +251 96 366 1680\n• Telegram: @mesafintkumlachew\n\nYou can call directly or send a direct message for inquiries.',
           buttons: [
-            { label: 'Chat on Telegram', url: 'https://t.me/abenezer_abrham', action: 'tg' },
+            { label: 'Chat on Telegram', url: 'https://t.me/mesafintkumlachew', action: 'tg' },
             { label: 'Reset Demo', action: 'reset' }
           ],
           time: '12:02'
