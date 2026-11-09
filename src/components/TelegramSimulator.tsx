@@ -117,6 +117,7 @@ export const TelegramSimulator: React.FC<TelegramSimulatorProps> = ({
     { id: 'starter-flow', label: 'Starter: Menu & Location', packageId: 'starter' },
     { id: 'standard-flow', label: 'Standard: Order Dispatch', packageId: 'standard' },
     { id: 'full-flow', label: 'Full: Bookings & Reports', packageId: 'full' },
+    { id: 'barbershop-flow', label: '💈 Barbershop (አማርኛ & Telebirr)', packageId: 'full' },
   ];
 
   return (

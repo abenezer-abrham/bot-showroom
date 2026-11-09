@@ -372,6 +372,174 @@ export const DEMO_FLOWS: Record<string, BotDemoFlow> = {
         }
       ]
     }
+  },
+  'barbershop-flow': {
+    tierId: 'full',
+    tierName: 'Habesha Barbershop Bot',
+    badge: 'አማርኛ & Telebirr',
+    botUsername: '@habesha_barbershop_bot',
+    initialMessages: [
+      {
+        id: 'bs-init',
+        sender: 'bot',
+        text: '💈 **እንኳን ወደ ሐበሻ ባርበርሾፕ ላውንጅ በደህና መጡ!**\n\nWelcome to Habesha Grooming Lounge (Bole, Addis Ababa).\n\nየሚፈልጉትን አገልግሎት ይምረጡ / Please select an option:',
+        buttons: [
+          { label: '📅 ቀጠሮ ይያዙ (Book Appointment)', action: 'bs_services' },
+          { label: '✂️ አገልግሎቶችና ዋጋ (Prices)', action: 'bs_price_list' },
+          { label: '📍 አድራሻና ስልክ (Location)', action: 'bs_location' }
+        ],
+        time: '12:00'
+      }
+    ],
+    responses: {
+      'bs_services': [
+        {
+          id: 'bss-1',
+          sender: 'user',
+          text: '📅 ቀጠሮ ይያዙ (Book Appointment)',
+          time: '12:01'
+        },
+        {
+          id: 'bss-2',
+          sender: 'bot',
+          text: '✂️ **ደረጃ 1/4: አገልግሎት ይምረጡ (Select Service)**:\n\n1. የጸጉር መቁረጥ / Fade Cut (250 ETB)\n2. የጢም ማስተካከልና ሻቨር / Beard Trim (150 ETB)\n3. የጸጉርና ጢም ጥምር / Hair & Beard Combo (350 ETB)\n4. የፊት እስክራብና ማሳጅ / Facial Scrub (300 ETB)\n5. ቪአይፒ ሙሉ ጥቅል / VIP Grooming (750 ETB)',
+          buttons: [
+            { label: '✂️ ጸጉርና ጢም Combo (350 ETB)', action: 'bs_barber' },
+            { label: '✂️ Fade Cut (250 ETB)', action: 'bs_barber' },
+            { label: '⬅️ Back', action: 'reset' }
+          ],
+          time: '12:01'
+        }
+      ],
+      'bs_barber': [
+        {
+          id: 'bsb-1',
+          sender: 'user',
+          text: '✂️ ጸጉርና ጢም Combo (350 ETB)',
+          time: '12:01'
+        },
+        {
+          id: 'bsb-2',
+          sender: 'bot',
+          text: '👤 **ደረጃ 2/4: ጸጉር አስተካካይ ይምረጡ (Select Barber)**:\n\n• **አቤል (Abel)** — Master Barber / Fades & Tapers\n• **ዳዊት (Dawit)** — Beard Sculpting & Classic Cuts\n• **ናትናኤል (Natnael)** — Creative Styling\n• **ፈጣን ተረኛ (Any Available)**',
+          buttons: [
+            { label: '💈 Abel (Master Barber)', action: 'bs_time' },
+            { label: '💈 Dawit (Beard Specialist)', action: 'bs_time' },
+            { label: '⚡ Any Available (ፈጣን)', action: 'bs_time' }
+          ],
+          time: '12:01'
+        }
+      ],
+      'bs_time': [
+        {
+          id: 'bst-1',
+          sender: 'user',
+          text: '💈 Abel (Master Barber)',
+          time: '12:02'
+        },
+        {
+          id: 'bst-2',
+          sender: 'bot',
+          text: '⏰ **ደረጃ 3/4: ሰዓት ይምረጡ (Select Time Slot)**:\n\nዛሬ (Today) ከአቤል ጋር ክፍት የሆኑ ሰዓቶች:',
+          buttons: [
+            { label: '🟢 02:00 PM (ከሰዓት)', action: 'bs_payment' },
+            { label: '🟢 04:30 PM (ከሰዓት)', action: 'bs_payment' },
+            { label: '🟢 07:00 PM (ማታ)', action: 'bs_payment' }
+          ],
+          time: '12:02'
+        }
+      ],
+      'bs_payment': [
+        {
+          id: 'bsp-1',
+          sender: 'user',
+          text: '🟢 04:30 PM (ከሰዓት)',
+          time: '12:02'
+        },
+        {
+          id: 'bsp-2',
+          sender: 'bot',
+          text: '💳 **ደረጃ 4/4: የክፍያ መንገድ ይምረጡ (Payment)**:\n\n• አገልግሎት: **የጸጉርና ጢም ጥምር (Hair & Beard Combo)**\n• አስተካካይ: **Abel**\n• ሰዓት: **ዛሬ 04:30 PM**\n• ጠቅላላ ዋጋ: **350 ETB**',
+          buttons: [
+            { label: '📱 በቴሌብር ክፈል (Telebirr)', action: 'bs_telebirr' },
+            { label: '💵 በቦታው በካሽ (Cash at Shop)', action: 'bs_confirmed' },
+            { label: '⬅️ Back', action: 'reset' }
+          ],
+          time: '12:02'
+        }
+      ],
+      'bs_telebirr': [
+        {
+          id: 'bstb-1',
+          sender: 'user',
+          text: '📱 በቴሌብር ክፈል (Telebirr)',
+          time: '12:03'
+        },
+        {
+          id: 'bstb-2',
+          sender: 'bot',
+          text: '📱 **የቴሌብር መክፈያ ዝርዝር (Telebirr Details)**:\n\n• ስልክ: `+251 96 366 1680`\n• የስም ባለቤት: **ADDIS**\n• የሚከፈለው: **350 ETB**\n\nከከፈሉ በኋላ የደረሰኝ ቁጥሩን (Transaction Code) ያስገቡ:',
+          buttons: [
+            { label: '✅ የተከፈለበትን ደረሰኝ አረጋግጥ', action: 'bs_confirmed' },
+            { label: '⬅️ Cancel', action: 'reset' }
+          ],
+          time: '12:03'
+        }
+      ],
+      'bs_confirmed': [
+        {
+          id: 'bsc-1',
+          sender: 'user',
+          text: '✅ የተከፈለበትን ደረሰኝ አረጋግጥ',
+          time: '12:03'
+        },
+        {
+          id: 'bsc-2',
+          sender: 'bot',
+          text: '🎉 **ቀጠሮዎ ተረጋግጧል! (Confirmed)**\n\n• የቀጠሮ መለያ: `#BS-8492`\n• አገልግሎት: **የጸጉርና ጢም Combo (350 ETB)**\n• አስተካካይ: **Abel**\n• ቀንና ሰዓት: **ዛሬ 04:30 PM**\n• አከፋፈል: **Telebirr Verified**\n\n📍 አድራሻ: ቦሌ ኤድና ሞል አጠገብ\n📞 ስልክ: `+251 90 421 6852`\n\n_ቀጠሮዎ ከመድረሱ 1 ሰዓት በፊት ማስታወሻ ይላክልዎታል!_',
+          buttons: [
+            { label: '🔄 አዲስ ቀጠሮ (Start Over)', action: 'reset' }
+          ],
+          time: '12:03'
+        }
+      ],
+      'bs_price_list': [
+        {
+          id: 'bspl-1',
+          sender: 'user',
+          text: '✂️ አገልግሎቶችና ዋጋ (Prices)',
+          time: '12:01'
+        },
+        {
+          id: 'bspl-2',
+          sender: 'bot',
+          text: '💈 **የሐበሻ ባርበርሾፕ አገልግሎቶች ዝርዝር**:\n\n• Fade Cut / የጸጉር መቁረጥ — 250 ETB\n• Beard Shaping / የጢም ማስተካከል — 150 ETB\n• Hair & Beard Combo — 350 ETB\n• Facial Scrub & Mask — 300 ETB\n• Hair Dye / ቀለም — 400 ETB\n• VIP Full Grooming — 750 ETB',
+          buttons: [
+            { label: '📅 ቀጠሮ ይያዙ', action: 'bs_services' },
+            { label: '⬅️ Back', action: 'reset' }
+          ],
+          time: '12:01'
+        }
+      ],
+      'bs_location': [
+        {
+          id: 'bsl-1',
+          sender: 'user',
+          text: '📍 አድራሻና ስልክ (Location)',
+          time: '12:01'
+        },
+        {
+          id: 'bsl-2',
+          sender: 'bot',
+          text: '📍 **አድራሻና የሥራ ሰዓት**:\n\n• አድራሻ: ቦሌ መንገድ፣ ኤድና ሞል አጠገብ፣ አዲስ አበባ\n• የሥራ ሰዓት: ከሰኞ - እሑድ (2:30 ጥዋት - 3:00 ማታ)\n• ዋና ስልክ: +251 90 421 6852\n• ተጨማሪ ስልክ: +251 96 366 1680\n• ቴሌብር: +251 96 366 1680 (ADDIS)',
+          buttons: [
+            { label: '📅 ቀጠሮ ይያዙ', action: 'bs_services' },
+            { label: '⬅️ Back', action: 'reset' }
+          ],
+          time: '12:01'
+        }
+      ]
+    }
   }
 };
 
