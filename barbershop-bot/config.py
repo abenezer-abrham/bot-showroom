@@ -3,10 +3,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BOT_TOKEN = os.getenv("BOT_TOKEN", "PLACEHOLDER_TOKEN")
+BOT_TOKEN = os.getenv("BOT_TOKEN", "9113170241:AAETZsS-6-nOVCGvIIYalfcgoJTKRMFhxFg")
 ADMIN_IDS = [
     int(x.strip())
-    for x in os.getenv("ADMIN_IDS", "123456789").split(",")
+    for x in os.getenv("ADMIN_IDS", "7108139518").split(",")
     if x.strip().isdigit()
 ]
 

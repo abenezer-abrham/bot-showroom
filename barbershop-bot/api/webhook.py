@@ -22,10 +22,10 @@ bot = Bot(
     default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN)
 )
 dp = Dispatcher()
+dp.include_router(start.router)
 dp.include_router(admin.router)
 dp.include_router(booking.router)
 dp.include_router(profile.router)
-dp.include_router(start.router)
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
