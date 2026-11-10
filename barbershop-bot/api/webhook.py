@@ -15,12 +15,8 @@ from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 from aiogram.types import Update
-from handlers import start, booking, profile, admin
+from handlers import start, admin, booking, profile
 
-bot = Bot(
-    token=config.BOT_TOKEN,
-    default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN)
-)
 dp = Dispatcher()
 dp.include_router(start.router)
 dp.include_router(admin.router)
@@ -49,8 +45,12 @@ class handler(BaseHTTPRequestHandler):
 
             async def handle_update():
                 await init_db()
-                update = Update.model_validate(update_dict, context={"bot": bot})
-                await dp.feed_update(bot=bot, update=update)
+                async with Bot(
+                    token=config.BOT_TOKEN,
+                    default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN)
+                ) as bot_instance:
+                    update = Update.model_validate(update_dict, context={"bot": bot_instance})
+                    await dp.feed_update(bot=bot_instance, update=update)
 
             asyncio.run(handle_update())
 
