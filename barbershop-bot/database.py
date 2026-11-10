@@ -58,12 +58,12 @@ async def init_db():
         count = (await cursor.fetchone())[0]
         if count == 0:
             services = [
-                ("Classic Haircut / Fade", "የጸጉር መቁረጥ / ፌድ", 250, 30, "Modern fades, scissor work, & razor finish", "ዘመናዊ የጸጉር ስታይል እና ማስተካከል"),
-                ("Beard Trim & Hot Towel Shave", "የጢም ማስተካከልና ሙቅ ፎጣ ሻቨር", 150, 20, "Beard shaping, oil treatment & razor lineup", "የጢም ቅርጽ ማውጣትና የዘይት እንክብካቤ"),
-                ("Haircut + Beard Styling Combo", "የጸጉር እና የጢም ጥምር ጥቅል", 350, 45, "Full head and beard grooming package", "ሙሉ የጸጉር እና የጢም ማስተካከል"),
-                ("Facial Scrub & Black Mask", "የፊት እስክራብና ብላክ ማስክ", 300, 30, "Deep pore cleansing, steam & facial massage", "የፊት ቆዳ ጥልቅ ጽዳትና ማሳጅ"),
-                ("Hair Color & Dye", "የጸጉር ቀለም መቀባት", 400, 40, "Grey coverage or full vibrant color", "የጸጉር ቀለም እና ዳይ አገልግሎት"),
-                ("VIP Grooming Executive Package", "ቪአይፒ ሙሉ የክብር ጥቅል", 750, 75, "Haircut, beard, facial scrub, wash & massage", "ጸጉር፣ ጢም፣ የፊት እስክራብ እና ሙሉ ማሳጅ"),
+                ("Beard Trim & Hot Towel Shave", "የጢም ማስተካከልና ሙቅ ፎጣ ሻቨር", 700, 20, "Beard shaping, oil treatment & razor lineup", "የጢም ቅርጽ ማውጣትና የዘይት እንክብካቤ"),
+                ("Classic Haircut / Fade", "የጸጉር መቁረጥ / ፌድ", 800, 30, "Modern fades, scissor work, & razor finish", "ዘመናዊ የጸጉር ስታይል እና ማስተካከል"),
+                ("Facial Scrub & Black Mask", "የፊት እስክራብና ብላክ ማስክ", 1000, 30, "Deep pore cleansing, steam & facial massage", "የፊት ቆዳ ጥልቅ ጽዳትና ማሳጅ"),
+                ("Haircut + Beard Styling Combo", "የጸጉር እና የጢም ጥምር ጥቅል", 1300, 45, "Full head and beard grooming package", "ሙሉ የጸጉር እና የጢም ማስተካከል"),
+                ("Hair Color & Dye", "የጸጉር ቀለም መቀባት", 1500, 40, "Grey coverage or full vibrant color", "የጸጉር ቀለም እና ዳይ አገልግሎት"),
+                ("VIP Grooming Executive Package", "ቪአይፒ ሙሉ የክብር ጥቅል", 2000, 75, "Haircut, beard, facial scrub, wash & massage", "ጸጉር፣ ጢም፣ የፊት እስክራብ እና ሙሉ ማሳጅ"),
             ]
             await db.executemany("""
                 INSERT INTO services (name_en, name_am, price, duration_mins, description_en, description_am)
