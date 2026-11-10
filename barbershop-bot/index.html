@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Miliana Barbershop — Premier heritage grooming lounge in Bole, Addis Ababa. Book appointments, view services, and pay with Telebirr." />
+  <title>Miliana Barbershop · Bole, Addis Ababa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0d0b;
+      --surface: #18140f;
+      --card: #201a12;
+      --border: #2e2416;
+      --accent: #b87c3e;
+      --accent-light: #d4a05a;
+      --text: #f0ebe3;
+      --muted: #9a8872;
+      --green: #4a7c5e;
+      --radius: 16px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px;
+      background: rgba(15,13,11,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px; font-weight: 700; color: var(--text);
+      text-decoration: none; letter-spacing: 0.03em;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-book {
+      background: var(--accent); color: #0f0d0b;
+      padding: 8px 20px; border-radius: 50px;
+      text-decoration: none; font-size: 13px; font-weight: 600;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .nav-book:hover { background: var(--accent-light); transform: translateY(-1px); }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative; height: 100svh; min-height: 600px;
+      display: flex; align-items: flex-end;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background-image: url('/assets/outfit/barber-banner.jpg');
+      background-size: cover; background-position: center;
+      transform: scale(1.04);
+      transition: transform 8s ease;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(15,13,11,1) 0%, rgba(15,13,11,0.6) 50%, rgba(15,13,11,0.1) 100%);
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      padding: 48px 24px;
+      max-width: 680px;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 16px;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: block; width: 24px; height: 1px; background: var(--accent);
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 7vw, 60px);
+      font-weight: 700; line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .hero-sub {
+      color: var(--muted); font-size: 15px; max-width: 480px; margin-bottom: 32px;
+    }
+    .hero-cta-row {
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: #0f0d0b;
+      padding: 14px 28px; border-radius: 50px;
+      text-decoration: none; font-weight: 700; font-size: 14px;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(184,124,62,0.3);
+    }
+    .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(184,124,62,0.4); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid var(--border); color: var(--text);
+      padding: 14px 24px; border-radius: 50px;
+      text-decoration: none; font-weight: 500; font-size: 14px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ─── STATUS PILL ─── */
+    .status-pill {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      z-index: 90;
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 8px 16px; border-radius: 50px;
+      font-size: 12px; font-weight: 500; color: var(--muted);
+      backdrop-filter: blur(12px);
+      white-space: nowrap;
+    }
+    .status-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    .status-dot.open { background: #4ade80; box-shadow: 0 0 0 2px rgba(74,222,128,0.2); }
+    .status-dot.closed { background: #f97316; box-shadow: 0 0 0 2px rgba(249,115,22,0.2); }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+    /* ─── SECTION WRAPPER ─── */
+    section { padding: 80px 24px; max-width: 1000px; margin: 0 auto; }
+    .section-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 12px;
+    }
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(24px, 4vw, 38px); font-weight: 700; line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .section-sub { color: var(--muted); margin-bottom: 40px; max-width: 500px; }
+    hr.divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+    /* ─── SERVICES ─── */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .service-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .service-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .service-emoji { font-size: 22px; margin-bottom: 10px; display: block; }
+    .service-name { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+    .service-name-am { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+    .service-desc { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 14px; }
+    .service-footer { display: flex; align-items: center; justify-content: space-between; }
+    .service-price { font-weight: 700; font-size: 16px; color: var(--accent-light); }
+    .service-duration { font-size: 12px; color: var(--muted); }
+
+    /* ─── BARBERS ─── */
+    .barbers-row {
+      display: flex; flex-wrap: wrap; gap: 16px;
+    }
+    .barber-card {
+      flex: 1; min-width: 200px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px 24px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .barber-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .barber-name { font-weight: 600; font-size: 14px; }
+    .barber-spec { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    /* ─── INFO GRID ─── */
+    .info-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .info-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px;
+    }
+    .info-icon { font-size: 20px; margin-bottom: 10px; display: block; }
+    .info-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .info-value { font-size: 14px; font-weight: 500; line-height: 1.5; }
+    .info-value a { color: var(--accent-light); text-decoration: none; }
+    .info-value a:hover { text-decoration: underline; }
+
+    /* ─── BOOKING CTA BANNER ─── */
+    .cta-banner {
+      background: linear-gradient(135deg, var(--card) 0%, rgba(184,124,62,0.08) 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 48px 32px;
+      text-align: center;
+    }
+    .cta-banner h2 { margin-bottom: 12px; }
+    .cta-banner p { color: var(--muted); margin-bottom: 28px; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+      text-align: center;
+      font-size: 13px; color: var(--muted);
+    }
+    footer strong { color: var(--text); }
+
+    /* ─── TELEGRAM FLOAT BUTTON ─── */
+    .tg-float {
+      position: fixed; bottom: 80px; right: 20px; z-index: 90;
+      width: 52px; height: 52px; border-radius: 50%;
+      background: #229ED9;
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(34,158,217,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .tg-float:hover { transform: scale(1.1); box-shadow: 0 8px 32px rgba(34,158,217,0.5); }
+    .tg-float svg { width: 26px; height: 26px; }
+
+    @media (max-width: 600px) {
+      nav { padding: 12px 16px; }
+      .hero-content { padding: 36px 16px; }
+      section { padding: 60px 16px; }
+      .cta-banner { padding: 36px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">Miliana <span>·</span> Barbershop</a>
+    <a class="nav-book" href="https://t.me/Miliana_Barbershop_Bot">📅 Book Now</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Heritage Grooming · Bole, Addis Ababa</div>
+      <h1>Precision cuts.<br>Classic shaves.<br>Real craft.</h1>
+      <p class="hero-sub">
+        Miliana Barbershop brings together timeless grooming tradition and modern skill.
+        Book your chair in seconds on Telegram — no calls, no waiting.
+      </p>
+      <div class="hero-cta-row">
+        <a class="btn-primary" href="https://t.me/Miliana_Barbershop_Bot">
+          <!-- Telegram icon -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          Book on Telegram
+        </a>
+        <a class="btn-secondary" href="#services">View Services ↓</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPEN/CLOSED STATUS PILL -->
+  <div class="status-pill" id="statusPill">
+    <span class="status-dot" id="statusDot"></span>
+    <span id="statusText">Checking hours…</span>
+  </div>
+
+  <!-- TELEGRAM FLOAT -->
+  <a class="tg-float" href="https://t.me/Miliana_Barbershop_Bot" title="Open in Telegram" target="_blank">
+    <svg viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+  </a>
+
+  <hr class="divider" />
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="section-label">What We Offer</div>
+    <h2>Our Services & Pricing</h2>
+    <p class="section-sub">Every service uses premium products. Prices are fixed and transparent — no surprises.</p>
+    <div class="services-grid">
+
+      <div class="service-card">
+        <span class="service-emoji">✂️</span>
+        <div class="service-name">Classic Haircut & Fade</div>
+        <div class="service-name-am">የጸጉር መቁረጥ / ፌድ</div>
+        <div class="service-desc">Modern fades, scissor work, and razor finish tailored to your head shape.</div>
+        <div class="service-footer">
+          <span class="service-price">250 ETB</span>
+          <span class="service-duration">30 min</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <span class="service-emoji">🪒</span>
+        <div class="service-name">Beard Trim & Hot Towel Shave</div>
+        <div class="service-name-am">የጢም ማስተካከልና ሙቅ ፎጣ ሻቨር</div>
+        <div class="service-desc">Beard shaping, premium oil treatment, and clean razor lineup.</div>
+        <div class="service-footer">
+          <span class="service-price">150 ETB</span>
+          <span class="service-duration">20 min</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <span class="service-emoji">💈</span>
+        <div class="service-name">Haircut + Beard Styling Combo</div>
+        <div class="service-name-am">የጸጉር እና የጢም ጥምር ጥቅል</div>
+        <div class="service-desc">Full head and beard grooming package. Best value.</div>
+        <div class="service-footer">
+          <span class="service-price">350 ETB</span>
+          <span class="service-duration">45 min</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <span class="service-emoji">🌿</span>
+        <div class="service-name">Facial Scrub & Black Mask</div>
+        <div class="service-name-am">የፊት እስክራብና ብላክ ማስክ</div>
+        <div class="service-desc">Deep pore cleansing, steam treatment, and refreshing facial massage.</div>
+        <div class="service-footer">
+          <span class="service-price">300 ETB</span>
+          <span class="service-duration">30 min</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <span class="service-emoji">🎨</span>
+        <div class="service-name">Hair Color & Dye</div>
+        <div class="service-name-am">የጸጉር ቀለም መቀባት</div>
+        <div class="service-desc">Grey coverage or full vibrant color using quality dye products.</div>
+        <div class="service-footer">
+          <span class="service-price">400 ETB</span>
+          <span class="service-duration">40 min</span>
+        </div>
+      </div>
+
+      <div class="service-card" style="border-color: rgba(184,124,62,0.4); background: linear-gradient(135deg, var(--card), rgba(184,124,62,0.06));">
+        <span class="service-emoji">👑</span>
+        <div class="service-name">VIP Executive Package</div>
+        <div class="service-name-am">ቪአይፒ ሙሉ የክብር ጥቅል</div>
+        <div class="service-desc">Haircut, beard sculpt, facial scrub, wash, scalp massage, and refreshing drink. The full experience.</div>
+        <div class="service-footer">
+          <span class="service-price">750 ETB</span>
+          <span class="service-duration">75 min</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- TEAM -->
+  <section id="team">
+    <div class="section-label">Our Team</div>
+    <h2>Meet the Barbers</h2>
+    <p class="section-sub">Choose your preferred stylist when booking, or let us assign the first available.</p>
+    <div class="barbers-row">
+      <div class="barber-card">
+        <div class="barber-avatar">✂️</div>
+        <div>
+          <div class="barber-name">Abel</div>
+          <div class="barber-spec">Master Barber · Modern Fades & Tapers</div>
+        </div>
+      </div>
+      <div class="barber-card">
+        <div class="barber-avatar">🪒</div>
+        <div>
+          <div class="barber-name">Dawit</div>
+          <div class="barber-spec">Classic Cuts & Beard Sculpting</div>
+        </div>
+      </div>
+      <div class="barber-card">
+        <div class="barber-avatar">🎨</div>
+        <div>
+          <div class="barber-name">Natnael</div>
+          <div class="barber-spec">Creative Styling & Kids Cuts</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- INFO -->
+  <section id="info">
+    <div class="section-label">Find Us</div>
+    <h2>Location & Hours</h2>
+    <p class="section-sub">Walk-ins welcome during business hours. Appointments through Telegram are always faster.</p>
+    <div class="info-grid">
+      <div class="info-card">
+        <span class="info-icon">📍</span>
+        <div class="info-label">Address</div>
+        <div class="info-value">
+          Bole Road, Near Edna Mall<br>Addis Ababa, Ethiopia
+        </div>
+      </div>
+      <div class="info-card">
+        <span class="info-icon">🕐</span>
+        <div class="info-label">Operating Hours</div>
+        <div class="info-value">
+          Monday – Sunday<br>8:30 AM – 9:00 PM
+        </div>
+      </div>
+      <div class="info-card">
+        <span class="info-icon">📞</span>
+        <div class="info-label">Phone</div>
+        <div class="info-value">
+          <a href="tel:+251904216852">+251 90 421 6852</a><br>
+          <a href="tel:+251963661680">+251 96 366 1680</a>
+        </div>
+      </div>
+      <div class="info-card">
+        <span class="info-icon">📱</span>
+        <div class="info-label">Telebirr Payment</div>
+        <div class="info-value">
+          +251 96 366 1680<br>
+          <span style="color: var(--muted); font-size: 13px;">Account: ADDIS</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section>
+    <div class="cta-banner">
+      <div class="section-label" style="margin-bottom: 16px;">Ready?</div>
+      <h2>Book your appointment now</h2>
+      <p>Open our Telegram bot, pick your service, choose a barber and time slot.<br>Pay with Telebirr or cash at the shop.</p>
+      <a class="btn-primary" href="https://t.me/Miliana_Barbershop_Bot" style="display: inline-flex;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        Open @Miliana_Barbershop_Bot
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 <strong>Miliana Barbershop</strong> · Bole Road, Addis Ababa</p>
+    <p style="margin-top: 6px;">Bot built by <a href="https://t.me/abenezer_abrham" style="color: var(--accent-light); text-decoration: none;">@abenezer_abrham</a></p>
+  </footer>
+
+  <script>
+    // ── Open/Closed status ──
+    function checkStatus() {
+      const now = new Date();
+      // Ethiopia is UTC+3
+      const etHour = (now.getUTCHours() + 3) % 24;
+      const etMin = now.getUTCMinutes();
+      const totalMins = etHour * 60 + etMin;
+      const openMins = 8 * 60 + 30;   // 8:30 AM
+      const closeMins = 21 * 60;       // 9:00 PM
+      const isOpen = totalMins >= openMins && totalMins < closeMins;
+
+      const dot = document.getElementById('statusDot');
+      const text = document.getElementById('statusText');
+      dot.className = 'status-dot ' + (isOpen ? 'open' : 'closed');
+      text.textContent = isOpen
+        ? 'Open now · Closes 9:00 PM'
+        : 'Closed · Opens 8:30 AM tomorrow';
+    }
+    checkStatus();
+    setInterval(checkStatus, 60000);
+
+    // ── Subtle hero parallax ──
+    const heroBg = document.getElementById('heroBg');
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      heroBg.style.transform = `scale(1.04) translateY(${y * 0.3}px)`;
+    }, { passive: true });
+  </script>
+</body>
+</html>
