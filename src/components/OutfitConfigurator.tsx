@@ -1,756 +1,352 @@
 import React, { useState } from 'react';
-import { SHOP_PRESETS, ShopPreset, ShopService } from '../../shop.config';
 import {
-  Sparkles,
-  Smartphone,
-  Copy,
-  Check,
-  ExternalLink,
-  Store,
-  Scissors,
-  Coffee,
-  HeartHandshake,
-  ShoppingBag,
-  Clock,
-  MapPin,
-  Phone,
-  ShieldCheck,
-  ChevronRight,
-  RotateCcw,
-  Zap,
-  Globe,
-  Sliders
+  Store, Scissors, Coffee, HeartHandshake, ShoppingBag,
+  Utensils, Dumbbell, Truck, ChevronRight, Send,
+  CheckCircle, Sparkles, Clock, Phone, MapPin, User
 } from 'lucide-react';
 
+const NICHES = [
+  { id: 'barbershop', label: 'Barbershop & Grooming', icon: Scissors },
+  { id: 'coffee', label: 'Specialty Coffee & Café', icon: Coffee },
+  { id: 'spa', label: 'Spa & Wellness', icon: HeartHandshake },
+  { id: 'boutique', label: 'Boutique & Fashion', icon: ShoppingBag },
+  { id: 'restaurant', label: 'Restaurant & Food', icon: Utensils },
+  { id: 'gym', label: 'Gym & Fitness', icon: Dumbbell },
+  { id: 'delivery', label: 'Delivery & Logistics', icon: Truck },
+  { id: 'other', label: 'Other / Custom', icon: Store },
+];
+
+const FEATURES = [
+  { id: 'booking', label: 'Appointment / Booking Flow' },
+  { id: 'catalog', label: 'Menu / Product Catalog' },
+  { id: 'payments', label: 'Telebirr & Cash Payments' },
+  { id: 'admin', label: 'Admin Notifications & Panel' },
+  { id: 'bilingual', label: 'Bilingual (English & Amharic)' },
+  { id: 'location', label: 'Location & Hours Info' },
+  { id: 'reviews', label: 'Customer Reviews & Feedback' },
+  { id: 'broadcasts', label: 'Promo Broadcast Messages' },
+];
+
+interface FormData {
+  businessName: string;
+  niche: string;
+  phone: string;
+  location: string;
+  extraDetails: string;
+  features: string[];
+  hasBotToken: 'yes' | 'no' | '';
+}
+
 export function OutfitConfigurator() {
-  const [selectedPresetKey, setSelectedPresetKey] = useState<string>('barbershop');
-  const activePreset = SHOP_PRESETS[selectedPresetKey] || SHOP_PRESETS.barbershop;
+  const [step, setStep] = useState<'form' | 'sent'>('form');
+  const [form, setForm] = useState<FormData>({
+    businessName: '',
+    niche: '',
+    phone: '',
+    location: '',
+    extraDetails: '',
+    features: [],
+    hasBotToken: '',
+  });
 
-  // Customizer state
-  const [shopName, setShopName] = useState(activePreset.shopName);
-  const [shopNameAm, setShopNameAm] = useState(activePreset.shopNameAm);
-  const [tagline, setTagline] = useState(activePreset.tagline);
-  const [phone, setPhone] = useState('+251 90 421 6852');
-  const [telebirrPhone, setTelebirrPhone] = useState('+251 96 366 1680');
-  const [telebirrName, setTelebirrName] = useState('ADDIS RETAIL');
-  const [botToken, setBotToken] = useState('7812938472:AAHq_EXAMPLE_TOKEN_xyz');
-  const [copiedEnv, setCopiedEnv] = useState(false);
-  const [copiedWebhook, setCopiedWebhook] = useState(false);
-
-  // Interactive Telegram simulator state
-  const [simLang, setSimLang] = useState<'en' | 'am'>('en');
-  const [simStep, setSimStep] = useState<'home' | 'catalog' | 'hours' | 'human' | 'book_svc' | 'book_staff' | 'book_date' | 'book_time' | 'book_confirm' | 'book_done'>('home');
-  const [chosenService, setChosenService] = useState<ShopService | null>(null);
-  const [chosenStaff, setChosenStaff] = useState<string>('First Available');
-  const [chosenDate, setChosenDate] = useState<string>('Today');
-  const [chosenTime, setChosenTime] = useState<string>('02:00 PM');
-  const [chosenPayment, setChosenPayment] = useState<'cash' | 'telebirr'>('cash');
-
-  const handleSelectPreset = (key: string) => {
-    setSelectedPresetKey(key);
-    const p = SHOP_PRESETS[key];
-    if (p) {
-      setShopName(p.shopName);
-      setShopNameAm(p.shopNameAm);
-      setTagline(p.tagline);
-      setSimStep('home');
-      setChosenService(null);
-    }
+  const toggleFeature = (id: string) => {
+    setForm(f => ({
+      ...f,
+      features: f.features.includes(id)
+        ? f.features.filter(x => x !== id)
+        : [...f.features, id],
+    }));
   };
 
-  const generateEnvString = () => {
-    return `# --- Universal Vercel Telegram Shop Bot Config ---
-SHOP_NICHE=${selectedPresetKey}
-SHOP_NAME="${shopName}"
-SHOP_NAME_AM="${shopNameAm}"
-SHOP_TAGLINE="${tagline}"
-SHOP_PHONE="${phone}"
-SHOP_LOCATION="Bole Road, Near Edna Mall, Addis Ababa"
-TELEBIRR_PHONE="${telebirrPhone}"
-TELEBIRR_NAME="${telebirrName}"
-BOT_TOKEN="${botToken}"
-ADMIN_IDS="123456789"
-SHOP_CURRENCY="ETB"
-`;
+  const isValid = form.businessName.trim() && form.niche && form.phone.trim();
+
+  const buildTelegramMessage = () => {
+    const nicheLabel = NICHES.find(n => n.id === form.niche)?.label || form.niche;
+    const featureList = form.features.length
+      ? form.features.map(f => FEATURES.find(x => x.id === f)?.label || f).join(', ')
+      : 'Standard setup';
+
+    const msg = `🌿 *New Bot Outfit Request*
+
+🏪 *Business Name:* ${form.businessName}
+🎯 *Niche / Type:* ${nicheLabel}
+📞 *Contact Phone:* ${form.phone}
+📍 *Location:* ${form.location || 'Not specified'}
+✅ *Requested Features:* ${featureList}
+🔑 *Already has Bot Token:* ${form.hasBotToken === 'yes' ? 'Yes ✅' : 'No — needs setup'}
+📝 *Extra Details:* ${form.extraDetails || 'None'}`;
+
+    return encodeURIComponent(msg);
   };
 
-  const handleCopyEnv = () => {
-    navigator.clipboard.writeText(generateEnvString());
-    setCopiedEnv(true);
-    setTimeout(() => setCopiedEnv(false), 2500);
+  const handleSend = () => {
+    const msg = buildTelegramMessage();
+    // Open Telegram DM to Abenezer with the prefilled message
+    window.open(`https://t.me/abenezer_abrham?text=${msg}`, '_blank');
+    setStep('sent');
   };
 
-  const handleCopyWebhookUrl = () => {
-    const sample = `https://your-shop-bot.vercel.app/api/set-webhook?token=${botToken}`;
-    navigator.clipboard.writeText(sample);
-    setCopiedWebhook(true);
-    setTimeout(() => setCopiedWebhook(false), 2500);
-  };
-
-  const resetSimulator = () => {
-    setSimStep('home');
-    setChosenService(null);
-  };
-
-  const isAm = simLang === 'am';
+  if (step === 'sent') {
+    return (
+      <section id="outfit-studio" className="relative py-20 px-4 max-w-3xl mx-auto text-center">
+        <div className="bg-neutral-900/90 border border-emerald-500/30 rounded-3xl p-10 shadow-2xl">
+          <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
+          <h3 className="text-2xl font-bold text-white mb-3">Request Sent!</h3>
+          <p className="text-neutral-400 mb-6">
+            Your order details were prefilled in Telegram. Once you hit <strong className="text-white">Send</strong> in the chat,
+            Abenezer will receive everything and get back to you within a few hours to set up your customized bot.
+          </p>
+          <div className="bg-neutral-950 rounded-2xl p-4 text-left space-y-2 text-sm text-neutral-300 mb-6 border border-neutral-800">
+            <div className="text-xs text-neutral-500 uppercase tracking-widest mb-2">What happens next</div>
+            <div className="flex items-start gap-2"><span className="text-amber-400 font-bold">1.</span> Abenezer reviews your request & confirms details</div>
+            <div className="flex items-start gap-2"><span className="text-amber-400 font-bold">2.</span> Bot is configured & deployed to Vercel (usually same day)</div>
+            <div className="flex items-start gap-2"><span className="text-amber-400 font-bold">3.</span> You receive your live bot link, ready to share with customers</div>
+          </div>
+          <button
+            onClick={() => setStep('form')}
+            className="text-sm text-neutral-400 hover:text-white transition-colors"
+          >
+            ← Submit another request
+          </button>
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <section id="outfit-studio" className="relative py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      {/* Glow decorative backdrop */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-3/4 h-96 bg-gradient-to-r from-amber-600/10 via-emerald-600/10 to-amber-700/10 blur-[130px] pointer-events-none -z-10" />
+    <section id="outfit-studio" className="relative py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+      {/* Ambient glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-2/3 h-80 bg-amber-600/8 blur-[120px] pointer-events-none -z-10" />
 
-      {/* Section Header */}
-      <div className="text-center max-w-3xl mx-auto mb-14">
+      {/* Header */}
+      <div className="text-center max-w-2xl mx-auto mb-12">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold uppercase tracking-wider mb-4">
-          <Sparkles className="w-4 h-4 text-amber-400" />
-          The Universal Bot Outfit • 1-Click Vercel Architecture
+          <Sparkles className="w-3.5 h-3.5" />
+          The Outfit — Custom Bot Order
         </div>
-        <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
-          One Outfit. <span className="bg-gradient-to-r from-amber-400 via-amber-200 to-emerald-400 bg-clip-text text-transparent">Any Shop Niche.</span>
+        <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+          Tell me about your shop.{' '}
+          <span className="bg-gradient-to-r from-amber-400 to-emerald-400 bg-clip-text text-transparent">
+            I'll build your bot.
+          </span>
         </h2>
-        <p className="mt-4 text-base sm:text-lg text-neutral-400 leading-relaxed">
-          Switch from a classic barbershop to a specialty roastery, boutique, or spa in seconds.
-          Pre-built with <strong>humane, photographic aesthetics</strong>, bilingual Ethiopian & international localization, and zero-cold-start Vercel serverless webhooks.
+        <p className="mt-3 text-neutral-400 text-base leading-relaxed">
+          Fill in the details below — it takes 2 minutes. Your info goes straight to Abenezer on Telegram,
+          who will set up and deploy your fully customized bot, usually the same day.
         </p>
       </div>
 
-      {/* Niche Selector Tabs */}
-      <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
-        {[
-          { key: 'barbershop', label: 'Barbershop & Grooming', icon: Scissors, badge: 'Popular' },
-          { key: 'coffee', label: 'Specialty Coffee & Roastery', icon: Coffee, badge: 'Artisanal' },
-          { key: 'spa', label: 'Wellness & Luxury Spa', icon: HeartHandshake, badge: 'Premium' },
-          { key: 'boutique', label: 'Artisan Boutique & Goods', icon: ShoppingBag, badge: 'Lifestyle' },
-        ].map((item) => {
-          const Icon = item.icon;
-          const isActive = selectedPresetKey === item.key;
-          return (
-            <button
-              key={item.key}
-              onClick={() => handleSelectPreset(item.key)}
-              className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-medium text-sm transition-all duration-200 ${
-                isActive
-                  ? 'bg-neutral-800 text-white border-2 border-amber-500/70 shadow-lg shadow-amber-500/10 scale-105'
-                  : 'bg-neutral-900/80 text-neutral-400 border border-neutral-800 hover:text-white hover:border-neutral-700'
-              }`}
-            >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-amber-400' : 'text-neutral-500'}`} />
-              <span>{item.label}</span>
-              <span className={`text-[10px] px-2 py-0.5 rounded-full ${
-                isActive ? 'bg-amber-500/20 text-amber-300 font-semibold' : 'bg-neutral-800 text-neutral-500'
-              }`}>
-                {item.badge}
-              </span>
-            </button>
-          );
-        })}
-      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
 
-      {/* Main Studio Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        {/* Left Column: Live Customizer & Aesthetic Profile (7 cols) */}
-        <div className="lg:col-span-7 space-y-6">
-          
-          {/* Aesthetic Showcase Card: Profile Pic & Welcome Banner */}
-          <div className="bg-neutral-900/90 border border-neutral-800/80 rounded-2xl p-6 backdrop-blur-sm shadow-xl">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Store className="w-5 h-5 text-amber-400" />
-                <h3 className="text-lg font-bold text-white">Visual Identity & Aesthetic Assets</h3>
-              </div>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-950/60 text-emerald-400 border border-emerald-800/40">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                Authentic 35mm Photography • Zero AI Glitch
-              </span>
-            </div>
+        {/* Form — 3 cols */}
+        <div className="lg:col-span-3 space-y-6">
 
-            {/* Banner & PFP Preview */}
-            <div className="relative rounded-xl overflow-hidden border border-neutral-800 group">
-              <img
-                src={activePreset.welcomeBanner}
-                alt={`${activePreset.shopName} Welcome Banner`}
-                className="w-full h-48 sm:h-56 object-cover object-center group-hover:scale-105 transition-transform duration-500"
+          {/* Business name & phone */}
+          <div className="bg-neutral-900/90 border border-neutral-800 rounded-2xl p-6 space-y-4">
+            <h4 className="text-sm font-semibold text-white flex items-center gap-2">
+              <User className="w-4 h-4 text-amber-400" /> Basic Info
+            </h4>
+            <div>
+              <label className="block text-xs text-neutral-400 mb-1">Business Name *</label>
+              <input
+                type="text"
+                placeholder="e.g. Miliana Barbershop"
+                value={form.businessName}
+                onChange={e => setForm(f => ({ ...f, businessName: e.target.value }))}
+                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/30 to-transparent" />
-              
-              {/* Profile Avatar Badge Overlay */}
-              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="relative">
-                    <img
-                      src={activePreset.profilePic}
-                      alt={`${activePreset.shopName} Avatar`}
-                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 border-amber-500/80 shadow-2xl object-cover bg-neutral-900"
-                    />
-                    <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-neutral-950" />
-                  </div>
-                  <div>
-                    <h4 className="text-white font-bold text-base sm:text-lg flex items-center gap-2">
-                      {shopName}
-                    </h4>
-                    <p className="text-xs sm:text-sm text-neutral-300 line-clamp-1">
-                      {tagline}
-                    </p>
-                    <span className="inline-block mt-1 text-[11px] font-mono text-amber-400/90 bg-amber-950/40 px-2 py-0.5 rounded border border-amber-800/30">
-                      Niche: {activePreset.niche}
-                    </span>
-                  </div>
-                </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs text-neutral-400 mb-1">
+                  <Phone className="w-3 h-3 inline mr-1" />Contact Phone *
+                </label>
+                <input
+                  type="text"
+                  placeholder="+251 90 ..."
+                  value={form.phone}
+                  onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors font-mono"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-neutral-400 mb-1">
+                  <MapPin className="w-3 h-3 inline mr-1" />Location (optional)
+                </label>
+                <input
+                  type="text"
+                  placeholder="Bole, Addis Ababa"
+                  value={form.location}
+                  onChange={e => setForm(f => ({ ...f, location: e.target.value }))}
+                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors"
+                />
               </div>
             </div>
-
-            <p className="mt-3 text-xs text-neutral-400 flex items-center gap-1.5">
-              <span className="text-amber-400">✨</span>
-              Crafted with warm natural daylight, real organic wood, textured linen, and humane tones.
-            </p>
           </div>
 
-          {/* Quick Customizer Fields */}
-          <div className="bg-neutral-900/90 border border-neutral-800/80 rounded-2xl p-6 backdrop-blur-sm shadow-xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
-              <div className="flex items-center gap-2">
-                <Sliders className="w-5 h-5 text-amber-400" />
-                <h3 className="text-base font-bold text-white">Turnkey Parameters (Change For Any Shop)</h3>
-              </div>
-              <span className="text-xs text-neutral-400">Updates Simulator & Vercel Env</span>
+          {/* Niche selector */}
+          <div className="bg-neutral-900/90 border border-neutral-800 rounded-2xl p-6">
+            <h4 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+              <Store className="w-4 h-4 text-amber-400" /> Type of Business *
+            </h4>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {NICHES.map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => setForm(f => ({ ...f, niche: id }))}
+                  className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-xs font-medium transition-all text-center ${
+                    form.niche === id
+                      ? 'border-amber-500/70 bg-amber-500/10 text-amber-300 scale-105'
+                      : 'border-neutral-800 bg-neutral-950 text-neutral-400 hover:border-neutral-700 hover:text-white'
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 ${form.niche === id ? 'text-amber-400' : 'text-neutral-500'}`} />
+                  {label}
+                </button>
+              ))}
             </div>
+          </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-medium text-neutral-400 mb-1">
-                  Shop Name (English)
-                </label>
-                <input
-                  type="text"
-                  value={shopName}
-                  onChange={(e) => setShopName(e.target.value)}
-                  className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-neutral-400 mb-1">
-                  Shop Name (Amharic / ቋንቋ)
-                </label>
-                <input
-                  type="text"
-                  value={shopNameAm}
-                  onChange={(e) => setShopNameAm(e.target.value)}
-                  className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors"
-                />
-              </div>
-
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-medium text-neutral-400 mb-1">
-                  Warm Tagline / Greeting
-                </label>
-                <input
-                  type="text"
-                  value={tagline}
-                  onChange={(e) => setTagline(e.target.value)}
-                  className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-neutral-400 mb-1">
-                  Contact Phone (Calls / Support)
-                </label>
-                <input
-                  type="text"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors font-mono"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-neutral-400 mb-1">
-                  Telebirr Account (Phone & Name)
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={telebirrPhone}
-                    onChange={(e) => setTelebirrPhone(e.target.value)}
-                    className="w-2/3 bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors font-mono"
-                  />
-                  <input
-                    type="text"
-                    value={telebirrName}
-                    onChange={(e) => setTelebirrName(e.target.value)}
-                    className="w-1/3 bg-neutral-950 border border-neutral-800 rounded-lg px-2 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors text-center font-mono"
-                  />
-                </div>
-              </div>
-
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-medium text-neutral-400 mb-1">
-                  Telegram Bot Token (from @BotFather)
-                </label>
-                <input
-                  type="text"
-                  value={botToken}
-                  onChange={(e) => setBotToken(e.target.value)}
-                  placeholder="e.g. 7812938472:AAHq_EXAMPLE_TOKEN_xyz"
-                  className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-amber-300 focus:outline-none focus:border-amber-500 transition-colors font-mono text-xs"
-                />
-              </div>
-            </div>
-
-            {/* Active Services Preview */}
-            <div className="mt-4 pt-3 border-t border-neutral-800">
-              <span className="block text-xs font-medium text-neutral-400 mb-2">
-                Included Turnkey Services ({activePreset.services.length} items):
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {activePreset.services.map((s) => (
-                  <span
-                    key={s.id}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-neutral-950 border border-neutral-800 text-xs text-neutral-300"
-                  >
-                    <span>{s.emoji}</span>
-                    <span>{s.name}</span>
-                    <strong className="text-amber-400">{s.price} ETB</strong>
+          {/* Features */}
+          <div className="bg-neutral-900/90 border border-neutral-800 rounded-2xl p-6">
+            <h4 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-400" /> Features You Want (pick all that apply)
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {FEATURES.map(f => (
+                <button
+                  key={f.id}
+                  onClick={() => toggleFeature(f.id)}
+                  className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-medium transition-all text-left ${
+                    form.features.includes(f.id)
+                      ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-300'
+                      : 'border-neutral-800 bg-neutral-950 text-neutral-400 hover:border-neutral-700 hover:text-white'
+                  }`}
+                >
+                  <span className={`w-3.5 h-3.5 rounded flex-shrink-0 border flex items-center justify-center ${
+                    form.features.includes(f.id) ? 'bg-emerald-500 border-emerald-500' : 'border-neutral-600'
+                  }`}>
+                    {form.features.includes(f.id) && <span className="text-black text-[10px] font-bold leading-none">✓</span>}
                   </span>
-                ))}
-              </div>
+                  {f.label}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Vercel 1-Click Deployment Card */}
-          <div className="bg-gradient-to-br from-neutral-900 to-neutral-950 border border-amber-500/30 rounded-2xl p-6 shadow-xl space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-amber-400" />
-                <h3 className="text-base font-bold text-white">Deploy to Vercel in 60 Seconds</h3>
-              </div>
-              <span className="text-[11px] font-mono bg-amber-500/20 text-amber-300 px-2.5 py-0.5 rounded-full font-bold">
-                Serverless • Zero VPS Bills
-              </span>
+          {/* Bot token question & extra notes */}
+          <div className="bg-neutral-900/90 border border-neutral-800 rounded-2xl p-6 space-y-4">
+            <h4 className="text-sm font-semibold text-white">Do you already have a Telegram Bot Token?</h4>
+            <div className="flex gap-3">
+              {(['yes', 'no'] as const).map(opt => (
+                <button
+                  key={opt}
+                  onClick={() => setForm(f => ({ ...f, hasBotToken: opt }))}
+                  className={`flex-1 py-2.5 rounded-xl border text-sm font-medium transition-all ${
+                    form.hasBotToken === opt
+                      ? 'border-amber-500/60 bg-amber-500/10 text-amber-300'
+                      : 'border-neutral-800 bg-neutral-950 text-neutral-400 hover:text-white'
+                  }`}
+                >
+                  {opt === 'yes' ? '✅ Yes, I have one' : '❌ No, need help'}
+                </button>
+              ))}
             </div>
-
-            <p className="text-xs text-neutral-400 leading-relaxed">
-              Vercel runs the Telegram Bot completely serverless via <code className="text-amber-300 bg-neutral-900 px-1 py-0.5 rounded font-mono">/api/webhook</code>. No server crashes, no Docker setups, and instantaneous sub-50ms responses.
-            </p>
-
-            <div className="flex flex-wrap gap-3 pt-2">
-              <button
-                onClick={handleCopyEnv}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 text-neutral-950 font-bold text-xs hover:bg-amber-400 transition-all shadow-md active:scale-95"
-              >
-                {copiedEnv ? <Check className="w-4 h-4 text-emerald-950" /> : <Copy className="w-4 h-4" />}
-                {copiedEnv ? 'Copied Vercel Environment Variables!' : 'Copy Vercel .env Preset'}
-              </button>
-
-              <button
-                onClick={handleCopyWebhookUrl}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-neutral-800 text-white font-medium text-xs hover:bg-neutral-700 transition-all border border-neutral-700"
-              >
-                {copiedWebhook ? <Check className="w-4 h-4 text-emerald-400" /> : <ExternalLink className="w-4 h-4" />}
-                {copiedWebhook ? 'Copied Webhook URL!' : 'Copy Webhook Activation URL'}
-              </button>
+            <div>
+              <label className="block text-xs text-neutral-400 mb-1">Any extra details / special requests</label>
+              <textarea
+                rows={3}
+                placeholder="e.g. I want it in Amharic only, 3 staff members, special services list..."
+                value={form.extraDetails}
+                onChange={e => setForm(f => ({ ...f, extraDetails: e.target.value }))}
+                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors resize-none"
+              />
             </div>
           </div>
+
+          {/* Submit */}
+          <button
+            onClick={handleSend}
+            disabled={!isValid}
+            className={`w-full py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${
+              isValid
+                ? 'bg-amber-500 hover:bg-amber-400 text-neutral-950 shadow-lg shadow-amber-500/20 active:scale-98'
+                : 'bg-neutral-800 text-neutral-500 cursor-not-allowed'
+            }`}
+          >
+            <Send className="w-4 h-4" />
+            Send Request to Abenezer on Telegram
+            <ChevronRight className="w-4 h-4" />
+          </button>
+          {!isValid && (
+            <p className="text-center text-xs text-neutral-500">Fill in business name, type, and phone to continue</p>
+          )}
         </div>
 
-        {/* Right Column: Interactive Telegram Phone Simulator (5 cols) */}
-        <div className="lg:col-span-5 sticky top-24">
-          <div className="bg-neutral-900/90 border border-neutral-800 rounded-3xl p-4 sm:p-6 shadow-2xl backdrop-blur-md">
-            
-            {/* Phone Header Toolbar */}
-            <div className="flex items-center justify-between pb-3 mb-3 border-b border-neutral-800 text-xs">
-              <div className="flex items-center gap-2">
-                <Smartphone className="w-4 h-4 text-amber-400" />
-                <span className="font-semibold text-white">Live Telegram Bot Sandbox</span>
-              </div>
-              <div className="flex items-center gap-2">
-                {/* Language toggle inside sandbox */}
-                <button
-                  onClick={() => setSimLang(simLang === 'en' ? 'am' : 'en')}
-                  className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-700 font-medium text-[11px] transition-colors"
-                  title="Toggle Language"
-                >
-                  <Globe className="w-3 h-3 text-amber-400" />
-                  {simLang === 'en' ? 'አማርኛ' : 'English'}
-                </button>
-                <button
-                  onClick={resetSimulator}
-                  className="p-1 rounded-full bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
-                  title="Restart Bot (/start)"
-                >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Telegram App Frame */}
-            <div className="bg-[#17212b] rounded-2xl overflow-hidden border border-neutral-800 shadow-inner flex flex-col h-[580px]">
-              
-              {/* Telegram Top App Bar */}
-              <div className="bg-[#242f3d] px-4 py-2.5 flex items-center justify-between border-b border-neutral-800/80">
-                <div className="flex items-center gap-2.5">
-                  <img
-                    src={activePreset.profilePic}
-                    alt="Bot Avatar"
-                    className="w-8 h-8 rounded-full object-cover border border-amber-500/50"
-                  />
+        {/* Right side — How it works */}
+        <div className="lg:col-span-2 space-y-4">
+          <div className="bg-neutral-900/80 border border-neutral-800 rounded-2xl p-6">
+            <h4 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+              <Clock className="w-4 h-4 text-amber-400" /> How it works
+            </h4>
+            <div className="space-y-4">
+              {[
+                { step: '1', title: 'You fill this form', desc: 'Takes 2 minutes. Name, type, phone, features you want.' },
+                { step: '2', title: 'Sent to Abenezer', desc: 'All details go directly via Telegram. No forms, no emails.' },
+                { step: '3', title: 'Bot gets built', desc: 'Fully customized to your shop. Same-day deployment in most cases.' },
+                { step: '4', title: 'You receive a live link', desc: 'Share it with your customers. The bot handles everything 24/7.' },
+              ].map(({ step, title, desc }) => (
+                <div key={step} className="flex gap-3">
+                  <span className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
+                    {step}
+                  </span>
                   <div>
-                    <div className="text-white font-semibold text-xs leading-none flex items-center gap-1.5">
-                      {shopName}
-                      <span className="text-[9px] bg-sky-500/20 text-sky-400 px-1 py-0.2 rounded font-normal">bot</span>
-                    </div>
-                    <div className="text-[10px] text-emerald-400 leading-none mt-1">online</div>
+                    <div className="text-sm font-semibold text-white">{title}</div>
+                    <div className="text-xs text-neutral-400 mt-0.5">{desc}</div>
                   </div>
                 </div>
-                <span className="text-[10px] text-neutral-400 font-mono">v1.0 serverless</span>
-              </div>
-
-              {/* Chat Messages Body */}
-              <div className="flex-1 overflow-y-auto p-3.5 space-y-3.5 text-xs text-white">
-                
-                {/* Simulated Welcome Message with Banner Image */}
-                <div className="bg-[#182533] rounded-2xl overflow-hidden border border-neutral-800 max-w-[94%] shadow-md">
-                  <img
-                    src={activePreset.welcomeBanner}
-                    alt="Welcome Banner"
-                    className="w-full h-32 object-cover object-center"
-                  />
-                  <div className="p-3 space-y-2">
-                    <p className="font-semibold text-amber-200">
-                      🌿 {isAm ? `እንኳን ወደ ${shopNameAm} በደህና መጡ!` : `Welcome to ${shopName}!`}
-                    </p>
-                    <p className="text-neutral-300 text-[11px] italic">
-                      {isAm ? activePreset.taglineAm : tagline}
-                    </p>
-                    <div className="flex items-center gap-1.5 text-[10px] text-emerald-400 pt-1 border-t border-neutral-800">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      <span>{isAm ? activePreset.operatingHoursAm : activePreset.operatingHours}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Step Content: Home Menu */}
-                {simStep === 'home' && (
-                  <div className="space-y-1.5">
-                    <div className="grid grid-cols-2 gap-1.5">
-                      <button
-                        onClick={() => setSimStep('book_svc')}
-                        className="bg-[#2b5278] hover:bg-[#346290] text-white font-medium py-2 px-2.5 rounded-xl text-center text-[11px] transition-colors"
-                      >
-                        📅 {isAm ? 'ቀጠሮ ይያዙ' : 'Book Appointment'}
-                      </button>
-                      <button
-                        onClick={() => setSimStep('catalog')}
-                        className="bg-[#2b5278] hover:bg-[#346290] text-white font-medium py-2 px-2.5 rounded-xl text-center text-[11px] transition-colors"
-                      >
-                        🏷️ {isAm ? 'አገልግሎቶችና ዋጋ' : 'Services & Menu'}
-                      </button>
-                      <button
-                        onClick={() => setSimStep('hours')}
-                        className="bg-[#242f3d] hover:bg-[#2c394a] text-neutral-200 font-medium py-2 px-2.5 rounded-xl text-center text-[11px] transition-colors"
-                      >
-                        📍 {isAm ? 'አድራሻና ሰዓት' : 'Location & Hours'}
-                      </button>
-                      <button
-                        onClick={() => setSimStep('human')}
-                        className="bg-[#242f3d] hover:bg-[#2c394a] text-neutral-200 font-medium py-2 px-2.5 rounded-xl text-center text-[11px] transition-colors"
-                      >
-                        💬 {isAm ? 'ከባለሙያ ጋር' : 'Talk to Staff'}
-                      </button>
-                    </div>
-                    <button
-                      onClick={() => setSimLang(simLang === 'en' ? 'am' : 'en')}
-                      className="w-full bg-[#1e2a38] text-neutral-300 py-1.5 rounded-xl text-center text-[10px] hover:text-white"
-                    >
-                      🌐 {isAm ? 'Switch to English' : 'ወደ አማርኛ ቀይር'}
-                    </button>
-                  </div>
-                )}
-
-                {/* Step Content: Catalog Menu */}
-                {simStep === 'catalog' && (
-                  <div className="bg-[#182533] rounded-2xl p-3 space-y-2 border border-neutral-800">
-                    <div className="flex items-center justify-between pb-1.5 border-b border-neutral-800">
-                      <span className="font-semibold text-amber-300">
-                        🏷️ {isAm ? 'የአገልግሎቶች ዝርዝር' : 'Services & Pricing'}
-                      </span>
-                      <button
-                        onClick={() => setSimStep('home')}
-                        className="text-[10px] text-neutral-400 hover:text-white"
-                      >
-                        ✕ Close
-                      </button>
-                    </div>
-                    <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
-                      {activePreset.services.map((s) => (
-                        <div key={s.id} className="p-2 rounded-lg bg-[#242f3d]/60 text-[11px]">
-                          <div className="flex justify-between items-center">
-                            <span className="font-medium text-white">{s.emoji} {isAm ? s.nameAm : s.name}</span>
-                            <span className="font-bold text-amber-400">{s.price} ETB</span>
-                          </div>
-                          <p className="text-[10px] text-neutral-400 mt-0.5">{isAm ? s.descriptionAm : s.description}</p>
-                        </div>
-                      ))}
-                    </div>
-                    <button
-                      onClick={() => setSimStep('book_svc')}
-                      className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-1.5 rounded-xl text-center text-[11px] mt-2"
-                    >
-                      📅 {isAm ? 'አሁን ቀጠሮ ይያዙ' : 'Book a Service Now'}
-                    </button>
-                  </div>
-                )}
-
-                {/* Step Content: Booking Step 1 (Choose Service) */}
-                {simStep === 'book_svc' && (
-                  <div className="bg-[#182533] rounded-2xl p-3 space-y-2 border border-neutral-800">
-                    <p className="font-medium text-amber-300 text-[11px]">
-                      ✂️ {isAm ? 'ደረጃ 1/4: የሚፈልጉትን አገልግሎት ይምረጡ' : 'Step 1/4: Choose a Service'}
-                    </p>
-                    <div className="space-y-1.5 max-h-56 overflow-y-auto pr-1">
-                      {activePreset.services.map((s) => (
-                        <button
-                          key={s.id}
-                          onClick={() => {
-                            setChosenService(s);
-                            setSimStep('book_staff');
-                          }}
-                          className="w-full text-left p-2 rounded-xl bg-[#242f3d] hover:bg-[#2b5278] flex items-center justify-between text-[11px] transition-colors"
-                        >
-                          <span className="font-medium text-white">{s.emoji} {isAm ? s.nameAm : s.name}</span>
-                          <span className="text-amber-400 font-bold">{s.price} ETB</span>
-                        </button>
-                      ))}
-                    </div>
-                    <button
-                      onClick={() => setSimStep('home')}
-                      className="text-[10px] text-neutral-400 hover:text-white w-full text-center py-1"
-                    >
-                      ⬅️ {isAm ? 'ወደ ዋና ማውጫ' : 'Back to Menu'}
-                    </button>
-                  </div>
-                )}
-
-                {/* Step Content: Booking Step 2 (Choose Staff) */}
-                {simStep === 'book_staff' && (
-                  <div className="bg-[#182533] rounded-2xl p-3 space-y-2 border border-neutral-800">
-                    <p className="font-medium text-amber-300 text-[11px]">
-                      👤 {isAm ? 'ደረጃ 2/4: ባለሙያ ይምረጡ' : 'Step 2/4: Select Your Specialist'}
-                    </p>
-                    <div className="space-y-1.5">
-                      {activePreset.staff.map((st) => (
-                        <button
-                          key={st.id}
-                          onClick={() => {
-                            setChosenStaff(st.name);
-                            setSimStep('book_date');
-                          }}
-                          className="w-full text-left p-2 rounded-xl bg-[#242f3d] hover:bg-[#2b5278] text-[11px] transition-colors"
-                        >
-                          <div className="font-medium text-white">{st.name}</div>
-                          <div className="text-[10px] text-neutral-400">{isAm ? st.titleAm : st.title}</div>
-                        </button>
-                      ))}
-                    </div>
-                    <button
-                      onClick={() => setSimStep('book_svc')}
-                      className="text-[10px] text-neutral-400 hover:text-white w-full text-center py-1"
-                    >
-                      ⬅️ {isAm ? 'አገልግሎት ቀይር' : 'Change Service'}
-                    </button>
-                  </div>
-                )}
-
-                {/* Step Content: Booking Step 3 (Choose Date) */}
-                {simStep === 'book_date' && (
-                  <div className="bg-[#182533] rounded-2xl p-3 space-y-2 border border-neutral-800">
-                    <p className="font-medium text-amber-300 text-[11px]">
-                      📅 {isAm ? 'ደረጃ 3/4: የቀጠሮ ቀን ይምረጡ' : 'Step 3/4: Pick Appointment Date'}
-                    </p>
-                    <div className="space-y-1.5">
-                      {['Today (ዛሬ)', 'Tomorrow (ነገ)', 'Day After Tomorrow'].map((d) => (
-                        <button
-                          key={d}
-                          onClick={() => {
-                            setChosenDate(d);
-                            setSimStep('book_time');
-                          }}
-                          className="w-full text-left p-2 rounded-xl bg-[#242f3d] hover:bg-[#2b5278] text-[11px] transition-colors font-medium text-white"
-                        >
-                          📅 {d}
-                        </button>
-                      ))}
-                    </div>
-                    <button
-                      onClick={() => setSimStep('book_staff')}
-                      className="text-[10px] text-neutral-400 hover:text-white w-full text-center py-1"
-                    >
-                      ⬅️ {isAm ? 'ባለሙያ ቀይር' : 'Change Specialist'}
-                    </button>
-                  </div>
-                )}
-
-                {/* Step Content: Booking Step 4 (Choose Time Slot) */}
-                {simStep === 'book_time' && (
-                  <div className="bg-[#182533] rounded-2xl p-3 space-y-2 border border-neutral-800">
-                    <p className="font-medium text-amber-300 text-[11px]">
-                      ⏰ {isAm ? 'ደረጃ 4/4: ሰዓት ይምረጡ' : 'Step 4/4: Choose Time Slot'}
-                    </p>
-                    <div className="grid grid-cols-2 gap-1.5">
-                      {['10:00 AM', '11:30 AM', '02:00 PM', '04:00 PM', '05:30 PM'].map((slot) => (
-                        <button
-                          key={slot}
-                          onClick={() => {
-                            setChosenTime(slot);
-                            setSimStep('book_confirm');
-                          }}
-                          className="p-2 rounded-xl bg-[#242f3d] hover:bg-[#2b5278] text-center text-[11px] font-mono text-white transition-colors"
-                        >
-                          {slot}
-                        </button>
-                      ))}
-                    </div>
-                    <button
-                      onClick={() => setSimStep('book_date')}
-                      className="text-[10px] text-neutral-400 hover:text-white w-full text-center py-1"
-                    >
-                      ⬅️ {isAm ? 'ቀን ቀይር' : 'Change Date'}
-                    </button>
-                  </div>
-                )}
-
-                {/* Step Content: Confirm & Payment */}
-                {simStep === 'book_confirm' && (
-                  <div className="bg-[#182533] rounded-2xl p-3 space-y-2.5 border border-neutral-800">
-                    <div className="font-semibold text-amber-300 text-xs">
-                      ✨ {isAm ? 'የቀጠሮ ማረጋገጫና ክፍያ' : 'Review & Confirm'}
-                    </div>
-                    <div className="p-2 rounded-xl bg-[#242f3d] text-[11px] space-y-1">
-                      <div>• {isAm ? 'አገልግሎት' : 'Service'}: <strong>{chosenService?.name || 'Selected Item'}</strong></div>
-                      <div>• {isAm ? 'ባለሙያ' : 'Specialist'}: <strong>{chosenStaff}</strong></div>
-                      <div>• {isAm ? 'ጊዜ' : 'Schedule'}: <strong>{chosenDate} @ {chosenTime}</strong></div>
-                      <div className="text-amber-400 font-bold">• {isAm ? 'ዋጋ' : 'Total'}: {chosenService?.price || 350} ETB</div>
-                    </div>
-
-                    <div className="space-y-1.5 pt-1">
-                      <button
-                        onClick={() => {
-                          setChosenPayment('cash');
-                          setSimStep('book_done');
-                        }}
-                        className="w-full p-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-white text-[11px] font-medium transition-colors text-left flex items-center justify-between"
-                      >
-                        <span>💵 {isAm ? 'በቦታው በካሽ መክፈል' : 'Pay Cash at Shop'}</span>
-                        <ChevronRight className="w-3.5 h-3.5 text-neutral-400" />
-                      </button>
-                      <button
-                        onClick={() => {
-                          setChosenPayment('telebirr');
-                          setSimStep('book_done');
-                        }}
-                        className="w-full p-2 rounded-xl bg-emerald-700/80 hover:bg-emerald-600 text-white text-[11px] font-medium transition-colors text-left flex items-center justify-between"
-                      >
-                        <span>📱 {isAm ? 'በቴሌብር ይክፈሉ' : 'Pay via Telebirr Transfer'}</span>
-                        <ChevronRight className="w-3.5 h-3.5 text-neutral-200" />
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* Step Content: Done / Ticket */}
-                {simStep === 'book_done' && (
-                  <div className="bg-[#182533] rounded-2xl p-3.5 space-y-3 border border-emerald-500/50 shadow-lg">
-                    <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs">
-                      <Check className="w-4 h-4" />
-                      <span>{isAm ? 'ቀጠሮዎ በተሳካ ሁኔታ ተመዝግቧል!' : 'Reservation Confirmed!'}</span>
-                    </div>
-
-                    <div className="p-2.5 rounded-xl bg-[#242f3d] font-mono text-[11px] space-y-1 text-neutral-200">
-                      <div>Ticket: <span className="text-amber-300 font-bold">#YH-8492</span></div>
-                      <div>Service: {chosenService?.name || 'Item'}</div>
-                      <div>Specialist: {chosenStaff}</div>
-                      <div>When: {chosenDate} @ {chosenTime}</div>
-                      <div>Payment: {chosenPayment === 'cash' ? 'Cash at Shop' : 'Telebirr Pending Verification'}</div>
-                    </div>
-
-                    {chosenPayment === 'telebirr' && (
-                      <div className="p-2 rounded-lg bg-amber-950/40 border border-amber-800/40 text-[10px] text-amber-300">
-                        📱 Send transfer to <strong>{telebirrPhone}</strong> ({telebirrName}) and paste reference.
-                      </div>
-                    )}
-
-                    <div className="pt-1 flex gap-2">
-                      <button
-                        onClick={resetSimulator}
-                        className="flex-1 bg-[#2b5278] hover:bg-[#346290] text-white py-1.5 rounded-xl text-center text-[10px]"
-                      >
-                        ⬅️ Main Menu
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* Step Content: Location & Hours */}
-                {simStep === 'hours' && (
-                  <div className="bg-[#182533] rounded-2xl p-3 space-y-2 border border-neutral-800 text-[11px]">
-                    <div className="font-semibold text-amber-300">📍 {isAm ? 'አድራሻና የስራ ሰዓት' : 'Location & Hours'}</div>
-                    <p className="text-neutral-300">
-                      • {isAm ? 'አድራሻ' : 'Address'}: Bole Road, Near Edna Mall, Addis Ababa<br />
-                      • {isAm ? 'የስራ ሰዓት' : 'Hours'}: {isAm ? activePreset.operatingHoursAm : activePreset.operatingHours}<br />
-                      • {isAm ? 'ስልክ' : 'Phone'}: {phone}
-                    </p>
-                    <button
-                      onClick={() => setSimStep('home')}
-                      className="w-full bg-[#242f3d] py-1.5 rounded-xl text-center text-[10px] text-neutral-300 hover:text-white"
-                    >
-                      ⬅️ {isAm ? 'ተመለስ' : 'Back'}
-                    </button>
-                  </div>
-                )}
-
-                {/* Step Content: Human Contact */}
-                {simStep === 'human' && (
-                  <div className="bg-[#182533] rounded-2xl p-3 space-y-2 border border-neutral-800 text-[11px]">
-                    <div className="font-semibold text-amber-300">💬 {isAm ? 'ከባለሙያ ጋር ይገናኙ' : 'Talk with Staff'}</div>
-                    <p className="text-neutral-300 text-[11px]">
-                      {isAm
-                        ? 'የሱቃችንን ሰራተኞች በቀጥታ በስልክ ወይም በቴሌግራም ለማግኘት:'
-                        : 'To speak directly with our in-shop concierge:'}
-                    </p>
-                    <div className="p-2 rounded-xl bg-[#242f3d] font-mono text-[11px] text-amber-300">
-                      📞 Phone: {phone}
-                    </div>
-                    <button
-                      onClick={() => setSimStep('home')}
-                      className="w-full bg-[#242f3d] py-1.5 rounded-xl text-center text-[10px] text-neutral-300 hover:text-white"
-                    >
-                      ⬅️ {isAm ? 'ተመለስ' : 'Back'}
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* Telegram Bottom Input Bar */}
-              <div className="bg-[#242f3d] px-3.5 py-2.5 flex items-center justify-between border-t border-neutral-800/80">
-                <span className="text-[11px] text-neutral-400 italic">
-                  Tap buttons above to interact...
-                </span>
-                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800/40">
-                  ⚡ 10ms
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-3 text-center">
-              <span className="text-[11px] text-neutral-500">
-                Live interactive emulation of <code className="text-neutral-400">/api/webhook.ts</code>
-              </span>
+              ))}
             </div>
           </div>
-        </div>
 
+          {/* What's included */}
+          <div className="bg-neutral-900/80 border border-neutral-800 rounded-2xl p-6">
+            <h4 className="text-sm font-bold text-white mb-3">Every bot includes</h4>
+            <div className="space-y-2">
+              {[
+                'Realistic, people-free shop banner & profile badge',
+                'Warm bilingual English & Amharic interface',
+                'Telebirr + Cash payment flow',
+                'Admin alerts for every booking/order',
+                'Vercel deployment (no monthly server bills)',
+                '1 round of revisions after delivery',
+              ].map(item => (
+                <div key={item} className="flex items-start gap-2 text-xs text-neutral-300">
+                  <CheckCircle className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Direct contact */}
+          <a
+            href="https://t.me/abenezer_abrham"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 p-4 bg-neutral-950 border border-neutral-800 rounded-2xl hover:border-neutral-700 transition-all group"
+          >
+            <div className="w-9 h-9 rounded-full bg-sky-500/20 flex items-center justify-center">
+              <svg className="w-4 h-4 text-sky-400" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+              </svg>
+            </div>
+            <div>
+              <div className="text-sm font-semibold text-white group-hover:text-sky-400 transition-colors">@abenezer_abrham</div>
+              <div className="text-xs text-neutral-400">Prefer to message directly? Go ahead</div>
+            </div>
+          </a>
+        </div>
       </div>
     </section>
   );
