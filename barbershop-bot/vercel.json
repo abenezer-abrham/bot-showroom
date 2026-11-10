@@ -1,0 +1,10 @@
+{
+  "buildCommand": "echo 'Barbershop Bot ready for Vercel'",
+  "outputDirectory": ".",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/webhook"
+    }
+  ]
+}

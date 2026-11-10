@@ -375,14 +375,14 @@ export const DEMO_FLOWS: Record<string, BotDemoFlow> = {
   },
   'barbershop-flow': {
     tierId: 'full',
-    tierName: 'Habesha Barbershop Bot',
+    tierName: 'Miliana Barbershop Bot',
     badge: 'አማርኛ & Telebirr',
-    botUsername: '@habesha_barbershop_bot',
+    botUsername: '@Miliana_Barbershop_Bot',
     initialMessages: [
       {
         id: 'bs-init',
         sender: 'bot',
-        text: '💈 **እንኳን ወደ ሐበሻ ባርበርሾፕ ላውንጅ በደህና መጡ!**\n\nWelcome to Habesha Grooming Lounge (Bole, Addis Ababa).\n\nየሚፈልጉትን አገልግሎት ይምረጡ / Please select an option:',
+        text: '💈 **እንኳን ወደ ሚሊያና ባርበርሾፕ በደህና መጡ!**\n\nWelcome to Miliana Barbershop (Bole, Addis Ababa).\n\nየሚፈልጉትን አገልግሎት ይምረጡ / Please select an option:',
         buttons: [
           { label: '📅 ቀጠሮ ይያዙ (Book Appointment)', action: 'bs_services' },
           { label: '✂️ አገልግሎቶችና ዋጋ (Prices)', action: 'bs_price_list' },

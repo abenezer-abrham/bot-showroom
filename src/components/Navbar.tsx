@@ -67,6 +67,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Desktop Nav Links */}
           <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-300">
+            <a href="#outfit-studio" className="text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1 transition-colors">
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              Universal Outfit
+            </a>
             <a href="#packages" className="hover:text-white transition-colors">
               Packages &amp; Pricing
             </a>
@@ -175,6 +179,13 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-[#0c0e14] border-b border-white/10 px-4 pt-3 pb-6 space-y-2">
+          <a
+            href="#outfit-studio"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-3 py-2.5 text-sm font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-lg"
+          >
+            🌿 Universal Bot Outfit (Vercel)
+          </a>
           <a
             href="#packages"
             onClick={() => setMobileMenuOpen(false)}

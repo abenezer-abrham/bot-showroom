@@ -11,6 +11,12 @@ Developed by **Abenezer Abrham** ([@abenezer_abrham](https://t.me/abenezer_abrha
 - **Spotify-Grade Aesthetic**: Obsidian dark theme (`#090a0f`), vibrant Spotify green & cyan glowing accents, and glassmorphic cards.
 - **Dynamic Dual-Model Deals**: Instantly switch between One-Time Source Code Buyout and Monthly Managed Servicing.
 - **Interactive In-Browser Telegram Sandbox**: Test real bot conversations, inline keyboards, checkout flows, and automated responses right in the browser.
+- **🌿 Universal Turnkey Shop Engine ("The Outfit")**:
+  - Deployable on **Vercel Serverless** in 60 seconds (`/api/webhook` and `/api/set-webhook`).
+  - Adaptable to **any shop or niche** (Barbershop, Specialty Coffee Roastery, Wellness & Spa, Artisan Boutique) by simply changing environment variables or `shop.config.ts`.
+  - **Photorealistic, humane branding**: Authentic 35mm film photography profile badges and welcome banners (warm reclaimed wood, linen, brass, natural daylight, zero AI glitch).
+  - **Sensible shop features**: 4-step booking/ordering, staff selection, date & time slots, Telebirr & Cash checkout, admin alerts, bilingual English/Amharic switcher, direct phone/concierge call buttons.
+  - **Live Web Configurator & Simulator**: Interactive sandbox with real-time preview and 1-click Vercel `.env` export.
 - **Categorized Showroom**:
   - 🛍️ **TeleShop Pro**: E-Commerce & Digital Goods with Telegram Stars, Crypto & Stripe payments.
   - 👑 **SubGate VIP**: Automated Paid Channel Gating & Subscription Expiry Bot.

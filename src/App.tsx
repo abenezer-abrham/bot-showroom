@@ -7,6 +7,7 @@ import { ComparisonMatrix } from './components/ComparisonMatrix';
 import { FAQ } from './components/FAQ';
 import { Footer } from './components/Footer';
 import { CheckoutModal } from './components/CheckoutModal';
+import { OutfitConfigurator } from './components/OutfitConfigurator';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { CurrencyCode, PackageTier } from './types/showroom';
 import { PACKAGES, SITE_CONFIG } from './config/showroom';
@@ -113,7 +114,10 @@ export function App() {
             onOpenOrderModal={() => handleOpenOrderModal(selectedPackageId)}
           />
 
-          {/* 2. Packages & Pricing (Starter 3,000, Standard 4,000, Full 7,000) */}
+          {/* 2. Universal Telegram Bot Outfit Studio */}
+          <OutfitConfigurator />
+
+          {/* 3. Packages & Pricing (Starter 3,000, Standard 4,000, Full 7,000) */}
           <DealsPricing
             currency={currency}
             selectedPackageId={selectedPackageId}
