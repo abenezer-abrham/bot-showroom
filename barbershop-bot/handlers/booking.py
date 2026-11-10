@@ -95,7 +95,7 @@ async def cb_select_slot(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text(t("enter_contact", lang), parse_mode="Markdown")
     await callback.answer()
 
-@router.message(BookingStates.entering_contact)
+@router.message(BookingStates.entering_contact, ~F.text.startswith('/'))
 async def process_contact(message: Message, state: FSMContext):
     contact_text = message.text.strip()
     await state.update_data(customer_contact=contact_text)

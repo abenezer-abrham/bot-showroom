@@ -1,6 +1,7 @@
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import CommandStart, Command
+from aiogram.fsm.context import FSMContext
 from database import get_user_language, set_user_language, get_all_services
 from strings import t
 from keyboards import get_main_menu_keyboard, get_language_inline_keyboard
@@ -9,9 +10,9 @@ import config
 router = Router()
 
 @router.message(CommandStart())
-async def cmd_start(message: Message):
+async def cmd_start(message: Message, state: FSMContext):
+    await state.clear()
     lang = await get_user_language(message.from_user.id)
-    # Check if first time or existing
     text = t("welcome", lang, shop_name=config.SHOP_NAME)
     kb = get_main_menu_keyboard(lang)
     await message.answer(text, reply_markup=kb, parse_mode="Markdown")

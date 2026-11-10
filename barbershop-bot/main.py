@@ -24,11 +24,11 @@ async def main():
     )
     dp = Dispatcher()
     
-    # Register routers in correct priority order
+    # Register routers in correct priority order: start handles /start and reset
+    dp.include_router(start.router)
     dp.include_router(admin.router)
     dp.include_router(booking.router)
     dp.include_router(profile.router)
-    dp.include_router(start.router)
     
     logger.info(f"Starting {config.SHOP_NAME} Telegram Bot...")
     try:
