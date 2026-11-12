@@ -2,492 +2,1646 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Miliana Barbershop — Premier heritage grooming lounge in Bole, Addis Ababa. Book appointments, view services, and pay with Telebirr." />
-  <title>Miliana Barbershop · Bole, Addis Ababa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f0d0b" />
+  <title>Miliana Barbershop · Telegram Mini App</title>
+  
+  <!-- Telegram Web App SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
 
     :root {
-      --bg: #0f0d0b;
-      --surface: #18140f;
-      --card: #201a12;
-      --border: #2e2416;
+      --bg-dark: #0a0806;
+      --bg-surface: #120f0c;
+      --bg-card: #181410;
+      --bg-card-hover: #221c16;
+      --border: #292119;
+      --border-accent: rgba(184, 124, 62, 0.45);
       --accent: #b87c3e;
-      --accent-light: #d4a05a;
-      --text: #f0ebe3;
-      --muted: #9a8872;
-      --green: #4a7c5e;
-      --radius: 16px;
+      --accent-light: #d89f5c;
+      --accent-glow: rgba(184, 124, 62, 0.2);
+      --text: #f5f0ea;
+      --text-muted: #948473;
+      --text-dim: #6b5e50;
+      --success: #38a169;
+      --success-glow: rgba(56, 161, 105, 0.2);
+      --danger: #e53e3e;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-pill: 9999px;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     }
-
-    html { scroll-behavior: smooth; }
 
     body {
-      background: var(--bg);
+      background-color: var(--bg-dark);
       color: var(--text);
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 90px;
     }
 
-    /* ─── NAV ─── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 24px;
-      background: rgba(15,13,11,0.85);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
+    /* Ambient Gold Glow */
+    .ambient-glow {
+      position: fixed;
+      top: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 480px;
+      height: 300px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
     }
-    .nav-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 18px; font-weight: 700; color: var(--text);
-      text-decoration: none; letter-spacing: 0.03em;
-    }
-    .nav-logo span { color: var(--accent); }
-    .nav-book {
-      background: var(--accent); color: #0f0d0b;
-      padding: 8px 20px; border-radius: 50px;
-      text-decoration: none; font-size: 13px; font-weight: 600;
-      transition: background 0.2s, transform 0.1s;
-    }
-    .nav-book:hover { background: var(--accent-light); transform: translateY(-1px); }
 
-    /* ─── HERO ─── */
-    .hero {
-      position: relative; height: 100svh; min-height: 600px;
-      display: flex; align-items: center; justify-content: center;
-      text-align: center;
-      overflow: hidden;
-    }
-    .hero-bg {
-      position: absolute; inset: 0;
-      background-image: url('./assets/outfit/barber-banner.jpg');
-      background-size: cover; background-position: center center;
-      transform: scale(1.04);
-      transition: transform 8s ease;
-    }
-    .hero-bg::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(circle at center, rgba(15,13,11,0.65) 0%, rgba(15,13,11,0.92) 100%);
-    }
-    .hero-content {
-      position: relative; z-index: 2;
-      padding: 48px 24px;
-      max-width: 760px;
+    /* Container */
+    .app-container {
+      max-width: 520px;
       margin: 0 auto;
-      display: flex; flex-direction: column; align-items: center;
+      position: relative;
+      z-index: 1;
+      padding: 14px 16px;
     }
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 16px;
-    }
-    .hero-eyebrow::before, .hero-eyebrow::after {
-      content: ''; display: block; width: 24px; height: 1px; background: var(--accent);
-    }
-    h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(32px, 7vw, 60px);
-      font-weight: 700; line-height: 1.1;
-      letter-spacing: -0.02em;
+
+    /* ── Top Bar ── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0 16px;
+      border-bottom: 1px solid var(--border);
       margin-bottom: 16px;
     }
-    .hero-sub {
-      color: var(--muted); font-size: 15px; max-width: 520px; margin: 0 auto 32px;
-    }
-    .hero-cta-row {
-      display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: center;
-    }
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--accent); color: #0f0d0b;
-      padding: 14px 28px; border-radius: 50px;
-      text-decoration: none; font-weight: 700; font-size: 14px;
-      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-      box-shadow: 0 4px 24px rgba(184,124,62,0.3);
-    }
-    .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(184,124,62,0.4); }
-    .btn-secondary {
-      display: inline-flex; align-items: center; gap: 8px;
-      border: 1px solid var(--border); color: var(--text);
-      padding: 14px 24px; border-radius: 50px;
-      text-decoration: none; font-weight: 500; font-size: 14px;
-      transition: border-color 0.2s, color 0.2s;
-    }
-    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
-    /* ─── STATUS PILL ─── */
-    .status-pill {
-      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-      z-index: 90;
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--surface); border: 1px solid var(--border);
-      padding: 8px 16px; border-radius: 50px;
-      font-size: 12px; font-weight: 500; color: var(--muted);
-      backdrop-filter: blur(12px);
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-pfp {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      border: 1px solid var(--border-accent);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--accent-light);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lang-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lang-btn:active {
+      transform: scale(0.96);
+      border-color: var(--accent);
+    }
+
+    /* ── Live Status Pill ── */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      background: rgba(18, 15, 12, 0.85);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      margin-bottom: 14px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .status-dot.open {
+      background: #4ade80;
+      box-shadow: 0 0 8px #4ade80;
+    }
+
+    .status-dot.closed {
+      background: #f97316;
+      box-shadow: 0 0 8px #f97316;
+    }
+
+    /* ── Navigation Tabs ── */
+    .nav-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      background: var(--bg-surface);
+      padding: 4px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .nav-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 4px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-tab span.icon {
+      font-size: 16px;
+    }
+
+    .nav-tab.active {
+      background: var(--bg-card);
+      color: var(--accent-light);
+      border: 1px solid var(--border-accent);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    /* ── Step Progress Wizard ── */
+    .wizard-steps {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      margin-bottom: 22px;
+      padding: 0 8px;
+    }
+
+    .wizard-steps::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 20px;
+      right: 20px;
+      height: 2px;
+      background: var(--border);
+      z-index: 0;
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .step-label {
+      font-size: 10px;
+      color: var(--text-dim);
+      font-weight: 600;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .step-item.active .step-num {
+      background: var(--accent);
+      border-color: var(--accent-light);
+      color: #0a0806;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .step-item.active .step-label {
+      color: var(--accent-light);
+    }
+
+    .step-item.done .step-num {
+      background: var(--bg-card-hover);
+      border-color: var(--accent);
+      color: var(--accent-light);
+    }
+
+    /* ── Section Titles ── */
+    .section-header {
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .section-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    /* ── Cards Grid ── */
+    .card-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    /* Service Card */
+    .service-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .service-card:hover, .service-card:active {
+      background: var(--bg-card-hover);
+      border-color: rgba(184, 124, 62, 0.3);
+    }
+
+    .service-card.selected {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(184, 124, 62, 0.12) 0%, var(--bg-card) 100%);
+      box-shadow: 0 4px 16px rgba(184, 124, 62, 0.15);
+    }
+
+    .service-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 6px;
+    }
+
+    .service-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .service-amharic {
+      font-size: 11px;
+      color: var(--accent-light);
+      margin-top: 1px;
+    }
+
+    .service-price {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent-light);
+      text-align: right;
       white-space: nowrap;
     }
-    .status-dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-    .status-dot.open { background: #4ade80; box-shadow: 0 0 0 2px rgba(74,222,128,0.2); }
-    .status-dot.closed { background: #f97316; box-shadow: 0 0 0 2px rgba(249,115,22,0.2); }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
 
-    /* ─── SECTION WRAPPER ─── */
-    section { padding: 80px 24px; max-width: 1000px; margin: 0 auto; }
-    .section-label {
-      font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 12px;
+    .service-duration {
+      font-size: 10px;
+      color: var(--text-muted);
+      display: block;
+      text-align: right;
     }
-    h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(24px, 4vw, 38px); font-weight: 700; line-height: 1.2;
-      margin-bottom: 8px;
-    }
-    .section-sub { color: var(--muted); margin-bottom: 40px; max-width: 500px; }
-    hr.divider { border: none; border-top: 1px solid var(--border); margin: 0; }
 
-    /* ─── SERVICES ─── */
-    .services-grid {
+    .service-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Barber Card */
+    .barber-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
     }
-    .service-card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 24px;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-    .service-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-    .service-emoji { font-size: 22px; margin-bottom: 10px; display: block; }
-    .service-name { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
-    .service-name-am { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
-    .service-desc { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 14px; }
-    .service-footer { display: flex; align-items: center; justify-content: space-between; }
-    .service-price { font-weight: 700; font-size: 16px; color: var(--accent-light); }
-    .service-duration { font-size: 12px; color: var(--muted); }
 
-    /* ─── BARBERS ─── */
-    .barbers-row {
-      display: flex; flex-wrap: wrap; gap: 16px;
-    }
     .barber-card {
-      flex: 1; min-width: 200px;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 20px 24px;
-      display: flex; align-items: center; gap: 14px;
-    }
-    .barber-avatar {
-      width: 44px; height: 44px; border-radius: 50%;
-      background: var(--border);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; flex-shrink: 0;
-    }
-    .barber-name { font-weight: 600; font-size: 14px; }
-    .barber-spec { font-size: 12px; color: var(--muted); margin-top: 2px; }
-
-    /* ─── INFO GRID ─── */
-    .info-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-    }
-    .info-card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 24px;
-    }
-    .info-icon { font-size: 20px; margin-bottom: 10px; display: block; }
-    .info-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
-    .info-value { font-size: 14px; font-weight: 500; line-height: 1.5; }
-    .info-value a { color: var(--accent-light); text-decoration: none; }
-    .info-value a:hover { text-decoration: underline; }
-
-    /* ─── BOOKING CTA BANNER ─── */
-    .cta-banner {
-      background: linear-gradient(135deg, var(--card) 0%, rgba(184,124,62,0.08) 100%);
+      background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 48px 32px;
+      border-radius: var(--radius-md);
+      padding: 14px;
+      cursor: pointer;
       text-align: center;
+      transition: all 0.2s ease;
     }
-    .cta-banner h2 { margin-bottom: 12px; }
-    .cta-banner p { color: var(--muted); margin-bottom: 28px; }
 
-    /* ─── FOOTER ─── */
-    footer {
+    .barber-card:hover, .barber-card:active {
+      border-color: var(--border-accent);
+    }
+
+    .barber-card.selected {
+      border-color: var(--accent);
+      background: linear-gradient(180deg, rgba(184, 124, 62, 0.15) 0%, var(--bg-card) 100%);
+      box-shadow: 0 4px 16px rgba(184, 124, 62, 0.15);
+    }
+
+    .barber-avatar-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin: 0 auto 8px;
+    }
+
+    .barber-card.selected .barber-avatar-wrap {
+      border-color: var(--accent);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .barber-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .barber-spec {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 3px;
+      line-height: 1.3;
+    }
+
+    /* Date Selector */
+    .date-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .date-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .date-card.selected {
+      border-color: var(--accent);
+      background: rgba(184, 124, 62, 0.14);
+      color: var(--text);
+    }
+
+    .date-day {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .date-val {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 2px;
+    }
+
+    .date-card.selected .date-day {
+      color: var(--accent-light);
+    }
+
+    /* Time Slots Grid */
+    .slots-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .slot-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 10px;
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .slot-btn:hover:not(.taken) {
+      border-color: var(--border-accent);
+    }
+
+    .slot-btn.selected {
+      background: var(--accent);
+      border-color: var(--accent-light);
+      color: #0a0806;
+      font-weight: 700;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    .slot-btn.taken {
+      opacity: 0.35;
+      background: #14110e;
+      border-color: #1e1914;
+      color: var(--text-dim);
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+
+    /* ── Input Fields ── */
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: var(--accent);
+    }
+
+    /* Payment Radio Cards */
+    .payment-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .payment-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s;
+    }
+
+    .payment-card.selected {
+      border-color: var(--accent);
+      background: rgba(184, 124, 62, 0.1);
+    }
+
+    .payment-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .payment-icon {
+      font-size: 20px;
+    }
+
+    .payment-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .payment-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Telebirr Details Box */
+    .telebirr-box {
+      background: #14100b;
+      border: 1px dashed var(--accent);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+
+    .telebirr-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .telebirr-row strong {
+      color: var(--accent-light);
+      font-family: monospace;
+    }
+
+    /* ── Sticky Bottom Action Bar ── */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15, 13, 11, 0.95);
+      backdrop-filter: blur(16px);
       border-top: 1px solid var(--border);
-      padding: 32px 24px;
+      padding: 12px 16px;
+      z-index: 100;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .btn-action-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-back {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: var(--radius-pill);
+      padding: 14px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      flex: 1;
+      background: var(--accent);
+      border: 1px solid var(--accent-light);
+      color: #0a0806;
+      border-radius: var(--radius-pill);
+      padding: 14px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 20px rgba(184, 124, 62, 0.35);
+      transition: all 0.2s;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+      background: var(--accent-light);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* ── Confirmation Ticket ── */
+    .ticket {
+      background: linear-gradient(180deg, #1f1913 0%, #15110d 100%);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-lg);
+      padding: 24px 20px;
       text-align: center;
-      font-size: 13px; color: var(--muted);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
     }
-    footer strong { color: var(--text); }
 
-    /* ─── TELEGRAM FLOAT BUTTON ─── */
-    .tg-float {
-      position: fixed; bottom: 80px; right: 20px; z-index: 90;
-      width: 52px; height: 52px; border-radius: 50%;
-      background: #229ED9;
-      display: flex; align-items: center; justify-content: center;
+    .ticket::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+    }
+
+    .ticket-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(56, 161, 105, 0.15);
+      border: 1.5px solid var(--success);
+      color: #4ade80;
+      font-size: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+    }
+
+    .ticket-title {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .ticket-id {
+      font-size: 12px;
+      color: var(--accent-light);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+    }
+
+    .ticket-details {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      text-align: left;
+      margin-bottom: 18px;
+    }
+
+    .ticket-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px dashed #271f16;
+      font-size: 12px;
+    }
+
+    .ticket-row:last-child {
+      border-bottom: none;
+    }
+
+    .ticket-row span.label {
+      color: var(--text-muted);
+    }
+
+    .ticket-row span.val {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* ── Info & Locations Tab ── */
+    .info-tile {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .info-tile h4 {
+      font-size: 12px;
+      color: var(--accent-light);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .info-tile p {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .info-tile a {
+      color: var(--accent-light);
       text-decoration: none;
-      box-shadow: 0 4px 20px rgba(34,158,217,0.4);
-      transition: transform 0.2s, box-shadow 0.2s;
+      font-weight: 600;
     }
-    .tg-float:hover { transform: scale(1.1); box-shadow: 0 8px 32px rgba(34,158,217,0.5); }
-    .tg-float svg { width: 26px; height: 26px; }
 
-    @media (max-width: 600px) {
-      nav { padding: 12px 16px; }
-      .hero-content { padding: 36px 16px; }
-      section { padding: 60px 16px; }
-      .cta-banner { padding: 36px 20px; }
+    /* Loading Spinner */
+    .spinner {
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-top-color: #0a0806;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <a class="nav-logo" href="#">Miliana <span>·</span> Barbershop</a>
-    <a class="nav-book" href="https://t.me/Miliana_Barbershop_Bot">📅 Book Now</a>
-  </nav>
+  <div class="ambient-glow"></div>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-bg" id="heroBg"></div>
-    <div class="hero-content">
-      <div class="hero-eyebrow">Heritage Grooming · Bole, Addis Ababa</div>
-      <h1>Precision cuts.<br>Classic shaves.<br>Real craft.</h1>
-      <p class="hero-sub">
-        Miliana Barbershop brings together timeless grooming tradition and modern skill.
-        Book your chair in seconds on Telegram — no calls, no waiting.
-      </p>
-      <div class="hero-cta-row">
-        <a class="btn-primary" href="https://t.me/Miliana_Barbershop_Bot">
-          <!-- Telegram icon -->
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-          Book on Telegram
-        </a>
-        <a class="btn-secondary" href="#services">View Services ↓</a>
+  <div class="app-container">
+
+    <!-- Top Header -->
+    <header>
+      <div class="brand-group">
+        <img class="brand-pfp" src="./assets/outfit/barber-pfp.jpg" alt="Miliana Barbershop" />
+        <div>
+          <div class="brand-title">Miliana Barbershop</div>
+          <div class="brand-subtitle" id="txtSubtitle">Heritage Grooming · Bole</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="lang-btn" id="langBtn" onclick="toggleLanguage()">🇬🇧 EN / 🇪🇹 አማ</button>
+      </div>
+    </header>
+
+    <!-- Open/Closed Real-time Badge -->
+    <div class="status-badge">
+      <span class="status-dot" id="liveDot"></span>
+      <span id="liveStatusText">Checking hours...</span>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+      <button class="nav-tab active" id="tabBtnBook" onclick="switchTab('book')">
+        <span class="icon">📅</span>
+        <span id="navBook">Book</span>
+      </button>
+      <button class="nav-tab" id="tabBtnServices" onclick="switchTab('services')">
+        <span class="icon">✂️</span>
+        <span id="navServices">Menu</span>
+      </button>
+      <button class="nav-tab" id="tabBtnInfo" onclick="switchTab('info')">
+        <span class="icon">📍</span>
+        <span id="navInfo">Hours</span>
+      </button>
+      <button class="nav-tab" id="tabBtnTickets" onclick="switchTab('tickets')">
+        <span class="icon">📋</span>
+        <span id="navTickets">Tickets</span>
+      </button>
+    </div>
+
+    <!-- ═════════ TAB 1: BOOKING WIZARD ═════════ -->
+    <div id="viewBook">
+
+      <!-- Wizard Step Indicator -->
+      <div class="wizard-steps" id="wizardSteps">
+        <div class="step-item active" id="stepIndicator1">
+          <div class="step-num">1</div>
+          <div class="step-label" id="stepLbl1">Service</div>
+        </div>
+        <div class="step-item" id="stepIndicator2">
+          <div class="step-num">2</div>
+          <div class="step-label" id="stepLbl2">Stylist</div>
+        </div>
+        <div class="step-item" id="stepIndicator3">
+          <div class="step-num">3</div>
+          <div class="step-label" id="stepLbl3">Time</div>
+        </div>
+        <div class="step-item" id="stepIndicator4">
+          <div class="step-num">4</div>
+          <div class="step-label" id="stepLbl4">Confirm</div>
+        </div>
+      </div>
+
+      <!-- STEP 1: SERVICE -->
+      <div id="step1" class="wizard-pane">
+        <div class="section-header">
+          <div class="section-title" id="tServiceTitle">Choose Your Service</div>
+          <div class="section-desc" id="tServiceDesc">Select from our signature grooming rituals (Prices 700 to 2,000 ETB)</div>
+        </div>
+        <div class="card-grid" id="serviceCardsContainer">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- STEP 2: BARBER -->
+      <div id="step2" class="wizard-pane" style="display: none;">
+        <div class="section-header">
+          <div class="section-title" id="tBarberTitle">Select Your Barber</div>
+          <div class="section-desc" id="tBarberDesc">Choose your specialist or take the first available chair</div>
+        </div>
+        <div class="barber-grid" id="barbersContainer">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- STEP 3: DATE & TIME -->
+      <div id="step3" class="wizard-pane" style="display: none;">
+        <div class="section-header">
+          <div class="section-title" id="tDateTimeTitle">Select Date & Time</div>
+          <div class="section-desc" id="tDateTimeDesc">Live collision protection ensures your slot is reserved</div>
+        </div>
+
+        <div class="date-strip" id="dateStrip">
+          <!-- Populated dynamically -->
+        </div>
+
+        <div class="section-header" style="margin-top: 18px;">
+          <div class="section-title" style="font-size: 15px;" id="tAvailableSlots">Available Hours</div>
+        </div>
+        <div class="slots-grid" id="slotsContainer">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- STEP 4: CONTACT & PAYMENT -->
+      <div id="step4" class="wizard-pane" style="display: none;">
+        <div class="section-header">
+          <div class="section-title" id="tConfirmTitle">Contact & Checkout</div>
+          <div class="section-desc" id="tConfirmDesc">Provide your phone for booking updates and select payment</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" id="lblCustomerName">Full Name</label>
+          <input type="text" class="form-input" id="inputName" placeholder="e.g. Abenezer Abrham" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" id="lblCustomerPhone">Phone Number (Required)</label>
+          <input type="tel" class="form-input" id="inputPhone" placeholder="+251 90 421 6852" />
+        </div>
+
+        <div class="section-header" style="margin-top: 18px;">
+          <div class="section-title" style="font-size: 15px;" id="tPaymentMethod">Payment Method</div>
+        </div>
+
+        <div class="payment-options">
+          <div class="payment-card selected" id="optCash" onclick="selectPayment('Cash at Shop')">
+            <div class="payment-left">
+              <span class="payment-icon">💵</span>
+              <div>
+                <div class="payment-title" id="txtPayCashTitle">Cash at Shop</div>
+                <div class="payment-sub" id="txtPayCashSub">Pay when you arrive at your appointment</div>
+              </div>
+            </div>
+            <div style="color: var(--accent); font-weight: bold;">✓</div>
+          </div>
+
+          <div class="payment-card" id="optTelebirr" onclick="selectPayment('Telebirr')">
+            <div class="payment-left">
+              <span class="payment-icon">📱</span>
+              <div>
+                <div class="payment-title">Telebirr</div>
+                <div class="payment-sub" id="txtPayTelebirrSub">Instant mobile wallet transfer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Telebirr details if selected -->
+        <div class="telebirr-box" id="telebirrBox" style="display: none;">
+          <div class="telebirr-row">
+            <span>Telebirr Number:</span>
+            <strong>+251 96 366 1680</strong>
+          </div>
+          <div class="telebirr-row">
+            <span>Account Name:</span>
+            <strong>ADDIS</strong>
+          </div>
+          <div class="form-group" style="margin-top: 10px; margin-bottom: 0;">
+            <label class="form-label" style="font-size: 10px;">Telebirr Transaction / Ref ID</label>
+            <input type="text" class="form-input" id="inputTelebirrRef" placeholder="e.g. TB1234567890" style="padding: 8px 10px; font-size: 12px;" />
+          </div>
+        </div>
+
+      </div>
+
+      <!-- STEP 5: SUCCESS TICKET -->
+      <div id="step5" class="wizard-pane" style="display: none;">
+        <div class="ticket">
+          <div class="ticket-icon">✓</div>
+          <div class="ticket-title" id="tConfirmedHead">Booking Confirmed!</div>
+          <div class="ticket-id" id="tTicketId">Appointment Ticket #101</div>
+
+          <div class="ticket-details">
+            <div class="ticket-row">
+              <span class="label" id="tLblSrv">Service</span>
+              <span class="val" id="tValSrv">Classic Haircut / Fade</span>
+            </div>
+            <div class="ticket-row">
+              <span class="label" id="tLblBarber">Barber</span>
+              <span class="val" id="tValBarber">Abel (Master Barber)</span>
+            </div>
+            <div class="ticket-row">
+              <span class="label" id="tLblWhen">Date & Time</span>
+              <span class="val" id="tValWhen">Today @ 11:00 AM</span>
+            </div>
+            <div class="ticket-row">
+              <span class="label" id="tLblPrice">Total</span>
+              <span class="val" id="tValPrice">800 ETB</span>
+            </div>
+            <div class="ticket-row">
+              <span class="label" id="tLblPay">Payment</span>
+              <span class="val" id="tValPay">Cash at Shop</span>
+            </div>
+          </div>
+
+          <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 16px;" id="tTicketNotice">
+            📍 Bole Bulbula, Rifenti Mall, Addis Ababa.<br>Please arrive 5 minutes before your time slot.
+          </p>
+
+          <button class="btn-primary" style="width: 100%; margin-bottom: 8px;" onclick="resetBookingWizard()">
+            📅 Book Another Service
+          </button>
+          <button class="btn-back" style="width: 100%;" onclick="closeMiniApp()">
+            ✕ Close App
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═════════ TAB 2: SERVICES CATALOG ═════════ -->
+    <div id="viewServices" style="display: none;">
+      <div class="section-header">
+        <div class="section-title" id="tMenuHead">Services & Pricing</div>
+        <div class="section-desc">Fixed, transparent pricing from 700 to 2,000 ETB</div>
+      </div>
+      <div class="card-grid" id="fullMenuContainer"></div>
+    </div>
+
+    <!-- ═════════ TAB 3: LOCATION & HOURS ═════════ -->
+    <div id="viewInfo" style="display: none;">
+      <div class="section-header">
+        <div class="section-title">Miliana Barbershop</div>
+        <div class="section-desc">Premier Heritage Men's Lounge</div>
+      </div>
+
+      <div class="info-tile">
+        <h4>📍 Location</h4>
+        <p>Bole Bulbula, Rifenti Mall<br>Addis Ababa, Ethiopia</p>
+      </div>
+
+      <div class="info-tile">
+        <h4>🕐 Hours</h4>
+        <p>Monday – Sunday: <strong>8:30 AM – 9:00 PM</strong><br>Walk-ins welcome, Telegram bookings prioritized</p>
+      </div>
+
+      <div class="info-tile">
+        <h4>📞 Phone & Contact</h4>
+        <p>
+          Primary: <a href="tel:+251904216852">+251 90 421 6852</a><br>
+          Alternate: <a href="tel:+251963661680">+251 96 366 1680</a>
+        </p>
+      </div>
+
+      <div class="info-tile">
+        <h4>📱 Telebirr Payment</h4>
+        <p>Number: <strong>+251 96 366 1680</strong><br>Account Name: <strong>ADDIS</strong></p>
       </div>
     </div>
+
+    <!-- ═════════ TAB 4: MY TICKETS ═════════ -->
+    <div id="viewTickets" style="display: none;">
+      <div class="section-header">
+        <div class="section-title" id="tMyTicketsHead">My Appointments</div>
+        <div class="section-desc">Track and review your upcoming visits</div>
+      </div>
+      <div id="myTicketsContainer">
+        <div style="text-align: center; color: var(--text-muted); padding: 40px 10px; font-size: 13px;" id="tNoTickets">
+          No appointments found. Tap 'Book' to schedule your first chair.
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- OPEN/CLOSED STATUS PILL -->
-  <div class="status-pill" id="statusPill">
-    <span class="status-dot" id="statusDot"></span>
-    <span id="statusText">Checking hours…</span>
+  <!-- Sticky Bottom Navigation Buttons -->
+  <div class="bottom-bar" id="bottomBar">
+    <div class="btn-action-row">
+      <button class="btn-back" id="btnBack" onclick="handleBackStep()" style="display: none;">← Back</button>
+      <button class="btn-primary" id="btnNext" onclick="handleNextStep()">
+        <span id="btnNextText">Continue to Stylist →</span>
+      </button>
+    </div>
   </div>
-
-  <!-- TELEGRAM FLOAT -->
-  <a class="tg-float" href="https://t.me/Miliana_Barbershop_Bot" title="Open in Telegram" target="_blank">
-    <svg viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-  </a>
-
-  <hr class="divider" />
-
-  <!-- SERVICES -->
-  <section id="services">
-    <div class="section-label">What We Offer</div>
-    <h2>Our Services & Pricing</h2>
-    <p class="section-sub">Every service uses premium products. Prices are fixed and transparent — no surprises.</p>
-    <div class="services-grid">
-
-      <div class="service-card">
-        <span class="service-emoji">✂️</span>
-        <div class="service-name">Classic Haircut & Fade</div>
-        <div class="service-name-am">የጸጉር መቁረጥ / ፌድ</div>
-        <div class="service-desc">Modern fades, scissor work, and razor finish tailored to your head shape.</div>
-        <div class="service-footer">
-          <span class="service-price">800 ETB</span>
-          <span class="service-duration">30 min</span>
-        </div>
-      </div>
-
-      <div class="service-card">
-        <span class="service-emoji">🪒</span>
-        <div class="service-name">Beard Trim & Hot Towel Shave</div>
-        <div class="service-name-am">የጢም ማስተካከልና ሙቅ ፎጣ ሻቨር</div>
-        <div class="service-desc">Beard shaping, premium oil treatment, and clean razor lineup.</div>
-        <div class="service-footer">
-          <span class="service-price">700 ETB</span>
-          <span class="service-duration">20 min</span>
-        </div>
-      </div>
-
-      <div class="service-card">
-        <span class="service-emoji">💈</span>
-        <div class="service-name">Haircut + Beard Styling Combo</div>
-        <div class="service-name-am">የጸጉር እና የጢም ጥምር ጥቅል</div>
-        <div class="service-desc">Full head and beard grooming package. Best value.</div>
-        <div class="service-footer">
-          <span class="service-price">1,300 ETB</span>
-          <span class="service-duration">45 min</span>
-        </div>
-      </div>
-
-      <div class="service-card">
-        <span class="service-emoji">🌿</span>
-        <div class="service-name">Facial Scrub & Black Mask</div>
-        <div class="service-name-am">የፊት እስክራብና ብላክ ማስክ</div>
-        <div class="service-desc">Deep pore cleansing, steam treatment, and refreshing facial massage.</div>
-        <div class="service-footer">
-          <span class="service-price">1,000 ETB</span>
-          <span class="service-duration">30 min</span>
-        </div>
-      </div>
-
-      <div class="service-card">
-        <span class="service-emoji">🎨</span>
-        <div class="service-name">Hair Color & Dye</div>
-        <div class="service-name-am">የጸጉር ቀለም መቀባት</div>
-        <div class="service-desc">Grey coverage or full vibrant color using quality dye products.</div>
-        <div class="service-footer">
-          <span class="service-price">1,500 ETB</span>
-          <span class="service-duration">40 min</span>
-        </div>
-      </div>
-
-      <div class="service-card" style="border-color: rgba(184,124,62,0.4); background: linear-gradient(135deg, var(--card), rgba(184,124,62,0.06));">
-        <span class="service-emoji">👑</span>
-        <div class="service-name">VIP Executive Package</div>
-        <div class="service-name-am">ቪአይፒ ሙሉ የክብር ጥቅል</div>
-        <div class="service-desc">Haircut, beard sculpt, facial scrub, wash, scalp massage, and refreshing drink. The full experience.</div>
-        <div class="service-footer">
-          <span class="service-price">2,000 ETB</span>
-          <span class="service-duration">75 min</span>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <hr class="divider" />
-
-  <!-- TEAM -->
-  <section id="team">
-    <div class="section-label">Our Team</div>
-    <h2>Meet the Barbers</h2>
-    <p class="section-sub">Choose your preferred stylist when booking, or let us assign the first available.</p>
-    <div class="barbers-row">
-      <div class="barber-card">
-        <div class="barber-avatar">✂️</div>
-        <div>
-          <div class="barber-name">Abel</div>
-          <div class="barber-spec">Master Barber · Modern Fades & Tapers</div>
-        </div>
-      </div>
-      <div class="barber-card">
-        <div class="barber-avatar">🪒</div>
-        <div>
-          <div class="barber-name">Dawit</div>
-          <div class="barber-spec">Classic Cuts & Beard Sculpting</div>
-        </div>
-      </div>
-      <div class="barber-card">
-        <div class="barber-avatar">🎨</div>
-        <div>
-          <div class="barber-name">Natnael</div>
-          <div class="barber-spec">Creative Styling & Kids Cuts</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <hr class="divider" />
-
-  <!-- INFO -->
-  <section id="info">
-    <div class="section-label">Find Us</div>
-    <h2>Location & Hours</h2>
-    <p class="section-sub">Walk-ins welcome during business hours. Appointments through Telegram are always faster.</p>
-    <div class="info-grid">
-      <div class="info-card">
-        <span class="info-icon">📍</span>
-        <div class="info-label">Address</div>
-        <div class="info-value">
-          Bole Road, Near Edna Mall<br>Addis Ababa, Ethiopia
-        </div>
-      </div>
-      <div class="info-card">
-        <span class="info-icon">🕐</span>
-        <div class="info-label">Operating Hours</div>
-        <div class="info-value">
-          Monday – Sunday<br>8:30 AM – 9:00 PM
-        </div>
-      </div>
-      <div class="info-card">
-        <span class="info-icon">📞</span>
-        <div class="info-label">Phone</div>
-        <div class="info-value">
-          <a href="tel:+251904216852">+251 90 421 6852</a><br>
-          <a href="tel:+251963661680">+251 96 366 1680</a>
-        </div>
-      </div>
-      <div class="info-card">
-        <span class="info-icon">📱</span>
-        <div class="info-label">Telebirr Payment</div>
-        <div class="info-value">
-          +251 96 366 1680<br>
-          <span style="color: var(--muted); font-size: 13px;">Account: ADDIS</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA BANNER -->
-  <section>
-    <div class="cta-banner">
-      <div class="section-label" style="margin-bottom: 16px;">Ready?</div>
-      <h2>Book your appointment now</h2>
-      <p>Open our Telegram bot, pick your service, choose a barber and time slot.<br>Pay with Telebirr or cash at the shop.</p>
-      <a class="btn-primary" href="https://t.me/Miliana_Barbershop_Bot" style="display: inline-flex;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-        Open @Miliana_Barbershop_Bot
-      </a>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <p>© 2026 <strong>Miliana Barbershop</strong> · Bole Road, Addis Ababa</p>
-    <p style="margin-top: 6px;">Bot built by <a href="https://t.me/abenezer_abrham" style="color: var(--accent-light); text-decoration: none;">@abenezer_abrham</a></p>
-  </footer>
 
   <script>
-    // ── Open/Closed status ──
-    function checkStatus() {
+    // ── Telegram WebApp Initialization ──
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+      try {
+        tg.setHeaderColor('#0f0d0b');
+        tg.setBackgroundColor('#0a0806');
+      } catch (e) {}
+    }
+
+    // Current State
+    let currentLang = 'en';
+    let currentStep = 1;
+    let selectedService = null;
+    let selectedBarber = 0; // 0 = Any Available
+    let selectedDate = '';
+    let selectedSlot = '';
+    let selectedPaymentMethod = 'Cash at Shop';
+
+    // Data Cache
+    let servicesData = [
+      { id: 1, name_en: "Beard Trim & Hot Towel Shave", name_am: "የጢም ማስተካከልና ሙቅ ፎጣ ሻቨር", price: 700, duration_mins: 20, description_en: "Beard shaping, oil treatment & razor lineup", description_am: "የጢም ቅርጽ ማውጣትና የዘይት እንክብካቤ" },
+      { id: 2, name_en: "Classic Haircut / Fade", name_am: "የጸጉር መቁረጥ / ፌድ", price: 800, duration_mins: 30, description_en: "Modern fades, scissor work, & razor finish", description_am: "ዘመናዊ የጸጉር ስታይል እና ማስተካከል" },
+      { id: 3, name_en: "Facial Scrub & Black Mask", name_am: "የፊት እስክራብና ብላክ ማስክ", price: 1000, duration_mins: 30, description_en: "Deep pore cleansing, steam & facial massage", description_am: "የፊት ቆዳ ጥልቅ ጽዳትና ማሳጅ" },
+      { id: 4, name_en: "Haircut + Beard Styling Combo", name_am: "የጸጉር እና የጢም ጥምር ጥቅል", price: 1300, duration_mins: 45, description_en: "Full head and beard grooming package", description_am: "ሙሉ የጸጉር እና የጢም ማስተካከል" },
+      { id: 5, name_en: "Hair Color & Dye", name_am: "የጸጉር ቀለም መቀባት", price: 1500, duration_mins: 40, description_en: "Grey coverage or full vibrant color", description_am: "የጸጉር ቀለም እና ዳይ አገልግሎት" },
+      { id: 6, name_en: "VIP Grooming Executive Package", name_am: "ቪአይፒ ሙሉ የክብር ጥቅል", price: 2000, duration_mins: 75, description_en: "Haircut, beard, facial scrub, wash & massage", description_am: "ጸጉር፣ ጢም፣ የፊት እስክራብ እና ሙሉ ማሳጅ" }
+    ];
+
+    let barbersData = [
+      { id: 0, name: "Any Available Stylist", specialty_en: "Fastest Chair · Top Barbers", specialty_am: "ፈጣን ተረኛ · ምርጥ ባለሙያ", icon: "⚡" },
+      { id: 1, name: "Abel", specialty_en: "Master Barber · Modern Fades", specialty_am: "ዋና ጸጉር አስተካካይ · ዘመናዊ ፌድ", icon: "✂️" },
+      { id: 2, name: "Dawit", specialty_en: "Classic Cuts & Beard Sculpting", specialty_am: "ክላሲክ የጸጉር ቁረጥና የጢም ባለሙያ", icon: "🪒" },
+      { id: 3, name: "Natnael", specialty_en: "Creative Styling & Kids Cuts", specialty_am: "የፈጠራ ስታይልና የህጻናት ጸጉር", icon: "🎨" }
+    ];
+
+    let allTimeSlots = [
+      "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
+      "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM",
+      "06:30 PM", "07:30 PM"
+    ];
+
+    let takenSlots = [];
+
+    // Pre-fill user data from Telegram if available
+    window.addEventListener('DOMContentLoaded', () => {
+      checkLiveHours();
+      setInterval(checkLiveHours, 60000);
+
+      // Pre-fill name from Telegram WebApp
+      if (tg?.initDataUnsafe?.user) {
+        const u = tg.initDataUnsafe.user;
+        const nameInput = document.getElementById('inputName');
+        if (nameInput) {
+          nameInput.value = `${u.first_name || ''} ${u.last_name || ''}`.trim();
+        }
+      }
+
+      // Fetch live services from serverless API
+      fetchServices();
+      initDates();
+      renderServicesList();
+      renderBarbersList();
+      renderFullMenu();
+    });
+
+    // ── Open / Closed Live Calculator ──
+    function checkLiveHours() {
       const now = new Date();
-      // Ethiopia is UTC+3
       const etHour = (now.getUTCHours() + 3) % 24;
       const etMin = now.getUTCMinutes();
       const totalMins = etHour * 60 + etMin;
-      const openMins = 8 * 60 + 30;   // 8:30 AM
-      const closeMins = 21 * 60;       // 9:00 PM
+      const openMins = 8 * 60 + 30; // 8:30 AM
+      const closeMins = 21 * 60;     // 9:00 PM
       const isOpen = totalMins >= openMins && totalMins < closeMins;
 
-      const dot = document.getElementById('statusDot');
-      const text = document.getElementById('statusText');
-      dot.className = 'status-dot ' + (isOpen ? 'open' : 'closed');
-      text.textContent = isOpen
-        ? 'Open now · Closes 9:00 PM'
-        : 'Closed · Opens 8:30 AM tomorrow';
+      const dot = document.getElementById('liveDot');
+      const text = document.getElementById('liveStatusText');
+      if (isOpen) {
+        dot.className = 'status-dot open';
+        text.textContent = currentLang === 'am' ? 'ክፍት ነው · እስከ ማታ 3:00' : 'Open now · Closes 9:00 PM';
+      } else {
+        dot.className = 'status-dot closed';
+        text.textContent = currentLang === 'am' ? 'ዝግ ነው · ነገ ጠዋት 2:30 ይከፈታል' : 'Closed · Opens 8:30 AM';
+      }
     }
-    checkStatus();
-    setInterval(checkStatus, 60000);
 
-    // ── Subtle hero parallax ──
-    const heroBg = document.getElementById('heroBg');
-    window.addEventListener('scroll', () => {
-      const y = window.scrollY;
-      heroBg.style.transform = `scale(1.04) translateY(${y * 0.3}px)`;
-    }, { passive: true });
+    // ── Fetch Services from backend ──
+    async function fetchServices() {
+      try {
+        const res = await fetch('/api/services');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.services && data.services.length) {
+            servicesData = data.services;
+            renderServicesList();
+            renderFullMenu();
+          }
+        }
+      } catch (err) {
+        console.log("Using cached services", err);
+      }
+    }
+
+    // ── Render Services (Step 1) ──
+    function renderServicesList() {
+      const container = document.getElementById('serviceCardsContainer');
+      container.innerHTML = '';
+
+      servicesData.forEach(s => {
+        const isSelected = selectedService && selectedService.id === s.id;
+        const card = document.createElement('div');
+        card.className = `service-card ${isSelected ? 'selected' : ''}`;
+        card.onclick = () => selectService(s);
+
+        const name = currentLang === 'am' ? s.name_am : s.name_en;
+        const subName = currentLang === 'am' ? s.name_en : s.name_am;
+        const desc = currentLang === 'am' ? s.description_am : s.description_en;
+
+        card.innerHTML = `
+          <div class="service-header">
+            <div>
+              <div class="service-name">${name}</div>
+              <div class="service-amharic">${subName}</div>
+            </div>
+            <div>
+              <div class="service-price">${s.price} ETB</div>
+              <span class="service-duration">${s.duration_mins} mins</span>
+            </div>
+          </div>
+          <div class="service-desc">${desc}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function selectService(s) {
+      selectedService = s;
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+      renderServicesList();
+      updateBottomBar();
+    }
+
+    // ── Render Barbers (Step 2) ──
+    function renderBarbersList() {
+      const container = document.getElementById('barbersContainer');
+      container.innerHTML = '';
+
+      barbersData.forEach(b => {
+        const isSelected = selectedBarber === b.id;
+        const card = document.createElement('div');
+        card.className = `barber-card ${isSelected ? 'selected' : ''}`;
+        card.onclick = () => selectBarber(b.id);
+
+        const spec = currentLang === 'am' ? b.specialty_am : b.specialty_en;
+
+        card.innerHTML = `
+          <div class="barber-avatar-wrap">${b.icon || '✂️'}</div>
+          <div class="barber-name">${b.name}</div>
+          <div class="barber-spec">${spec}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function selectBarber(id) {
+      selectedBarber = id;
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+      renderBarbersList();
+      fetchSlotAvailability();
+      updateBottomBar();
+    }
+
+    // ── Dates Init (Step 3) ──
+    function initDates() {
+      const strip = document.getElementById('dateStrip');
+      strip.innerHTML = '';
+
+      const now = new Date();
+      const dates = [];
+
+      for (let i = 0; i < 3; i++) {
+        const d = new Date();
+        d.setDate(now.getDate() + i);
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        const dateStr = `${yyyy}-${mm}-${dd}`;
+
+        let label = '';
+        if (i === 0) label = currentLang === 'am' ? 'ዛሬ' : 'Today';
+        else if (i === 1) label = currentLang === 'am' ? 'ነገ' : 'Tomorrow';
+        else label = d.toLocaleDateString(currentLang === 'am' ? 'am-ET' : 'en-US', { weekday: 'short' });
+
+        dates.push({
+          dateStr,
+          label,
+          dayNum: `${d.getDate()} ${d.toLocaleDateString('en-US', { month: 'short' })}`
+        });
+      }
+
+      selectedDate = dates[0].dateStr;
+
+      dates.forEach((d, idx) => {
+        const el = document.createElement('div');
+        el.className = `date-card ${d.dateStr === selectedDate ? 'selected' : ''}`;
+        el.onclick = () => selectDate(d.dateStr);
+        el.innerHTML = `
+          <div class="date-day">${d.label}</div>
+          <div class="date-val">${d.dayNum}</div>
+        `;
+        strip.appendChild(el);
+      });
+
+      fetchSlotAvailability();
+    }
+
+    function selectDate(dateStr) {
+      selectedDate = dateStr;
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+      initDates();
+    }
+
+    // ── Live Slots Check from Backend (Collision Check) ──
+    async function fetchSlotAvailability() {
+      try {
+        const res = await fetch(`/api/slots?date=${selectedDate}&barber_id=${selectedBarber}`);
+        if (res.ok) {
+          const data = await res.json();
+          takenSlots = data.taken_slots || [];
+        }
+      } catch (e) {
+        takenSlots = [];
+      }
+      renderTimeSlots();
+    }
+
+    function renderTimeSlots() {
+      const container = document.getElementById('slotsContainer');
+      container.innerHTML = '';
+
+      allTimeSlots.forEach(slot => {
+        const isTaken = takenSlots.includes(slot);
+        const isSelected = selectedSlot === slot && !isTaken;
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `slot-btn ${isTaken ? 'taken' : ''} ${isSelected ? 'selected' : ''}`;
+        btn.disabled = isTaken;
+        btn.innerHTML = `${isTaken ? '🔒' : '🟢'} ${slot}`;
+
+        if (!isTaken) {
+          btn.onclick = () => selectSlot(slot);
+        }
+
+        container.appendChild(btn);
+      });
+    }
+
+    function selectSlot(slot) {
+      selectedSlot = slot;
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+      renderTimeSlots();
+      updateBottomBar();
+    }
+
+    // ── Payment Select (Step 4) ──
+    function selectPayment(method) {
+      selectedPaymentMethod = method;
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+      document.getElementById('optCash').className = `payment-card ${method === 'Cash at Shop' ? 'selected' : ''}`;
+      document.getElementById('optTelebirr').className = `payment-card ${method === 'Telebirr' ? 'selected' : ''}`;
+      document.getElementById('telebirrBox').style.display = method === 'Telebirr' ? 'block' : 'none';
+    }
+
+    // ── Wizard Step Navigation ──
+    function handleNextStep() {
+      if (currentStep === 1) {
+        if (!selectedService) return;
+        goToStep(2);
+      } else if (currentStep === 2) {
+        goToStep(3);
+      } else if (currentStep === 3) {
+        if (!selectedSlot) return;
+        goToStep(4);
+      } else if (currentStep === 4) {
+        submitAppointment();
+      }
+    }
+
+    function handleBackStep() {
+      if (currentStep > 1 && currentStep <= 4) {
+        goToStep(currentStep - 1);
+      }
+    }
+
+    function goToStep(step) {
+      currentStep = step;
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+
+      // Update panes
+      for (let i = 1; i <= 5; i++) {
+        const pane = document.getElementById(`step${i}`);
+        if (pane) pane.style.display = (i === step) ? 'block' : 'none';
+
+        const ind = document.getElementById(`stepIndicator${i}`);
+        if (ind) {
+          ind.className = 'step-item';
+          if (i === step) ind.classList.add('active');
+          if (i < step) ind.classList.add('done');
+        }
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      updateBottomBar();
+    }
+
+    function updateBottomBar() {
+      const btnBack = document.getElementById('btnBack');
+      const btnNext = document.getElementById('btnNext');
+      const btnNextText = document.getElementById('btnNextText');
+
+      if (currentStep === 1) {
+        btnBack.style.display = 'none';
+        btnNext.disabled = !selectedService;
+        btnNextText.textContent = selectedService
+          ? `${currentLang === 'am' ? 'ቀጣይ' : 'Continue'} (${selectedService.price} ETB) →`
+          : (currentLang === 'am' ? 'አገልግሎት ይምረጡ' : 'Select a Service');
+      } else if (currentStep === 2) {
+        btnBack.style.display = 'block';
+        btnNext.disabled = false;
+        btnNextText.textContent = currentLang === 'am' ? 'ቀን እና ሰዓት ይምረጡ →' : 'Choose Date & Time →';
+      } else if (currentStep === 3) {
+        btnBack.style.display = 'block';
+        btnNext.disabled = !selectedSlot;
+        btnNextText.textContent = selectedSlot
+          ? `${currentLang === 'am' ? 'ቀጣይ' : 'Continue'} (${selectedSlot}) →`
+          : (currentLang === 'am' ? 'ሰዓት ይምረጡ' : 'Select Time Slot');
+      } else if (currentStep === 4) {
+        btnBack.style.display = 'block';
+        btnNext.disabled = false;
+        btnNextText.textContent = currentLang === 'am'
+          ? `ቀጠሮውን አረጋግጥ (${selectedService?.price || ''} ETB)`
+          : `Confirm Appointment (${selectedService?.price || ''} ETB)`;
+      } else if (currentStep === 5) {
+        document.getElementById('bottomBar').style.display = 'none';
+      }
+    }
+
+    // ── Submit Appointment ──
+    async function submitAppointment() {
+      const name = document.getElementById('inputName').value.trim() || 'Guest';
+      const phone = document.getElementById('inputPhone').value.trim();
+      const telebirrRef = document.getElementById('inputTelebirrRef').value.trim();
+
+      if (!phone) {
+        alert(currentLang === 'am' ? "እባክዎ የስልክ ቁጥርዎን ያስገቡ" : "Please enter your phone number to receive appointment updates.");
+        return;
+      }
+
+      const btnNext = document.getElementById('btnNext');
+      btnNext.disabled = true;
+      btnNext.innerHTML = `<span class="spinner"></span> ${currentLang === 'am' ? 'በማረጋገጥ ላይ...' : 'Securing your chair...'}`;
+
+      const userId = tg?.initDataUnsafe?.user?.id || 0;
+
+      const payload = {
+        user_id: userId,
+        customer_name: name,
+        customer_phone: phone,
+        service_id: selectedService?.id || 1,
+        barber_id: selectedBarber || 1,
+        booking_date: selectedDate,
+        time_slot: selectedSlot,
+        payment_method: selectedPaymentMethod,
+        payment_ref: telebirrRef || null
+      };
+
+      try {
+        const res = await fetch('/api/book', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (data.ok) {
+          if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+
+          // Fill Ticket
+          document.getElementById('tTicketId').textContent = `Appointment Ticket #${data.booking_id}`;
+          document.getElementById('tValSrv').textContent = currentLang === 'am' ? selectedService.name_am : selectedService.name_en;
+          
+          const chosenBarberObj = barbersData.find(b => b.id === selectedBarber) || barbersData[0];
+          document.getElementById('tValBarber').textContent = chosenBarberObj.name;
+          document.getElementById('tValWhen').textContent = `${selectedDate} @ ${selectedSlot}`;
+          document.getElementById('tValPrice').textContent = `${selectedService.price} ETB`;
+          document.getElementById('tValPay').textContent = selectedPaymentMethod;
+
+          goToStep(5);
+        } else {
+          alert("Error booking: " + (data.error || "Please try again"));
+          btnNext.disabled = false;
+          updateBottomBar();
+        }
+      } catch (e) {
+        alert("Connection error. Please try again.");
+        btnNext.disabled = false;
+        updateBottomBar();
+      }
+    }
+
+    function resetBookingWizard() {
+      selectedService = null;
+      selectedSlot = '';
+      document.getElementById('bottomBar').style.display = 'block';
+      goToStep(1);
+    }
+
+    function closeMiniApp() {
+      if (tg) {
+        tg.close();
+      } else {
+        window.location.href = 'https://t.me/Miliana_Barbershop_Bot';
+      }
+    }
+
+    // ── Tab Switcher ──
+    function switchTab(tab) {
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+
+      ['book', 'services', 'info', 'tickets'].forEach(t => {
+        document.getElementById(`tabBtn${capitalize(t)}`).className = `nav-tab ${t === tab ? 'active' : ''}`;
+        document.getElementById(`view${capitalize(t)}`).style.display = (t === tab) ? 'block' : 'none';
+      });
+
+      const bottomBar = document.getElementById('bottomBar');
+      if (tab === 'book' && currentStep !== 5) {
+        bottomBar.style.display = 'block';
+      } else {
+        bottomBar.style.display = 'none';
+      }
+
+      if (tab === 'tickets') {
+        loadUserTickets();
+      }
+    }
+
+    function capitalize(s) {
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+
+    // ── Load User Tickets Tab ──
+    async function loadUserTickets() {
+      const container = document.getElementById('myTicketsContainer');
+      const userId = tg?.initDataUnsafe?.user?.id;
+      if (!userId) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 40px 10px; font-size: 13px;">Open inside Telegram to review your active appointment tickets.</div>`;
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/my-bookings?user_id=${userId}`);
+        const data = await res.json();
+        if (data.bookings && data.bookings.length) {
+          container.innerHTML = data.bookings.map(b => `
+            <div class="info-tile" style="margin-bottom: 12px; border-color: var(--border-accent);">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <strong style="color: var(--text);">${currentLang === 'am' ? b.name_am : b.name_en}</strong>
+                <span style="color: var(--accent-light); font-weight: bold;">#${b.id}</span>
+              </div>
+              <div style="font-size: 12px; color: var(--text-muted);">
+                💈 ${b.barber_name} &nbsp;•&nbsp; 📅 ${b.booking_date} @ ${b.time_slot}
+              </div>
+              <div style="font-size: 12px; margin-top: 6px; display: flex; justify-content: space-between;">
+                <span>Total: <strong style="color: var(--accent-light);">${b.price} ETB</strong></span>
+                <span style="color: #4ade80; text-transform: uppercase; font-size: 11px; font-weight: 700;">${b.status}</span>
+              </div>
+            </div>
+          `).join('');
+        } else {
+          container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 40px 10px; font-size: 13px;">No bookings found. Tap 'Book' to reserve your chair.</div>`;
+        }
+      } catch (e) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 40px 10px;">Failed to load tickets.</div>`;
+      }
+    }
+
+    // ── Render Full Menu Tab ──
+    function renderFullMenu() {
+      const container = document.getElementById('fullMenuContainer');
+      container.innerHTML = servicesData.map(s => `
+        <div class="service-card" style="cursor: default;">
+          <div class="service-header">
+            <div>
+              <div class="service-name">${currentLang === 'am' ? s.name_am : s.name_en}</div>
+              <div class="service-amharic">${currentLang === 'am' ? s.name_en : s.name_am}</div>
+            </div>
+            <div>
+              <div class="service-price">${s.price} ETB</div>
+              <span class="service-duration">${s.duration_mins} mins</span>
+            </div>
+          </div>
+          <div class="service-desc">${currentLang === 'am' ? s.description_am : s.description_en}</div>
+        </div>
+      `).join('');
+    }
+
+    // ── Bilingual Language Switcher ──
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'am' : 'en';
+      if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+
+      document.getElementById('langBtn').textContent = currentLang === 'en' ? '🇬🇧 EN / 🇪🇹 አማ' : '🇪🇹 አማ / 🇬🇧 EN';
+      
+      // Update localized labels
+      document.getElementById('txtSubtitle').textContent = currentLang === 'am' ? 'ዘመናዊ የክብር ባርበርሾፕ · ቦሌ' : 'Heritage Grooming · Bole';
+      document.getElementById('navBook').textContent = currentLang === 'am' ? 'ቀጠሮ' : 'Book';
+      document.getElementById('navServices').textContent = currentLang === 'am' ? 'ዝርዝር' : 'Menu';
+      document.getElementById('navInfo').textContent = currentLang === 'am' ? 'አድራሻ' : 'Hours';
+      document.getElementById('navTickets').textContent = currentLang === 'am' ? 'ትኬቶች' : 'Tickets';
+
+      document.getElementById('stepLbl1').textContent = currentLang === 'am' ? 'አገልግሎት' : 'Service';
+      document.getElementById('stepLbl2').textContent = currentLang === 'am' ? 'ባለሙያ' : 'Stylist';
+      document.getElementById('stepLbl3').textContent = currentLang === 'am' ? 'ሰዓት' : 'Time';
+      document.getElementById('stepLbl4').textContent = currentLang === 'am' ? 'ማረጋገጫ' : 'Confirm';
+
+      document.getElementById('tServiceTitle').textContent = currentLang === 'am' ? 'የሚፈልጉትን አገልግሎት ይምረጡ' : 'Choose Your Service';
+      document.getElementById('tServiceDesc').textContent = currentLang === 'am' ? 'ዋጋ ከ 700 እስከ 2,000 የኢትዮጵያ ብር' : 'Select from our signature grooming rituals (Prices 700 to 2,000 ETB)';
+
+      document.getElementById('tBarberTitle').textContent = currentLang === 'am' ? 'ባለሙያዎን ይምረጡ' : 'Select Your Barber';
+      document.getElementById('tBarberDesc').textContent = currentLang === 'am' ? 'የሚፈልጉትን ስታይሊስት ይምረጡ ወይም ፈጣን ተረኛን ይውሰዱ' : 'Choose your specialist or take the first available chair';
+
+      document.getElementById('tDateTimeTitle').textContent = currentLang === 'am' ? 'ቀንና ሰዓት ይምረጡ' : 'Select Date & Time';
+      document.getElementById('tDateTimeDesc').textContent = currentLang === 'am' ? 'የተያዙ ሰዓቶች በራስ-ሰር ይዘጋሉ' : 'Live collision protection ensures your slot is reserved';
+
+      document.getElementById('tConfirmTitle').textContent = currentLang === 'am' ? 'የግል መረጃ እና ክፍያ' : 'Contact & Checkout';
+      document.getElementById('tConfirmDesc').textContent = currentLang === 'am' ? 'ለቀጠሮ ማረጋገጫ ስልክ ቁጥርዎን ያስገቡ' : 'Provide your phone for booking updates and select payment';
+
+      document.getElementById('lblCustomerName').textContent = currentLang === 'am' ? 'ሙሉ ስም' : 'Full Name';
+      document.getElementById('lblCustomerPhone').textContent = currentLang === 'am' ? 'ስልክ ቁጥር (ግዴታ)' : 'Phone Number (Required)';
+      document.getElementById('tPaymentMethod').textContent = currentLang === 'am' ? 'የክፍያ ዘዴ' : 'Payment Method';
+      document.getElementById('txtPayCashTitle').textContent = currentLang === 'am' ? 'በቦታው በካሽ' : 'Cash at Shop';
+      document.getElementById('txtPayCashSub').textContent = currentLang === 'am' ? 'ሳሎን ሲደርሱ የሚከፍሉት' : 'Pay when you arrive at your appointment';
+      document.getElementById('txtPayTelebirrSub').textContent = currentLang === 'am' ? 'በቴሌብር በቀጥታ ይክፈሉ' : 'Instant mobile wallet transfer';
+
+      checkLiveHours();
+      renderServicesList();
+      renderBarbersList();
+      initDates();
+      renderFullMenu();
+      updateBottomBar();
+    }
   </script>
 </body>
 </html>

@@ -1,10 +1,12 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 from datetime import datetime, timedelta
 from strings import t
 
 def get_main_menu_keyboard(lang: str = "en") -> ReplyKeyboardMarkup:
+    mini_app_btn_text = "💈 Launch Mini App" if lang == "en" else "💈 የቀጠሮ መተግበሪያ ክፈት"
     return ReplyKeyboardMarkup(
         keyboard=[
+            [KeyboardButton(text=mini_app_btn_text, web_app=WebAppInfo(url="https://barbershop-bot-seven.vercel.app/"))],
             [KeyboardButton(text=t("btn_book", lang)), KeyboardButton(text=t("btn_services", lang))],
             [KeyboardButton(text=t("btn_my_bookings", lang)), KeyboardButton(text=t("btn_hours", lang))],
             [KeyboardButton(text=t("btn_change_lang", lang)), KeyboardButton(text=t("btn_contact", lang))]

@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 from database import get_user_language, set_user_language, get_all_services
@@ -15,7 +15,19 @@ async def cmd_start(message: Message, state: FSMContext):
     lang = await get_user_language(message.from_user.id)
     text = t("welcome", lang, shop_name=config.SHOP_NAME)
     kb = get_main_menu_keyboard(lang)
-    await message.answer(text, reply_markup=kb, parse_mode="Markdown")
+    
+    inline_tma = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="💈 Open Booking App (Mini App)" if lang == "en" else "💈 የቀጠሮ መተግበሪያ ክፈት",
+                    web_app=WebAppInfo(url="https://barbershop-bot-seven.vercel.app/")
+                )
+            ]
+        ]
+    )
+    await message.answer(text, reply_markup=inline_tma, parse_mode="Markdown")
+    await message.answer("👇 Or select an option below:" if lang == "en" else "👇 ወይም ከታች ካሉት አማራጮች አንዱን ይምረጡ:", reply_markup=kb)
 
 @router.message(F.text.in_(["🌐 አማርኛ / English", "🌐 English / አማርኛ"]))
 @router.message(Command("language"))
