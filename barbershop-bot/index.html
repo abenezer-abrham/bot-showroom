@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#0f0d0b" />
+  <meta name="theme-color" content="#0a0e17" />
   <title>Miliana Barbershop · Telegram Mini App</title>
   
   <!-- Telegram Web App SDK -->
@@ -23,21 +23,21 @@
     }
 
     :root {
-      --bg-dark: #0a0806;
-      --bg-surface: #120f0c;
-      --bg-card: #181410;
-      --bg-card-hover: #221c16;
-      --border: #292119;
-      --border-accent: rgba(184, 124, 62, 0.45);
-      --accent: #b87c3e;
-      --accent-light: #d89f5c;
-      --accent-glow: rgba(184, 124, 62, 0.2);
-      --text: #f5f0ea;
-      --text-muted: #948473;
-      --text-dim: #6b5e50;
-      --success: #38a169;
-      --success-glow: rgba(56, 161, 105, 0.2);
-      --danger: #e53e3e;
+      --bg-dark: #0a0e17;
+      --bg-surface: #111726;
+      --bg-card: #162032;
+      --bg-card-hover: #1e2b42;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(245, 158, 11, 0.5);
+      --accent: #f59e0b;
+      --accent-light: #fbbf24;
+      --accent-glow: rgba(245, 158, 11, 0.25);
+      --text: #ffffff;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.25);
+      --danger: #ef4444;
       --radius-sm: 8px;
       --radius-md: 14px;
       --radius-lg: 20px;
@@ -63,9 +63,9 @@
       top: -120px;
       left: 50%;
       transform: translateX(-50%);
-      width: 480px;
-      height: 300px;
-      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      width: 500px;
+      height: 320px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, rgba(22, 32, 50, 0.15) 50%, transparent 70%);
       pointer-events: none;
       z-index: 0;
     }
@@ -100,8 +100,8 @@
       height: 44px;
       border-radius: var(--radius-md);
       object-fit: cover;
-      border: 1px solid var(--border-accent);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+      border: 1.5px solid var(--border-accent);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
     }
 
     .brand-title {
@@ -150,11 +150,12 @@
       gap: 6px;
       font-size: 11px;
       font-weight: 600;
-      padding: 4px 10px;
-      background: rgba(18, 15, 12, 0.85);
+      padding: 5px 12px;
+      background: rgba(17, 23, 38, 0.85);
       border: 1px solid var(--border);
       border-radius: var(--radius-pill);
       margin-bottom: 14px;
+      backdrop-filter: blur(8px);
     }
 
     .status-dot {
@@ -164,13 +165,13 @@
     }
 
     .status-dot.open {
-      background: #4ade80;
-      box-shadow: 0 0 8px #4ade80;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
     }
 
     .status-dot.closed {
-      background: #f97316;
-      box-shadow: 0 0 8px #f97316;
+      background: #f59e0b;
+      box-shadow: 0 0 10px #f59e0b;
     }
 
     /* ── Navigation Tabs ── */
@@ -179,7 +180,7 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 6px;
       background: var(--bg-surface);
-      padding: 4px;
+      padding: 5px;
       border-radius: var(--radius-lg);
       border: 1px solid var(--border);
       margin-bottom: 20px;
@@ -187,7 +188,7 @@
 
     .nav-tab {
       background: transparent;
-      border: none;
+      border: 1px solid transparent;
       color: var(--text-muted);
       font-family: var(--font-sans);
       font-size: 12px;
@@ -210,7 +211,7 @@
       background: var(--bg-card);
       color: var(--accent-light);
       border: 1px solid var(--border-accent);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
     }
 
     /* ── Step Progress Wizard ── */
@@ -267,10 +268,10 @@
     }
 
     .step-item.active .step-num {
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
       border-color: var(--accent-light);
-      color: #0a0806;
-      box-shadow: 0 0 12px var(--accent-glow);
+      color: #0a0e17;
+      box-shadow: 0 0 14px var(--accent-glow);
     }
 
     .step-item.active .step-label {
@@ -323,13 +324,13 @@
 
     .service-card:hover, .service-card:active {
       background: var(--bg-card-hover);
-      border-color: rgba(184, 124, 62, 0.3);
+      border-color: rgba(245, 158, 11, 0.35);
     }
 
     .service-card.selected {
       border-color: var(--accent);
-      background: linear-gradient(135deg, rgba(184, 124, 62, 0.12) 0%, var(--bg-card) 100%);
-      box-shadow: 0 4px 16px rgba(184, 124, 62, 0.15);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, var(--bg-card) 100%);
+      box-shadow: 0 4px 18px rgba(245, 158, 11, 0.18);
     }
 
     .service-header {
@@ -397,8 +398,8 @@
 
     .barber-card.selected {
       border-color: var(--accent);
-      background: linear-gradient(180deg, rgba(184, 124, 62, 0.15) 0%, var(--bg-card) 100%);
-      box-shadow: 0 4px 16px rgba(184, 124, 62, 0.15);
+      background: linear-gradient(180deg, rgba(245, 158, 11, 0.15) 0%, var(--bg-card) 100%);
+      box-shadow: 0 4px 18px rgba(245, 158, 11, 0.18);
     }
 
     .barber-avatar-wrap {
@@ -452,8 +453,9 @@
 
     .date-card.selected {
       border-color: var(--accent);
-      background: rgba(184, 124, 62, 0.14);
+      background: rgba(245, 158, 11, 0.15);
       color: var(--text);
+      box-shadow: 0 2px 12px rgba(245, 158, 11, 0.15);
     }
 
     .date-day {
@@ -504,17 +506,17 @@
     }
 
     .slot-btn.selected {
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
       border-color: var(--accent-light);
-      color: #0a0806;
+      color: #0a0e17;
       font-weight: 700;
-      box-shadow: 0 4px 14px var(--accent-glow);
+      box-shadow: 0 4px 16px var(--accent-glow);
     }
 
     .slot-btn.taken {
       opacity: 0.35;
-      background: #14110e;
-      border-color: #1e1914;
+      background: #111726;
+      border-color: rgba(255, 255, 255, 0.05);
       color: var(--text-dim);
       cursor: not-allowed;
       text-decoration: line-through;
@@ -574,7 +576,7 @@
 
     .payment-card.selected {
       border-color: var(--accent);
-      background: rgba(184, 124, 62, 0.1);
+      background: rgba(245, 158, 11, 0.12);
     }
 
     .payment-left {
@@ -600,7 +602,7 @@
 
     /* Telebirr Details Box */
     .telebirr-box {
-      background: #14100b;
+      background: #131c2e;
       border: 1px dashed var(--accent);
       border-radius: var(--radius-md);
       padding: 12px 14px;
@@ -625,7 +627,7 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(15, 13, 11, 0.95);
+      background: rgba(10, 14, 23, 0.92);
       backdrop-filter: blur(16px);
       border-top: 1px solid var(--border);
       padding: 12px 16px;
@@ -653,9 +655,9 @@
 
     .btn-primary {
       flex: 1;
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent) 0%, #d97706 100%);
       border: 1px solid var(--accent-light);
-      color: #0a0806;
+      color: #0a0e17;
       border-radius: var(--radius-pill);
       padding: 14px 20px;
       font-size: 14px;
@@ -665,13 +667,13 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 4px 20px rgba(184, 124, 62, 0.35);
+      box-shadow: 0 4px 22px rgba(245, 158, 11, 0.35);
       transition: all 0.2s;
     }
 
     .btn-primary:active {
       transform: scale(0.98);
-      background: var(--accent-light);
+      filter: brightness(1.1);
     }
 
     .btn-primary:disabled {
@@ -682,7 +684,7 @@
 
     /* ── Confirmation Ticket ── */
     .ticket {
-      background: linear-gradient(180deg, #1f1913 0%, #15110d 100%);
+      background: linear-gradient(180deg, #162032 0%, #111726 100%);
       border: 1px solid var(--border-accent);
       border-radius: var(--radius-lg);
       padding: 24px 20px;
@@ -704,14 +706,15 @@
       width: 56px;
       height: 56px;
       border-radius: 50%;
-      background: rgba(56, 161, 105, 0.15);
+      background: rgba(16, 185, 129, 0.15);
       border: 1.5px solid var(--success);
-      color: #4ade80;
+      color: #10b981;
       font-size: 26px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 12px;
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.3);
     }
 
     .ticket-title {
@@ -742,7 +745,7 @@
       display: flex;
       justify-content: space-between;
       padding: 6px 0;
-      border-bottom: 1px dashed #271f16;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
       font-size: 12px;
     }
 
@@ -791,7 +794,7 @@
     /* Loading Spinner */
     .spinner {
       border: 2px solid rgba(255, 255, 255, 0.2);
-      border-top-color: #0a0806;
+      border-top-color: #0a0e17;
       border-radius: 50%;
       width: 16px;
       height: 16px;
@@ -1092,8 +1095,8 @@
       tg.ready();
       tg.expand();
       try {
-        tg.setHeaderColor('#0f0d0b');
-        tg.setBackgroundColor('#0a0806');
+        tg.setHeaderColor('#0a0e17');
+        tg.setBackgroundColor('#0a0e17');
       } catch (e) {}
     }
 
@@ -1565,7 +1568,7 @@
               </div>
               <div style="font-size: 12px; margin-top: 6px; display: flex; justify-content: space-between;">
                 <span>Total: <strong style="color: var(--accent-light);">${b.price} ETB</strong></span>
-                <span style="color: #4ade80; text-transform: uppercase; font-size: 11px; font-weight: 700;">${b.status}</span>
+                <span style="color: var(--success); text-transform: uppercase; font-size: 11px; font-weight: 700;">${b.status}</span>
               </div>
             </div>
           `).join('');
