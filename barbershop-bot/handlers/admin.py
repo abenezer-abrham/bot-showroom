@@ -4,8 +4,9 @@ from aiogram.filters import Command
 from datetime import datetime
 from database import (
     get_daily_appointments, update_appointment_status,
-    get_all_user_ids
+    get_all_user_ids, get_appointment_by_id, get_user_language
 )
+from strings import t
 import config
 
 router = Router()
@@ -59,21 +60,65 @@ async def cb_admin_approve(callback: CallbackQuery, bot: Bot):
         return
         
     booking_id = int(callback.data.split("_")[2])
+    appt = await get_appointment_by_id(booking_id)
     await update_appointment_status(booking_id, "confirmed")
     await callback.message.edit_reply_markup(reply_markup=None)
     await callback.message.answer(f"✅ Booking #{booking_id} has been **APPROVED** and confirmed!")
     await callback.answer("Approved!")
 
+    if appt and appt["user_id"] and appt["user_id"] > 1000:
+        lang = await get_user_language(appt["user_id"])
+        srv_name = appt["name_en"] if lang == "en" else appt["name_am"]
+        cust_name = appt["customer_name"] or "Customer"
+        msg = t(
+            "booking_approved",
+            lang,
+            id=booking_id,
+            name=cust_name,
+            service=srv_name,
+            barber=appt["barber_name"],
+            date=appt["booking_date"],
+            slot=appt["time_slot"],
+            location=config.SHOP_LOCATION,
+            phone=config.SHOP_PHONE
+        )
+        try:
+            await bot.send_message(appt["user_id"], msg, parse_mode="Markdown")
+        except Exception:
+            pass
+
 @router.callback_query(F.data.startswith("adm_dec_"))
-async def cb_admin_decline(callback: CallbackQuery):
+async def cb_admin_decline(callback: CallbackQuery, bot: Bot):
     if not is_admin(callback.from_user.id):
         return
         
     booking_id = int(callback.data.split("_")[2])
+    appt = await get_appointment_by_id(booking_id)
     await update_appointment_status(booking_id, "declined")
     await callback.message.edit_reply_markup(reply_markup=None)
     await callback.message.answer(f"❌ Booking #{booking_id} has been **DECLINED**.")
     await callback.answer("Declined.")
+
+    if appt and appt["user_id"] and appt["user_id"] > 1000:
+        lang = await get_user_language(appt["user_id"])
+        srv_name = appt["name_en"] if lang == "en" else appt["name_am"]
+        cust_name = appt["customer_name"] or "Customer"
+        msg = t(
+            "booking_declined",
+            lang,
+            id=booking_id,
+            name=cust_name,
+            service=srv_name,
+            barber=appt["barber_name"],
+            date=appt["booking_date"],
+            slot=appt["time_slot"],
+            location=config.SHOP_LOCATION,
+            phone=config.SHOP_PHONE
+        )
+        try:
+            await bot.send_message(appt["user_id"], msg, parse_mode="Markdown")
+        except Exception:
+            pass
 
 @router.message(Command("broadcast"))
 async def cmd_broadcast(message: Message, bot: Bot):

@@ -156,6 +156,15 @@ class handler(BaseHTTPRequestHandler):
 
                 async def process_booking():
                     await init_db()
+                    # Collision check: verify if barber already booked for this slot
+                    daily = await get_daily_appointments(booking_date)
+                    already_taken = any(
+                        a["time_slot"] == time_slot and a["barber_id"] == actual_barber_id
+                        for a in daily
+                    )
+                    if already_taken:
+                        return {"ok": False, "error": "This slot was already booked by another customer. Please choose a different time."}
+
                     booking_id = await create_appointment(
                         user_id=user_id or 1,
                         customer_name=customer_name,
@@ -223,8 +232,12 @@ class handler(BaseHTTPRequestHandler):
 
                     return booking_id
 
-                booking_id = asyncio.run(process_booking())
-                self._send_json({"ok": True, "booking_id": booking_id, "message": "Appointment confirmed successfully!"})
+                result = asyncio.run(process_booking())
+                if isinstance(result, dict) and not result.get("ok", True):
+                    self._send_json(result, status=409)
+                    return
+
+                self._send_json({"ok": True, "booking_id": result, "message": "Appointment confirmed successfully!"})
             except Exception as e:
                 self._send_json({"ok": False, "error": str(e)}, status=500)
             return

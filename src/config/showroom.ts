@@ -145,7 +145,7 @@ export const DEMO_FLOWS: Record<string, BotDemoFlow> = {
         {
           id: 'sh-2',
           sender: 'bot',
-          text: 'Business Information:\n\n• Hours: Monday - Sunday, 8:00 AM - 10:00 PM\n• Location: Bole Road, Next to Edna Mall, Addis Ababa\n• Map Coordinates: 9.0123° N, 38.7845° E',
+          text: 'Business Information:\n\n• Hours: Monday - Sunday, 8:00 AM - 10:00 PM\n• Location: Bole Bulbula, Addis Ababa\n• Map Coordinates: 9.0123° N, 38.7845° E',
           buttons: [
             { label: 'Contact Owner', action: 'contact_owner' },
             { label: 'Back to Menu', action: 'show_menu' }

@@ -147,6 +147,18 @@ async def get_user_appointments(user_id: int):
         """, (user_id,))
         return await cursor.fetchall()
 
+async def get_appointment_by_id(appointment_id: int):
+    async with aiosqlite.connect(DATABASE_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        cursor = await db.execute("""
+            SELECT a.*, s.name_en, s.name_am, s.price, b.name as barber_name
+            FROM appointments a
+            JOIN services s ON a.service_id = s.id
+            JOIN barbers b ON a.barber_id = b.id
+            WHERE a.id = ?
+        """, (appointment_id,))
+        return await cursor.fetchone()
+
 async def get_daily_appointments(date_str: str):
     async with aiosqlite.connect(DATABASE_PATH) as db:
         db.row_factory = aiosqlite.Row
@@ -155,7 +167,7 @@ async def get_daily_appointments(date_str: str):
             FROM appointments a
             JOIN services s ON a.service_id = s.id
             JOIN barbers b ON a.barber_id = b.id
-            WHERE a.booking_date = ?
+            WHERE a.booking_date = ? AND a.status NOT IN ('cancelled', 'declined')
             ORDER BY a.time_slot ASC
         """, (date_str,))
         return await cursor.fetchall()

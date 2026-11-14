@@ -146,8 +146,18 @@ async def finalize_booking(user_id: int, payment_method: str, payment_ref: str, 
     barber_name = barber["name"] if barber else "Barber"
     contact_parts = data.get("customer_contact", "Customer").split("-")
     cust_name = contact_parts[0].strip()
-    cust_phone = contact_parts[1].strip() if len(contact_parts) > 1 else ""
-    
+    # Verify slot collision before inserting
+    daily = await get_daily_appointments(data["booking_date"])
+    already_taken = any(
+        a["time_slot"] == data["time_slot"] and a["barber_id"] == data["barber_id"]
+        for a in daily
+    )
+    if already_taken:
+        error_msg = "❌ ይቅርታ፣ ይህ ሰዓት በሌላ ደንበኛ ተይዟል። እባክዎ እንደገና ይጀምሩና ሌላ ሰዓት ይምረጡ።" if lang == "am" else "❌ Sorry, this time slot was just booked by another customer. Please start again and select an available time."
+        await message_target.answer(error_msg)
+        await state.clear()
+        return
+
     booking_id = await create_appointment(
         user_id=user_id,
         customer_name=cust_name,

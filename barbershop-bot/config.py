@@ -13,7 +13,7 @@ ADMIN_IDS = [
 SHOP_NAME = os.getenv("SHOP_NAME", "Miliana Barbershop")
 SHOP_PHONE = os.getenv("SHOP_PHONE", "+251 90 421 6852")
 SHOP_ALT_PHONE = os.getenv("SHOP_ALT_PHONE", "+251 96 366 1680")
-SHOP_LOCATION = os.getenv("SHOP_LOCATION", "Bole Road, Near Edna Mall, Addis Ababa")
+SHOP_LOCATION = os.getenv("SHOP_LOCATION", "Bole Bulbula, Addis Ababa")
 
 TELEBIRR_PHONE = os.getenv("TELEBIRR_PHONE", "+251 96 366 1680")
 TELEBIRR_NAME = os.getenv("TELEBIRR_NAME", "ADDIS")

@@ -39,6 +39,9 @@ TEXTS = {
         "admin_no_appointments": "No appointments scheduled for today.",
         "btn_approve": "✅ Approve Payment",
         "approved_msg": "✅ Payment for Booking #{id} approved and confirmed!",
+        "booking_declined": "❌ **Booking #{id} Declined / Rejected**\n\nDear {name}, we regret to inform you that your appointment for **{service}** with **{barber}** on **{date} at {slot}** has been **DECLINED / REJECTED** by the shop.\n\n📍 Location: {location}\n📞 To reschedule or ask questions, please call {phone}.",
+        "booking_approved": "✅ **Booking #{id} Approved & Confirmed!**\n\nDear {name}, your appointment for **{service}** with **{barber}** on **{date} at {slot}** has been officially **APPROVED** and confirmed!\n\n📍 Location: {location}\n📞 Need assistance? Call {phone}.",
+        "booking_cancelled_notify": "⚠️ **Booking #{id} Cancelled**\n\nYour appointment for **{service}** on **{date} at {slot}** has been cancelled.",
     },
     "am": {
         "welcome": "💈 እንኳን ወደ **{shop_name}** በደህና መጡ!\n\nየአዲስ አበባ ምርጥ የጸጉርና ጢም ማስተካከያ ላውንጅ። ቀጠሮ ይያዙ፣ ጸጉር አስተካካይዎን ይምረጡ፣ በቴሌብር ወይም በካሽ ይክፈሉ።\n\nከታች አንዱን ይምረጡ:",
@@ -78,6 +81,9 @@ TEXTS = {
         "admin_no_appointments": "ለዛሬ የተያዘ ቀጠሮ የለም።",
         "btn_approve": "✅ ክፍያ አረጋግጥ",
         "approved_msg": "✅ ለቀጠሮ #{id} ክፍያ ተረጋግጧል!",
+        "booking_declined": "❌ **ቀጠሮ #{id} ውድቅ ተደርጓል (ተሰርዟል)**\n\nውድ {name}፣ በ **{date} በ {slot}** ለ **{service}** ከአስተካካይ **{barber}** ጋር የያዙት ቀጠሮ በባርበርሾፑ **ውድቅ ተደርጓል (ተሰርዟል)**።\n\n📍 አድራሻ: {location}\n📞 ሌላ ሰዓት ለመያዝ ወይም ለመጠየቅ በ {phone} ይደውሉልን።",
+        "booking_approved": "✅ **ቀጠሮ #{id} ጸድቋል!**\n\nውድ {name}፣ በ **{date} በ {slot}** ለ **{service}** ከአስተካካይ **{barber}** ጋር የያዙት ቀጠሮ በባርበርሾፑ **ጸድቋል**!\n\n📍 አድራሻ: {location}\n📞 ጥያቄ ካለዎት በ {phone} ይደውሉልን።",
+        "booking_cancelled_notify": "⚠️ **ቀጠሮ #{id} ተሰርዟል**\n\nበ **{date} በ {slot}** የነበረዎት የ **{service}** ቀጠሮ ተሰርዟል።",
     }
 }
 
